@@ -35,4 +35,9 @@ class User extends \TCG\Voyager\Models\User
     protected $hidden = [
         'password', 'remember_token',
     ];
+
+    protected $casts = [
+        'email_verified_at' => 'datetime',
+        'settings' => 'json'
+    ];
 }
