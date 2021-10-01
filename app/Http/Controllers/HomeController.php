@@ -23,6 +23,7 @@ class HomeController extends Controller
      */
     public function index()
     {
+        $this->authorize('index', 'App\User');
         return view('home');
     }
 }

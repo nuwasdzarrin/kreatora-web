@@ -14,6 +14,7 @@ class AddPhoneToUsersTable extends Migration
     public function up()
     {
         Schema::table('users', function (Blueprint $table) {
+            $table->timestamp('email_verified_at')->nullable()->after('remember_token');
             $table->string('phone')->nullable()->after('settings');
             $table->string('address')->nullable()->after('phone');
             $table->string('latitude')->nullable()->after('address');
