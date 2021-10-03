@@ -81,6 +81,7 @@ class AuthController extends Controller
         }
 
         $code = rand(100000,999999);
+        Mail::to($request->email)->send(new EmailCodeVerification($code));
 
         $user = new User();
         $user->name = $request->name;
@@ -90,7 +91,6 @@ class AuthController extends Controller
         $user->save();
 
         $this->message = "Sukses mendaftar akun, silahkan cek email untuk verifikasi";
-        Mail::to($request->email)->send(new EmailCodeVerification($code));
 
         return response()->json([
             'data' => $user,

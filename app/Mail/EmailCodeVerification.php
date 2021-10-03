@@ -29,6 +29,6 @@ class EmailCodeVerification extends Mailable
      */
     public function build()
     {
-        return $this->view('mails.email_verify_code');
+        return $this->view('mails.email_verify_code')->subject("Code Verification");
     }
 }
