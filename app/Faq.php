@@ -6,14 +6,14 @@ use Smartisan\Filters\Traits\Filterable;
 use Illuminate\Database\Eloquent\Model;
 
 /**
- * Category Model
+ * Faq Model
  */
-class Category extends Model
+class Faq extends Model
 {
     use Filterable;
 
     /** @var string Filter Class */
-    protected $filters = 'App\Filters\CategoryFilter';
+    protected $filters = 'App\Filters\FaqFilter';
 
     /** @var string $table */
     //protected $table = '';

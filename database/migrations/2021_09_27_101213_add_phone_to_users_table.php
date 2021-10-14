@@ -23,6 +23,7 @@ class AddPhoneToUsersTable extends Migration
             $table->string('bank_account')->nullable()->after('gender');
             $table->string('ktp')->nullable()->after('bank_account');
             $table->string('fcm_token')->nullable()->after('ktp');
+            $table->softDeletes();
         });
     }
     /**
@@ -34,7 +35,7 @@ class AddPhoneToUsersTable extends Migration
     {
         Schema::table('users', function (Blueprint $table) {
             $table->dropColumn([
-                'phone', 'address', 'latitude', 'longitude', 'gender', 'bank_account', 'ktp', 'fcm_token'
+                'email_verified_at', 'phone', 'address', 'latitude', 'longitude', 'gender', 'bank_account', 'ktp', 'fcm_token'
             ]);
         });
     }

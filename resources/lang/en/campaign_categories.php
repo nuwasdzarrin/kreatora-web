@@ -2,8 +2,8 @@
 
 return [
 
-    'plural' => 'categories',
-    'singular' => 'category',
+    'plural' => 'campaign categories',
+    'singular' => 'campaign category',
 
     'name' => 'name',
 

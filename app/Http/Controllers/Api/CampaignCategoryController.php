@@ -2,24 +2,24 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\Category;
+use App\CampaignCategory;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Resources\Json\Resource;
 
 /**
- * CategoryController
+ * CampaignCategoryController
  * @extends Controller
  */
-class CategoryController extends Controller
+class CampaignCategoryController extends Controller
 {
     /**
      * Rules
      * @param  \Illuminate\Http\Request|null $request
-     * @param Category $category
+     * @param CampaignCategory $campaign_category
      * @return array
      */
-    public static function rules(Request $request = null, Category $category = null)
+    public static function rules(Request $request = null, CampaignCategory $campaign_category = null)
     {
         return [
             'store' => [
@@ -49,11 +49,11 @@ class CategoryController extends Controller
      */
     public function index()
     {
-        $categories = Category::filter()
+        $campaign_categories = CampaignCategory::filter()
             ->paginate()->appends(request()->query());
-        $this->authorize('index', 'App\Category');
+        $this->authorize('index', 'App\CampaignCategory');
 
-        return Resource::collection($categories);
+        return Resource::collection($campaign_categories);
     }
 
     /**
@@ -65,82 +65,82 @@ class CategoryController extends Controller
      */
     public function store(Request $request)
     {
-        $this->authorize('create', 'App\Category');
+        $this->authorize('create', 'App\CampaignCategory');
         $request->validate(self::rules($request)['store']);
 
-        $category = new Category;
+        $campaign_category = new CampaignCategory;
         foreach (self::rules($request)['store'] as $key => $value) {
             if (str_contains($value, [ 'file', 'image', 'mimetypes', 'mimes' ])) {
                 if ($request->hasFile($key)) {
-                    $category->{$key} = $request->file($key)->store('categories');
+                    $campaign_category->{$key} = $request->file($key)->store('campaign_categories');
                 } elseif ($request->exists($key)) {
-                    $category->{$key} = $request->{$key};
+                    $campaign_category->{$key} = $request->{$key};
                 }
             } elseif ($request->exists($key)) {
-                $category->{$key} = $request->{$key};
+                $campaign_category->{$key} = $request->{$key};
             }
         }
-        $category->save();
+        $campaign_category->save();
 
-        return (new Resource($category))->response()->setStatusCode(201);
+        return (new Resource($campaign_category))->response()->setStatusCode(201);
     }
 
     /**
      * Display the specified resource.
      *
-     * @param Category $category
+     * @param CampaignCategory $campaign_category
      * @return Resource
      * @throws \Illuminate\Auth\Access\AuthorizationException
      */
-    public function show(Category $category)
+    public function show(CampaignCategory $campaign_category)
     {
-        $this->authorize('view', $category);
+        $this->authorize('view', $campaign_category);
 
-        return new Resource($category);
+        return new Resource($campaign_category);
     }
 
     /**
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request $request
-     * @param Category $category
+     * @param CampaignCategory $campaign_category
      * @return Resource
      * @throws \Illuminate\Auth\Access\AuthorizationException
      */
-    public function update(Request $request, Category $category)
+    public function update(Request $request, CampaignCategory $campaign_category)
     {
-        $this->authorize('update', $category);
-        $request->validate(self::rules($request, $category)['update']);
+        $this->authorize('update', $campaign_category);
+        $request->validate(self::rules($request, $campaign_category)['update']);
 
-        foreach (self::rules($request, $category)['update'] as $key => $value) {
+        foreach (self::rules($request, $campaign_category)['update'] as $key => $value) {
             if (str_contains($value, [ 'file', 'image', 'mimetypes', 'mimes' ])) {
                 if ($request->hasFile($key)) {
-                    $category->{$key} = $request->file($key)->store('categories');
+                    $campaign_category->{$key} = $request->file($key)->store('campaign_categories');
                 } elseif ($request->exists($key)) {
-                    $category->{$key} = $request->{$key};
+                    $campaign_category->{$key} = $request->{$key};
                 }
             } elseif ($request->exists($key)) {
-                $category->{$key} = $request->{$key};
+                $campaign_category->{$key} = $request->{$key};
             }
         }
-        $category->save();
+        $campaign_category->save();
 
-        return new Resource($category);
+        return new Resource($campaign_category);
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param Category $category
+     * @param CampaignCategory $campaign_category
      * @return Resource
      * @throws \Illuminate\Auth\Access\AuthorizationException
      * @throws \Exception
      */
-    public function destroy(Category $category)
+    public function destroy(CampaignCategory $campaign_category)
     {
-        $this->authorize('delete', $category);
-        $category->delete();
+        $this->authorize('delete', $campaign_category);
+        $campaign_category->delete();
 
-        return new Resource($category);
+        return new Resource($campaign_category);
     }
 }

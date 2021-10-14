@@ -10,6 +10,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
+use TCG\Voyager\Models\Role;
 
 /**
  * AuthController
@@ -70,7 +71,12 @@ class AuthController extends Controller
         $validator = Validator::make($request->all(), [
             'name' => 'required|string',
             'email' => 'required|email|unique:users',
-            'password' => 'required|string|min:6',
+            'password' => [
+                'required', 'string', 'min:6',
+                'regex:/[a-z]/',
+                'regex:/[A-Z]/',
+                'regex:/[0-9]/',
+                'regex:/[@$!%*#?&.s]/'],
             'password_confirmation' => 'required|same:password',
         ]);
         if ($validator->fails()) {
@@ -122,8 +128,10 @@ class AuthController extends Controller
                 ->file('ktp')
                 ->storeAs('users', 'ktp_'.$auth->name.'_'.rand(100000,999999).'.'.$request->ktp->getClientOriginalExtension(), 'public');
         }
+        $role = Role::query()->where('name', 'creator')->first();
 
         $user = User::query()->find($auth->id);
+        $user->role_id = $role->id;
         $user->phone = $request->phone;
         $user->address = $request->address;
         $user->latitude = $request->latitude;
@@ -133,7 +141,7 @@ class AuthController extends Controller
         $user->ktp = $ktp;
         $user->save();
 
-        $this->message = "Sukses mendaftar akun, silahkan cek email untuk verifikasi";
+        $this->message = "Selamat akun anda telah manjadi kreator";
         return response()->json([
             'data' => $user,
             'message' => $this->message

@@ -2,14 +2,14 @@
 
 namespace Tests\Feature\Api;
 
-use App\Category;
+use App\Faq;
 use Illuminate\Support\Facades\Route;
 use App\User;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
-class CategoryControllerTest extends TestCase
+class FaqControllerTest extends TestCase
 {
     /**
      * Display a listing of the resource.
@@ -18,14 +18,14 @@ class CategoryControllerTest extends TestCase
      */
     public function testIndex()
     {
-        if (!Route::has('api.categories.index')) { $this->expectNotToPerformAssertions(); return; }
+        if (!Route::has('api.faqs.index')) { $this->expectNotToPerformAssertions(); return; }
         $user = factory(User::class)->create();
 
         $this->actingAs($user, 'api');
 
-        $categories = factory(Category::class, 5)->create();
+        $faqs = factory(Faq::class, 5)->create();
 
-        $response = $this->getJson(route('api.categories.index')."?search=lorem");
+        $response = $this->getJson(route('api.faqs.index')."?search=lorem");
         if ($response->exception) {
             $this->expectOutputString('');
             $this->setOutputCallback(function () use($response) { return $response->exception; });
@@ -41,11 +41,11 @@ class CategoryControllerTest extends TestCase
      */
     public function testStore()
     {
-        if (!Route::has('api.categories.store')) { $this->expectNotToPerformAssertions(); return; }
+        if (!Route::has('api.faqs.store')) { $this->expectNotToPerformAssertions(); return; }
         $user = factory(User::class)->create();
 
         $this->actingAs($user, 'api');
-        $response = $this->postJson(route('api.categories.store'), factory(Category::class)->make()->toArray());
+        $response = $this->postJson(route('api.faqs.store'), factory(Faq::class)->make()->toArray());
         if ($response->exception) {
             $this->expectOutputString('');
             $this->setOutputCallback(function () use($response) { return $response->exception; });
@@ -61,14 +61,14 @@ class CategoryControllerTest extends TestCase
      */
     public function testShow()
     {
-        if (!Route::has('api.categories.show')) { $this->expectNotToPerformAssertions(); return; }
+        if (!Route::has('api.faqs.show')) { $this->expectNotToPerformAssertions(); return; }
         $user = factory(User::class)->create();
 
         $this->actingAs($user, 'api');
 
-        $category = factory(Category::class)->create();
+        $faq = factory(Faq::class)->create();
 
-        $response = $this->getJson(route('api.categories.show', [ $category->getKey() ]));
+        $response = $this->getJson(route('api.faqs.show', [ $faq->getKey() ]));
         if ($response->exception) {
             $this->expectOutputString('');
             $this->setOutputCallback(function () use($response) { return $response->exception; });
@@ -84,14 +84,14 @@ class CategoryControllerTest extends TestCase
      */
     public function testUpdate()
     {
-        if (!Route::has('api.categories.update')) { $this->expectNotToPerformAssertions(); return; }
+        if (!Route::has('api.faqs.update')) { $this->expectNotToPerformAssertions(); return; }
         $user = factory(User::class)->create();
 
         $this->actingAs($user, 'api');
 
-        $category = factory(Category::class)->create();
+        $faq = factory(Faq::class)->create();
 
-        $response = $this->putJson(route('api.categories.update', [ $category->getKey() ]), factory(Category::class)->make()->toArray());
+        $response = $this->putJson(route('api.faqs.update', [ $faq->getKey() ]), factory(Faq::class)->make()->toArray());
         if ($response->exception) {
             $this->expectOutputString('');
             $this->setOutputCallback(function () use($response) { return $response->exception; });
@@ -107,14 +107,14 @@ class CategoryControllerTest extends TestCase
      */
     public function testDestroy()
     {
-        if (!Route::has('api.categories.destroy')) { $this->expectNotToPerformAssertions(); return; }
+        if (!Route::has('api.faqs.destroy')) { $this->expectNotToPerformAssertions(); return; }
         $user = factory(User::class)->create();
 
         $this->actingAs($user, 'api');
 
-        $category = factory(Category::class)->create();
+        $faq = factory(Faq::class)->create();
 
-        $response = $this->deleteJson(route('api.categories.destroy', [ $category->getKey() ]));
+        $response = $this->deleteJson(route('api.faqs.destroy', [ $faq->getKey() ]));
         if ($response->exception) {
             $this->expectOutputString('');
             $this->setOutputCallback(function () use($response) { return $response->exception; });

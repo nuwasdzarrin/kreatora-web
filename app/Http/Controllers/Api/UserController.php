@@ -134,6 +134,10 @@ class UserController extends Controller
         $this->authorize('update', $user);
         $request->validate(self::rules($request, $user)['update']);
 
+        $role = User::query()->where('name', 'creator')->first();
+        if ($role) {
+            $user->role_id = $role->id;
+        }
         foreach (self::rules($request, $user)['update'] as $key => $value) {
             if (str_contains($value, [ 'file', 'image', 'mimetypes', 'mimes' ])) {
                 if ($request->hasFile($key)) {

@@ -3,9 +3,9 @@
 namespace App\Filters;
 
 /**
- * CategoryFilter Filter
+ * CampaignCategoryFilter Filter
  */
-class CategoryFilter extends BaseFilter
+class CampaignCategoryFilter extends BaseFilter
 {
     /**
      * Searchable Field,

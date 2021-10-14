@@ -5,6 +5,7 @@ namespace App;
 use Atnic\LaravelGenerator\Traits\HasExtendedAttributes;
 use App\Traits\ResolveRouteBindingWithFilter;
 use Atnic\LaravelGenerator\Traits\SetterGetterExtendedAttribute;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Laravel\Passport\HasApiTokens;
@@ -12,7 +13,7 @@ use Smartisan\Filters\Traits\Filterable;
 
 class User extends \TCG\Voyager\Models\User
 {
-    use HasApiTokens, Notifiable;
+    use HasApiTokens, Notifiable, SoftDeletes;
     use Filterable, HasExtendedAttributes, ResolveRouteBindingWithFilter, SetterGetterExtendedAttribute;
 
     /** @var string Filter Class */
@@ -33,6 +34,22 @@ class User extends \TCG\Voyager\Models\User
      * @var array
      */
     protected $hidden = [
-        'password', 'remember_token',
+        'password', 'remember_token', 'role',
     ];
+
+    /**
+     * The attributes that should be mutated to dates.
+     *
+     * @var array
+     */
+    protected $dates = ['deleted_at'];
+
+    protected $appends = [
+        'role_name'
+    ];
+
+    public function getRoleNameAttribute()
+    {
+        return $this->role ? $this->role->display_name : null;
+    }
 }

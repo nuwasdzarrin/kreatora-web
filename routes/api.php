@@ -26,4 +26,9 @@ Route::post('forget_password', 'Api\AuthController@forget_password')->name('api.
 Route::post('change_password', 'Api\AuthController@change_password')->name('api.change_password');
 Route::get('logout', 'Api\AuthController@logout')->name('api.logout');
 Route::apiResource('users', 'Api\UserController', [ 'as' => 'api' ]);
-Route::apiResource('categories', 'Api\CategoryController', [ 'as' => 'api' ]);
+Route::apiResource('campaign_categories', 'Api\CampaignCategoryController', [ 'as' => 'api' ]);
+Route::get('campaigns/home', 'Api\CampaignController@home')->name('campaigns.home');
+Route::apiResource('campaigns', 'Api\CampaignController', [ 'as' => 'api' ]);
+Route::post('faqs/ask', 'Api\FaqController@ask')->name('faqs.ask');
+Route::put('faqs/answer/{id}', 'Api\FaqController@answer')->name('faqs.answer');
+Route::apiResource('faqs', 'Api\FaqController', [ 'as' => 'api' ]);
