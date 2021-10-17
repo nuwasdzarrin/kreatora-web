@@ -31,6 +31,7 @@ class CampaignController extends Controller
                 'title' => 'required|string|max:255',
                 'short_desc' => 'string|max:255|nullable',
                 'long_desc' => 'string|nullable',
+                'risk' => 'string|nullable',
                 'goal' => 'required|numeric',
                 'start' => 'required|date|after:now',
                 'end' => 'required|date|after:start',
@@ -42,6 +43,7 @@ class CampaignController extends Controller
                 'title' => 'string|max:255',
                 'short_desc' => 'string|max:255',
                 'long_desc' => 'string',
+                'risk' => 'string',
                 'goal' => 'numeric',
                 'start' => 'date|after:now',
                 'end' => 'date|after:start',
@@ -58,7 +60,7 @@ class CampaignController extends Controller
     */
     public function __construct()
     {
-        $this->middleware('auth:api');
+        $this->middleware('auth:api')->except(['home','index','show']);
     }
 
     /**
@@ -71,7 +73,7 @@ class CampaignController extends Controller
     {
         $campaigns = Campaign::filter()
             ->paginate()->appends(request()->query());
-        $this->authorize('index', 'App\Campaign');
+//        $this->authorize('index', 'App\Campaign');
 
         return Resource::collection($campaigns);
     }
@@ -139,7 +141,7 @@ class CampaignController extends Controller
      */
     public function show(Campaign $campaign)
     {
-        $this->authorize('view', $campaign);
+//        $this->authorize('view', $campaign);
 
         return new Resource($campaign);
     }

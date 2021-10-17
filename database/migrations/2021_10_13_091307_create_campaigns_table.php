@@ -20,6 +20,7 @@ class CreateCampaignsTable extends Migration
             $table->string('title');
             $table->string('short_desc')->nullable();
             $table->longText('long_desc')->nullable();
+            $table->longText('risk')->nullable();
             $table->double('goal')->nullable();
             $table->timestamp('start')->nullable();
             $table->timestamp('end')->nullable();

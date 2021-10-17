@@ -18,6 +18,7 @@ $factory->define(App\Campaign::class, function (Faker $faker) {
         'title' => $faker->sentence(3),
         'short_desc' => $faker->sentence(10),
         'long_desc' => $faker->text(100),
+        'risk' => $faker->text(100),
         'goal' => $faker->numberBetween(50000, 500000),
         'start' => $faker->dateTime('now'),
         'end' => $faker->dateTimeBetween('now', '+1 years'),
