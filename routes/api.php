@@ -33,3 +33,4 @@ Route::post('faqs/ask', 'Api\FaqController@ask')->name('faqs.ask');
 Route::put('faqs/answer/{id}', 'Api\FaqController@answer')->name('faqs.answer');
 Route::apiResource('faqs', 'Api\FaqController', [ 'as' => 'api' ]);
 Route::apiResource('rewards', 'Api\RewardController', [ 'as' => 'api' ]);
+Route::apiResource('updates', 'Api\UpdateController', [ 'as' => 'api' ]);

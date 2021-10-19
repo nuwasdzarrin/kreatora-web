@@ -2,40 +2,35 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\Reward;
+use App\Update;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Resources\Json\Resource;
 use Illuminate\Support\Str;
 
 /**
- * RewardController
+ * UpdateController
  * @extends Controller
  */
-class RewardController extends Controller
+class UpdateController extends Controller
 {
     /**
      * Rules
      * @param  \Illuminate\Http\Request|null $request
-     * @param Reward $reward
+     * @param Update $update
      * @return array
      */
-    public static function rules(Request $request = null, Reward $reward = null)
+    public static function rules(Request $request = null, Update $update = null)
     {
         return [
             'store' => [
                 'campaign_id' => 'required|exists:campaigns,id',
                 'title' => 'required|string|max:255',
-                'description' => 'required|string',
-                'min_donation' => 'required|numeric',
-                'max_backer' => 'required|numeric',
+                'description' => 'required|string|max:255',
             ],
             'update' => [
-                'campaign_id' => 'exists:campaigns,id',
                 'title' => 'string|max:255',
-                'description' => 'string',
-                'min_donation' => 'numeric',
-                'max_backer' => 'numeric',
+                'description' => 'string|max:255',
             ]
         ];
     }
@@ -47,7 +42,7 @@ class RewardController extends Controller
     */
     public function __construct()
     {
-        $this->middleware('auth:api')->except(['index', 'show']);
+        $this->middleware('auth:api');
     }
 
     /**
@@ -58,11 +53,11 @@ class RewardController extends Controller
      */
     public function index()
     {
-        $rewards = Reward::filter()
+        $updates = Update::filter()
             ->paginate()->appends(request()->query());
-//        $this->authorize('index', 'App\Reward');
+        $this->authorize('index', 'App\Update');
 
-        return Resource::collection($rewards);
+        return Resource::collection($updates);
     }
 
     /**
@@ -74,82 +69,85 @@ class RewardController extends Controller
      */
     public function store(Request $request)
     {
-        $this->authorize('create', 'App\Reward');
+        $this->authorize('create', 'App\Update');
         $request->validate(self::rules($request)['store']);
 
-        $reward = new Reward;
+        $index = Update::query()->where('campaign_id', $request->campaign_id)->count();
+        $index += 1;
+        $update = new Update;
+        $update->index = $index;
         foreach (self::rules($request)['store'] as $key => $value) {
             if (Str::contains($value, [ 'file', 'image', 'mimetypes', 'mimes' ])) {
                 if ($request->hasFile($key)) {
-                    $reward->{$key} = $request->file($key)->store('rewards');
+                    $update->{$key} = $request->file($key)->store('updates');
                 } elseif ($request->exists($key)) {
-                    $reward->{$key} = $request->{$key};
+                    $update->{$key} = $request->{$key};
                 }
             } elseif ($request->exists($key)) {
-                $reward->{$key} = $request->{$key};
+                $update->{$key} = $request->{$key};
             }
         }
-        $reward->save();
+        $update->save();
 
-        return (new Resource($reward))->response()->setStatusCode(201);
+        return (new Resource($update))->response()->setStatusCode(201);
     }
 
     /**
      * Display the specified resource.
      *
-     * @param Reward $reward
+     * @param Update $update
      * @return Resource
      * @throws \Illuminate\Auth\Access\AuthorizationException
      */
-    public function show(Reward $reward)
+    public function show(Update $update)
     {
-//        $this->authorize('view', $reward);
+        $this->authorize('view', $update);
 
-        return new Resource($reward);
+        return new Resource($update);
     }
 
     /**
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request $request
-     * @param Reward $reward
+     * @param Update $update
      * @return Resource
      * @throws \Illuminate\Auth\Access\AuthorizationException
      */
-    public function update(Request $request, Reward $reward)
+    public function update(Request $request, Update $update)
     {
-        $this->authorize('update', $reward);
-        $request->validate(self::rules($request, $reward)['update']);
+        $this->authorize('update', $update);
+        $request->validate(self::rules($request, $update)['update']);
 
-        foreach (self::rules($request, $reward)['update'] as $key => $value) {
+        foreach (self::rules($request, $update)['update'] as $key => $value) {
             if (Str::contains($value, [ 'file', 'image', 'mimetypes', 'mimes' ])) {
                 if ($request->hasFile($key)) {
-                    $reward->{$key} = $request->file($key)->store('rewards');
+                    $update->{$key} = $request->file($key)->store('updates');
                 } elseif ($request->exists($key)) {
-                    $reward->{$key} = $request->{$key};
+                    $update->{$key} = $request->{$key};
                 }
             } elseif ($request->exists($key)) {
-                $reward->{$key} = $request->{$key};
+                $update->{$key} = $request->{$key};
             }
         }
-        $reward->save();
+        $update->save();
 
-        return new Resource($reward);
+        return new Resource($update);
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param Reward $reward
+     * @param Update $update
      * @return Resource
      * @throws \Illuminate\Auth\Access\AuthorizationException
      * @throws \Exception
      */
-    public function destroy(Reward $reward)
+    public function destroy(Update $update)
     {
-        $this->authorize('delete', $reward);
-        $reward->delete();
+        $this->authorize('delete', $update);
+        $update->delete();
 
-        return new Resource($reward);
+        return new Resource($update);
     }
 }

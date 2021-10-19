@@ -6,6 +6,7 @@ use App\User;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Resources\Json\Resource;
+use Illuminate\Support\Str;
 
 /**
  * UserController
@@ -92,7 +93,7 @@ class UserController extends Controller
 
         $user = new User;
         foreach (self::rules($request)['store'] as $key => $value) {
-            if (str_contains($value, [ 'file', 'image', 'mimetypes', 'mimes' ])) {
+            if (Str::contains($value, [ 'file', 'image', 'mimetypes', 'mimes' ])) {
                 if ($request->hasFile($key)) {
                     $user->{$key} = $request->file($key)->store('users');
                 } elseif ($request->exists($key)) {
@@ -139,7 +140,7 @@ class UserController extends Controller
             $user->role_id = $role->id;
         }
         foreach (self::rules($request, $user)['update'] as $key => $value) {
-            if (str_contains($value, [ 'file', 'image', 'mimetypes', 'mimes' ])) {
+            if (Str::contains($value, [ 'file', 'image', 'mimetypes', 'mimes' ])) {
                 if ($request->hasFile($key)) {
                     $user->{$key} = $request->file($key)->store('users');
                 } elseif ($request->exists($key)) {

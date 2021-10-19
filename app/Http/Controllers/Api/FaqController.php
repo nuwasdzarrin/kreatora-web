@@ -6,6 +6,7 @@ use App\Faq;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Resources\Json\Resource;
+use Illuminate\Support\Str;
 
 /**
  * FaqController
@@ -78,7 +79,7 @@ class FaqController extends Controller
 
         $faq = new Faq;
         foreach (self::rules($request)['store'] as $key => $value) {
-            if (str_contains($value, [ 'file', 'image', 'mimetypes', 'mimes' ])) {
+            if (Str::contains($value, [ 'file', 'image', 'mimetypes', 'mimes' ])) {
                 if ($request->hasFile($key)) {
                     $faq->{$key} = $request->file($key)->store('faqs');
                 } elseif ($request->exists($key)) {
@@ -121,7 +122,7 @@ class FaqController extends Controller
         $request->validate(self::rules($request, $faq)['update']);
 
         foreach (self::rules($request, $faq)['update'] as $key => $value) {
-            if (str_contains($value, [ 'file', 'image', 'mimetypes', 'mimes' ])) {
+            if (Str::contains($value, [ 'file', 'image', 'mimetypes', 'mimes' ])) {
                 if ($request->hasFile($key)) {
                     $faq->{$key} = $request->file($key)->store('faqs');
                 } elseif ($request->exists($key)) {

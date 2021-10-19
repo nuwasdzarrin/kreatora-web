@@ -160,7 +160,7 @@ class CampaignController extends Controller
         $request->validate(self::rules($request, $campaign)['update']);
 
         foreach (self::rules($request, $campaign)['update'] as $key => $value) {
-            if (str_contains($value, [ 'file', 'image', 'mimetypes', 'mimes' ])) {
+            if (Str::contains($value, [ 'file', 'image', 'mimetypes', 'mimes' ])) {
                 if ($request->hasFile($key)) {
                     $campaign->{$key} = $request->file($key)->store('campaigns');
                 } elseif ($request->exists($key)) {

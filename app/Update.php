@@ -2,20 +2,18 @@
 
 namespace App;
 
-use App\Traits\ResolveRouteBindingWithFilter;
-use Illuminate\Database\Eloquent\SoftDeletes;
 use Smartisan\Filters\Traits\Filterable;
 use Illuminate\Database\Eloquent\Model;
 
 /**
- * Campaign Model
+ * Update Model
  */
-class Campaign extends Model
+class Update extends Model
 {
-    use Filterable, SoftDeletes, ResolveRouteBindingWithFilter;
+    use Filterable;
 
     /** @var string Filter Class */
-    protected $filters = 'App\Filters\CampaignFilter';
+    protected $filters = 'App\Filters\UpdateFilter';
 
     /** @var string $table */
     //protected $table = '';
@@ -43,28 +41,8 @@ class Campaign extends Model
     /** @var string $connection */
     //protected $connection = '';
 
-    /**
-     * @var array
-     */
-    protected $casts = [
-        'images' => 'array',
-    ];
-
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
-     */
-    public function faqs()
+    public function campaign()
     {
-        return $this->hasMany(Faq::class);
-    }
-
-    public function rewards()
-    {
-        return $this->hasMany(Reward::class);
-    }
-
-    public function updates()
-    {
-        return $this->hasMany(Update::class);
+        return $this->belongsTo(Campaign::class);
     }
 }

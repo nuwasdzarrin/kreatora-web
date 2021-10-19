@@ -6,6 +6,7 @@ use App\CampaignCategory;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Resources\Json\Resource;
+use Illuminate\Support\Str;
 
 /**
  * CampaignCategoryController
@@ -70,7 +71,7 @@ class CampaignCategoryController extends Controller
 
         $campaign_category = new CampaignCategory;
         foreach (self::rules($request)['store'] as $key => $value) {
-            if (str_contains($value, [ 'file', 'image', 'mimetypes', 'mimes' ])) {
+            if (Str::contains($value, [ 'file', 'image', 'mimetypes', 'mimes' ])) {
                 if ($request->hasFile($key)) {
                     $campaign_category->{$key} = $request->file($key)->store('campaign_categories');
                 } elseif ($request->exists($key)) {
@@ -113,7 +114,7 @@ class CampaignCategoryController extends Controller
         $request->validate(self::rules($request, $campaign_category)['update']);
 
         foreach (self::rules($request, $campaign_category)['update'] as $key => $value) {
-            if (str_contains($value, [ 'file', 'image', 'mimetypes', 'mimes' ])) {
+            if (Str::contains($value, [ 'file', 'image', 'mimetypes', 'mimes' ])) {
                 if ($request->hasFile($key)) {
                     $campaign_category->{$key} = $request->file($key)->store('campaign_categories');
                 } elseif ($request->exists($key)) {
