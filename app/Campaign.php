@@ -67,4 +67,9 @@ class Campaign extends Model
     {
         return $this->hasMany(Update::class);
     }
+
+    public function campaign_comments()
+    {
+        return $this->hasMany(CampaignComment::class)->whereNull('parent_id');
+    }
 }
