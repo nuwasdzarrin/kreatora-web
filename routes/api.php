@@ -35,3 +35,4 @@ Route::apiResource('faqs', 'Api\FaqController', [ 'as' => 'api' ]);
 Route::apiResource('rewards', 'Api\RewardController', [ 'as' => 'api' ]);
 Route::apiResource('updates', 'Api\UpdateController', [ 'as' => 'api' ]);
 Route::apiResource('campaign_comments', 'Api\CampaignCommentController', [ 'as' => 'api' ]);
+Route::apiResource('backer_users', 'Api\BackerUserController', [ 'as' => 'api' ]);

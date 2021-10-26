@@ -48,6 +48,11 @@ class User extends \TCG\Voyager\Models\User
         'role_name'
     ];
 
+    public function campaigns()
+    {
+        return $this->hasMany(Campaign::class);
+    }
+
     public function getRoleNameAttribute()
     {
         return $this->role ? $this->role->display_name : null;

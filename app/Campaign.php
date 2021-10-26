@@ -43,12 +43,26 @@ class Campaign extends Model
     /** @var string $connection */
     //protected $connection = '';
 
+    protected $hidden = ['user','backer_users'];
+
     /**
      * @var array
      */
     protected $casts = [
         'images' => 'array',
     ];
+
+    protected $appends = ['creator_name','total_backer','total_funded'];
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    public function backer_users()
+    {
+        return $this->hasMany(BackerUser::class);
+    }
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
@@ -71,5 +85,22 @@ class Campaign extends Model
     public function campaign_comments()
     {
         return $this->hasMany(CampaignComment::class)->whereNull('parent_id');
+    }
+
+    public function getCreatorNameAttribute()
+    {
+        return $this->user?$this->user->name:null;
+    }
+
+    public function getTotalBackerAttribute()
+    {
+        return $this->backer_users->count();
+    }
+
+    public function getTotalFundedAttribute()
+    {
+        return $this->backer_users->sum(function ($item) {
+            return $item['amount'] + $item['tip'];
+        });
     }
 }
