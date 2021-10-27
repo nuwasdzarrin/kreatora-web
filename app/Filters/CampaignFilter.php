@@ -16,6 +16,7 @@ class CampaignFilter extends BaseFilter
      * @var array
      */
     protected $searchables = [
+        'id',
         'name'
     ];
 
