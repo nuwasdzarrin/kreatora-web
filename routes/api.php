@@ -36,3 +36,7 @@ Route::apiResource('rewards', 'Api\RewardController', [ 'as' => 'api' ]);
 Route::apiResource('updates', 'Api\UpdateController', [ 'as' => 'api' ]);
 Route::apiResource('campaign_comments', 'Api\CampaignCommentController', [ 'as' => 'api' ]);
 Route::apiResource('backer_users', 'Api\BackerUserController', [ 'as' => 'api' ]);
+
+Route::get('payment/virtual_accounts', 'Api\Payment\XenditController@virtual_accounts')->name('payment.virtual_accounts');
+Route::post('payment/virtual_accounts', 'Api\Payment\XenditController@create_virtual_accounts')->name('payment.create_virtual_accounts');
+Route::post('payment/callback_virtual_accounts', 'Api\Payment\XenditController@callback_virtual_accounts')->name('payment.callback_virtual_accounts');
