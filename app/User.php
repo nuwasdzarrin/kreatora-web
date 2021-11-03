@@ -53,6 +53,11 @@ class User extends \TCG\Voyager\Models\User
         return $this->hasMany(Campaign::class);
     }
 
+    public function backer_users()
+    {
+        return $this->hasMany(BackerUser::class);
+    }
+
     public function getRoleNameAttribute()
     {
         return $this->role ? $this->role->display_name : null;

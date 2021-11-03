@@ -41,5 +41,8 @@ class BackerUser extends Model
     /** @var string $connection */
     //protected $connection = '';
 
-    // TODO: Define other default value and relations
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 }

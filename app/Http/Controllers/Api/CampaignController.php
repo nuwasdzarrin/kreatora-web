@@ -194,13 +194,13 @@ class CampaignController extends Controller
     public function home()
     {
         Carbon::now();
-        $will_end = Campaign::query()
+        $will_end = Campaign::filter()
             ->whereNotNull('end')
             ->whereBetween('end', [Carbon::now(), Carbon::now()->addYears(2)])
             ->orderBy('end', 'asc')
             ->limit(5)
             ->get();
-        $latest = Campaign::query()->latest('created_at')->limit(5)->get();
+        $latest = Campaign::filter()->latest('created_at')->limit(5)->get();
 
         $data = [];
         $data['data']['trending'] = [];

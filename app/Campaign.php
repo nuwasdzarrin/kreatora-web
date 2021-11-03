@@ -43,7 +43,7 @@ class Campaign extends Model
     /** @var string $connection */
     //protected $connection = '';
 
-    protected $hidden = ['user','backer_users'];
+    protected $hidden = ['user','backer_users', 'campaign_category'];
 
     /**
      * @var array
@@ -52,7 +52,7 @@ class Campaign extends Model
         'images' => 'array',
     ];
 
-    protected $appends = ['creator_name','total_backer','total_funded'];
+    protected $appends = ['category_name', 'creator_name','creator_avatar','total_backer','total_funded'];
 
     public function user()
     {
@@ -61,7 +61,7 @@ class Campaign extends Model
 
     public function backer_users()
     {
-        return $this->hasMany(BackerUser::class);
+        return $this->hasMany(BackerUser::class)->with(['user']);
     }
 
     /**
@@ -87,9 +87,34 @@ class Campaign extends Model
         return $this->hasMany(CampaignComment::class)->whereNull('parent_id');
     }
 
+    public function campaign_category()
+    {
+        return $this->belongsTo(CampaignCategory::class);
+    }
+
+    public function getCategoryNameAttribute()
+    {
+        return $this->campaign_category ? $this->campaign_category->name : null;
+    }
+
     public function getCreatorNameAttribute()
     {
         return $this->user?$this->user->name:null;
+    }
+
+    public function getCreatorAvatarAttribute()
+    {
+        return $this->user ? $this->user->avatar : null;
+    }
+
+    public function getBackersAvatarAttribute()
+    {
+        if (!$this->backer_users) return null;
+        $result = [];
+        $this->backer_users->take(-3)->each(function ($backer) use (&$result) {
+            array_push($result, $backer->user->avatar);
+        });
+        return $result;
     }
 
     public function getTotalBackerAttribute()
