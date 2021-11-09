@@ -210,10 +210,10 @@ class CampaignController extends Controller
             ->limit(5)
             ->get();
         $latest = Campaign::filter()->latest('created_at')->limit(5)->get();
-        $populer = Campaign::filter()
-            ->leftJoin('backer_users', 'campaigns.id', 'backer_users.campaign_id')
-            ->selectRaw('COUNT(backer_users.id) as backer_count, campaigns.*')
-            ->groupBy('campaigns.id')
+        $popular = Campaign::filter()
+            ->join('backer_users', 'campaigns.id', 'backer_users.campaign_id')
+            ->select('campaigns.*', 'backer_users.campaign_id', DB::raw('count(backer_users.campaign_id) as backer_count'))
+            ->groupBy('backer_users.campaign_id')
             ->orderBy('backer_count', 'DESC')
             ->limit(5)
             ->get();
@@ -221,7 +221,7 @@ class CampaignController extends Controller
         $data = [];
         $data['data']['trending'] = $trending;
         $data['data']['will_end'] = $will_end;
-        $data['data']['popular'] = $populer;
+        $data['data']['popular'] = $popular;
         $data['data']['latest'] = $latest;
         $data['message'] = 'success';
 
