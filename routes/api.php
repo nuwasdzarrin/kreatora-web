@@ -40,3 +40,7 @@ Route::apiResource('backer_users', 'Api\BackerUserController', [ 'as' => 'api' ]
 Route::get('payment/virtual_accounts', 'Api\Payment\XenditController@virtual_accounts')->name('payment.virtual_accounts');
 Route::post('payment/virtual_accounts', 'Api\Payment\XenditController@create_virtual_accounts')->name('payment.create_virtual_accounts');
 Route::post('payment/callback_virtual_accounts', 'Api\Payment\XenditController@callback_virtual_accounts')->name('payment.callback_virtual_accounts');
+Route::get('shipping/province', 'Api\ShippingController@province')->name('api.shipping.province');
+Route::get('shipping/city', 'Api\ShippingController@city')->name('api.shipping.city');
+Route::get('shipping/subdistrict', 'Api\ShippingController@subdistrict')->name('api.shipping.subdistrict');
+Route::get('shipping/cost', 'Api\ShippingController@cost')->name('api.shipping.cost');

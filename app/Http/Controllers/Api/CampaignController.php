@@ -7,6 +7,7 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Resources\Json\Resource;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
@@ -193,7 +194,15 @@ class CampaignController extends Controller
 
     public function home()
     {
-        Carbon::now();
+        $trending = Campaign::filter()
+            ->join('backer_users', 'campaigns.id', 'backer_users.campaign_id')
+            ->select('campaigns.*', 'backer_users.campaign_id', DB::raw('count(backer_users.campaign_id) as backer_count'))
+//            filter backer_users by 7 day after campaign created  not working
+//            ->whereRaw("`backer_users_created_at` <= DATE_ADD(`campaigns.created_at`, INTERVAL 7 DAY)")
+            ->groupBy('backer_users.campaign_id')
+            ->orderBy('backer_count', 'DESC')
+            ->limit(5)
+            ->get();
         $will_end = Campaign::filter()
             ->whereNotNull('end')
             ->whereBetween('end', [Carbon::now(), Carbon::now()->addYears(2)])
@@ -201,11 +210,18 @@ class CampaignController extends Controller
             ->limit(5)
             ->get();
         $latest = Campaign::filter()->latest('created_at')->limit(5)->get();
+        $populer = Campaign::filter()
+            ->leftJoin('backer_users', 'campaigns.id', 'backer_users.campaign_id')
+            ->selectRaw('COUNT(backer_users.id) as backer_count, campaigns.*')
+            ->groupBy('campaigns.id')
+            ->orderBy('backer_count', 'DESC')
+            ->limit(5)
+            ->get();
 
         $data = [];
-        $data['data']['trending'] = [];
+        $data['data']['trending'] = $trending;
         $data['data']['will_end'] = $will_end;
-        $data['data']['popular'] = [];
+        $data['data']['popular'] = $populer;
         $data['data']['latest'] = $latest;
         $data['message'] = 'success';
 

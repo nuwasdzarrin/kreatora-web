@@ -52,7 +52,7 @@ class CampaignCategoryController extends Controller
     {
         $campaign_categories = CampaignCategory::filter()
             ->paginate()->appends(request()->query());
-        $this->authorize('index', 'App\CampaignCategory');
+//        $this->authorize('index', 'App\CampaignCategory');
 
         return Resource::collection($campaign_categories);
     }
