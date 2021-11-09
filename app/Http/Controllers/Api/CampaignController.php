@@ -199,7 +199,10 @@ class CampaignController extends Controller
             ->select('campaigns.*', 'backer_users.campaign_id', DB::raw('count(backer_users.campaign_id) as backer_count'))
 //            filter backer_users by 7 day after campaign created  not working
 //            ->whereRaw("`backer_users_created_at` <= DATE_ADD(`campaigns.created_at`, INTERVAL 7 DAY)")
-            ->groupBy('backer_users.campaign_id')
+            ->groupBy('campaigns.id','campaigns.user_id','campaigns.campaign_category_id','campaigns.title',
+                'campaigns.short_desc','campaigns.long_desc','campaigns.risk','campaigns.goal','campaigns.start',
+                'campaigns.end','campaigns.status','campaigns.images','campaigns.created_at','campaigns.updated_at',
+                'campaigns.deleted_at','backer_users.campaign_id')
             ->orderBy('backer_count', 'DESC')
             ->limit(5)
             ->get();
@@ -213,7 +216,10 @@ class CampaignController extends Controller
         $popular = Campaign::filter()
             ->join('backer_users', 'campaigns.id', 'backer_users.campaign_id')
             ->select('campaigns.*', 'backer_users.campaign_id', DB::raw('count(backer_users.campaign_id) as backer_count'))
-            ->groupBy('backer_users.campaign_id')
+            ->groupBy('campaigns.id','campaigns.user_id','campaigns.campaign_category_id','campaigns.title',
+                'campaigns.short_desc','campaigns.long_desc','campaigns.risk','campaigns.goal','campaigns.start',
+                'campaigns.end','campaigns.status','campaigns.images','campaigns.created_at','campaigns.updated_at',
+                'campaigns.deleted_at','backer_users.campaign_id')
             ->orderBy('backer_count', 'DESC')
             ->limit(5)
             ->get();
