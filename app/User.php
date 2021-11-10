@@ -58,6 +58,16 @@ class User extends \TCG\Voyager\Models\User
         return $this->hasMany(BackerUser::class);
     }
 
+    public function wallet()
+    {
+        return $this->hasOne(Wallet::class);
+    }
+
+    public function wallet_histories()
+    {
+        return $this->hasMany(WalletHistory::class);
+    }
+
     public function getRoleNameAttribute()
     {
         return $this->role ? $this->role->display_name : null;

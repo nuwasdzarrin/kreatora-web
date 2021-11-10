@@ -14,9 +14,6 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:api')->get('/profile', function (Request $request) {
-    return $request->user();
-});
 Route::post('login', 'Api\AuthController@login')->name('api.login');
 Route::post('register', 'Api\AuthController@register')->name('api.register');
 Route::post('register_creator', 'Api\AuthController@register_creator')->name('api.register_creator');
@@ -25,6 +22,7 @@ Route::post('email_verification', 'Api\AuthController@email_verification')->name
 Route::post('forget_password', 'Api\AuthController@forget_password')->name('api.forget_password');
 Route::post('change_password', 'Api\AuthController@change_password')->name('api.change_password');
 Route::get('logout', 'Api\AuthController@logout')->name('api.logout');
+Route::get('profile', 'Api\AuthController@profile')->name('api.profile');
 Route::apiResource('users', 'Api\UserController', [ 'as' => 'api' ]);
 Route::apiResource('campaign_categories', 'Api\CampaignCategoryController', [ 'as' => 'api' ]);
 Route::get('campaigns/home', 'Api\CampaignController@home')->name('campaigns.home');
@@ -44,3 +42,6 @@ Route::get('shipping/province', 'Api\ShippingController@province')->name('api.sh
 Route::get('shipping/city', 'Api\ShippingController@city')->name('api.shipping.city');
 Route::get('shipping/subdistrict', 'Api\ShippingController@subdistrict')->name('api.shipping.subdistrict');
 Route::get('shipping/cost', 'Api\ShippingController@cost')->name('api.shipping.cost');
+Route::get('wallets/me', 'Api\WalletController@me')->name('api.wallets.me');
+Route::apiResource('wallets', 'Api\WalletController', [ 'as' => 'api' ]);
+Route::apiResource('wallet_histories', 'Api\WalletHistoryController', [ 'as' => 'api' ]);

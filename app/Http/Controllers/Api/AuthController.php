@@ -4,12 +4,15 @@ namespace App\Http\Controllers\Api;
 
 use App\Mail\EmailCodeVerification;
 use App\User;
+use App\Wallet;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
+use Symfony\Component\HttpKernel\Exception\HttpException;
 use TCG\Voyager\Models\Role;
 
 /**
@@ -26,7 +29,7 @@ class AuthController extends Controller
     */
     public function __construct()
     {
-        $this->middleware('auth:api')->only(['register_creator','change_password','logout']);
+        $this->middleware('auth:api')->only(['register_creator','change_password','logout','profile']);
         $this->code = 200;
         $this->message = 'Success';
     }
@@ -89,14 +92,26 @@ class AuthController extends Controller
         $code = rand(100000,999999);
         Mail::to($request->email)->send(new EmailCodeVerification($code));
 
-        $user = new User();
-        $user->name = $request->name;
-        $user->email = $request->email;
-        $user->password = bcrypt($request->password);
-        $user->remember_token = $code;
-        $user->save();
+        try {
+            DB::beginTransaction();
 
-        $this->message = "Sukses mendaftar akun, silahkan cek email untuk verifikasi";
+            $user = new User();
+            $user->name = $request->name;
+            $user->email = $request->email;
+            $user->password = bcrypt($request->password);
+            $user->remember_token = $code;
+            $user->save();
+
+            $wallet = new Wallet();
+            $wallet->user_id = $user->id;
+            $wallet->save();
+
+            $this->message = "Sukses mendaftar akun, silahkan cek email untuk verifikasi";
+            DB::commit();
+        } catch (\Exception $exception) {
+            DB::rollBack();
+            throw new HttpException(500, $exception->getMessage(), $exception);
+        }
 
         return response()->json([
             'data' => $user,
@@ -282,5 +297,11 @@ class AuthController extends Controller
             'data' => [],
             'message' => 'Logout successfully'
         ], $this->code);
+    }
+
+    public function profile()
+    {
+        $user =User::query()->with(['wallet'])->findOrFail(Auth::user()->id);
+        return response()->json($user, $this->code);
     }
 }
