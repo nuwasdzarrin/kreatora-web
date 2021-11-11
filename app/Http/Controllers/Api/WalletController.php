@@ -147,7 +147,8 @@ class WalletController extends Controller
 
     public function me()
     {
-        $wallet = Wallet::query()->where('user_id',Auth::user()->id)->first();
-        return new Resource($wallet);
+        $auth = Auth::user();
+        $wallet = Wallet::query()->where('user_id',$auth->id)->first();
+        return response()->json($wallet);
     }
 }
