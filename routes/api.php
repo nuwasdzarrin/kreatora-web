@@ -33,6 +33,8 @@ Route::apiResource('faqs', 'Api\FaqController', [ 'as' => 'api' ]);
 Route::apiResource('rewards', 'Api\RewardController', [ 'as' => 'api' ]);
 Route::apiResource('updates', 'Api\UpdateController', [ 'as' => 'api' ]);
 Route::apiResource('campaign_comments', 'Api\CampaignCommentController', [ 'as' => 'api' ]);
+
+Route::post('support', 'Api\BackerUserController@support')->name('create.support');
 Route::apiResource('backer_users', 'Api\BackerUserController', [ 'as' => 'api' ]);
 
 Route::get('payment/virtual_accounts', 'Api\Payment\XenditController@virtual_accounts')->name('payment.virtual_accounts');
