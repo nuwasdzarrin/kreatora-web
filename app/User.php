@@ -17,7 +17,7 @@ class User extends \TCG\Voyager\Models\User
     use Filterable, HasExtendedAttributes, ResolveRouteBindingWithFilter, SetterGetterExtendedAttribute;
 
     /** @var string Filter Class */
-    protected $filters = 'App\Filters\CategoryFilter';
+    protected $filters = 'App\Filters\UserFilter';
 
     /**
      * The attributes that are mass assignable.
@@ -51,6 +51,11 @@ class User extends \TCG\Voyager\Models\User
     public function campaigns()
     {
         return $this->hasMany(Campaign::class);
+    }
+
+    public function campaign_comments()
+    {
+        return $this->hasMany(CampaignComment::class);
     }
 
     public function backer_users()

@@ -43,8 +43,27 @@ class CampaignComment extends Model
 
     protected $guarded = [];
 
+    protected $hidden = ['user'];
+
+    protected $appends = ['user_avatar', 'user_name'];
+
     public function childs()
     {
         return $this->hasMany(CampaignComment::class, 'parent_id');
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    public function getUserAvatarAttribute()
+    {
+        return $this->user ? $this->user->avatar : '';
+    }
+
+    public function getUserNameAttribute()
+    {
+        return $this->user ? $this->user->name : '';
     }
 }

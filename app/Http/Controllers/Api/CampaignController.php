@@ -7,6 +7,7 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Resources\Json\Resource;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
@@ -231,6 +232,13 @@ class CampaignController extends Controller
         $data['data']['latest'] = $latest;
         $data['message'] = 'success';
 
+        return response()->json($data, 200);
+    }
+
+    public function me()
+    {
+        $user = \auth()->user();
+        $data = Campaign::query()->where('user_id', $user->id)->orderByDesc('id')->paginate(15);
         return response()->json($data, 200);
     }
 }

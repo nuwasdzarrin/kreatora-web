@@ -26,6 +26,7 @@ Route::get('profile', 'Api\AuthController@profile')->name('api.profile');
 Route::apiResource('users', 'Api\UserController', [ 'as' => 'api' ]);
 Route::apiResource('campaign_categories', 'Api\CampaignCategoryController', [ 'as' => 'api' ]);
 Route::get('campaigns/home', 'Api\CampaignController@home')->name('campaigns.home');
+Route::get('campaigns/me', 'Api\CampaignController@me')->name('campaigns.me');
 Route::apiResource('campaigns', 'Api\CampaignController', [ 'as' => 'api' ]);
 Route::post('faqs/ask', 'Api\FaqController@ask')->name('faqs.ask');
 Route::put('faqs/answer/{id}', 'Api\FaqController@answer')->name('faqs.answer');
@@ -34,7 +35,8 @@ Route::apiResource('rewards', 'Api\RewardController', [ 'as' => 'api' ]);
 Route::apiResource('updates', 'Api\UpdateController', [ 'as' => 'api' ]);
 Route::apiResource('campaign_comments', 'Api\CampaignCommentController', [ 'as' => 'api' ]);
 
-Route::post('support', 'Api\BackerUserController@support')->name('create.support');
+Route::post('support', 'Api\BackerUserController@support')->name('support.create');
+Route::get('backer/me', 'Api\BackerUserController@me')->name('backer.me');
 Route::apiResource('backer_users', 'Api\BackerUserController', [ 'as' => 'api' ]);
 
 Route::get('payment/virtual_accounts', 'Api\Payment\XenditController@virtual_accounts')->name('payment.virtual_accounts');

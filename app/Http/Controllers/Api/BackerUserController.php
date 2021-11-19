@@ -3,8 +3,10 @@
 namespace App\Http\Controllers\Api;
 
 use App\BackerUser;
+use App\Campaign;
 use App\Payment;
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Resources\Json\Resource;
@@ -217,5 +219,13 @@ class BackerUserController extends Controller
             'data' => $va
         ])->setStatusCode(200);
 
+    }
+
+    public function me()
+    {
+        $data = Campaign::query()->whereHas('backer_users', function (Builder $query){
+            return $query->where('user_id', auth()->user()->id);
+        })->orderByDesc('id')->paginate(15);
+        return response()->json($data);
     }
 }
