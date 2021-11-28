@@ -85,6 +85,29 @@ class XenditController extends Controller
             $payment->status = 'PAID';
             $payment->save();
 
+            $external_id = $request->external_id;
+            $external_id = explode('-xen-', $external_id);
+            $external_id = $external_id[1];
+            $backer_user = BackerUser::query()->with('user')->find($external_id);
+            $user = $backer_user->user;
+            $recipients = [$user->fcm_token];
+            $title ='Hai Kak '. $user->name;
+            $body='Pembayaranmu sejumlah Rp '.number_format($request->amount).' via virtual account bank '
+                .$request->bank_code.' telah berhasil dilakukan';
+
+            if ($user->fcm_token)
+                fcm()->to($recipients)
+                    ->timeToLive(0)
+                    ->priority('high')
+                    ->data([
+                        'title' => $title,
+                        'body' => $body,
+                    ])
+                    ->notification([
+                        'title' => $title,
+                        'body' => $body,
+                    ])->send();
+
             return response()->json([
                 'message' => 'callback success'
             ], 200);
@@ -110,7 +133,7 @@ class XenditController extends Controller
             'checkout_method' => 'ONE_TIME_PAYMENT',
             'channel_code' => $request->channel_code,
             'channel_properties' => [
-                'success_redirect_url' => URL::to('/api/payment/callback_e_wallet'),
+//                'success_redirect_url' => URL::to('/api/payment/callback_e_wallet'),
             ],
             'metadata' => [
                 'branch_code' => 'tree_branch'
