@@ -11,6 +11,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Resources\Json\Resource;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Str;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Xendit\VirtualAccounts;
@@ -170,7 +171,8 @@ class BackerUserController extends Controller
             'reward_id' => 'exists:rewards,id|nullable',
             'amount' => 'required|numeric',
             'tip' => 'numeric|nullable',
-            'bank_code' => 'required|string'
+            'bank_code' => 'required|string',
+            'type' => 'required|in:virtual_account,e_wallet,dompet_kreasi'
         ]);
 
         try {
@@ -182,31 +184,63 @@ class BackerUserController extends Controller
             if ($request->tip) $backer_user->tip = $request->tip;
             $backer_user->save();
 
-            $total = $request->amount + $request->tip;
+            $total = (int)$request->amount + (int)$request->tip;
             Xendit::setApiKey($this->api_key);
-            $params = [
-                "external_id" => uniqid().'va'.$backer_user->id,
-                "bank_code" => $request->bank_code,
-                "name" => auth()->user()->name,
-                "expected_amount" => $total,
-                "expiration_date" => Carbon::now()->addDays(1)->toISOString(),
-                "is_closed" => true,
-                "is_single_use" => true
-            ];
-            $va = VirtualAccounts::create($params);
+            $res = [];
+            if ($request->type == 'virtual_account') {
+                $params = [
+                    "external_id" => uniqid().'-xen-'.$backer_user->id,
+                    "bank_code" => $request->bank_code,
+                    "name" => auth()->user()->name,
+                    "expected_amount" => $total,
+                    "expiration_date" => Carbon::now()->addDays(1)->toISOString(),
+                    "is_closed" => true,
+                    "is_single_use" => true
+                ];
+                $res = VirtualAccounts::create($params);
+            } elseif ($request->type == 'e_wallet') {
+                $params = [
+                    'reference_id' => uniqid().'-xen-'.$backer_user->id,
+                    'currency' => 'IDR',
+                    'amount' => (int)$total,
+                    'checkout_method' => 'ONE_TIME_PAYMENT',
+                    'channel_code' => $request->bank_code,
+                    'channel_properties' => [
+                        'success_redirect_url' => URL::to('/api/payment/callback_e_wallet'),
+                    ],
+                    'metadata' => [
+                        'branch_code' => 'tree_branch'
+                    ]
+                ];
+                $res = \Xendit\EWallets::createEWalletCharge($params);
+            } elseif ($request->type == 'dompet_kreasi') {
+//
+            }
 
-            $payment = new Payment;
-            $payment->backer_user_id = $backer_user->id;
-            $payment->owner_id = $va['owner_id'];
-            $payment->external_id = $va['external_id'];
-            $payment->name = $va['name'];
-            $payment->account_number = $va['account_number'];
-            $payment->bank_code = $va['bank_code'];
-            $payment->amount = $va['expected_amount'];
-            $payment->expiration_date = Carbon::parse($va['expiration_date'])->format('Y-m-d H:i:s');
-            $payment->channel = "virtual_account";
-            $payment->status = $va['status'];
-            $payment->save();
+            if ($request->type == 'virtual_account') {
+                $payment = new Payment;
+                $payment->backer_user_id = $backer_user->id;
+                $payment->owner_id = $res['owner_id'];
+                $payment->external_id = $res['external_id'];
+                $payment->name = $res['name'];
+                $payment->account_number = $res['account_number'];
+                $payment->bank_code = $res['bank_code'];
+                $payment->amount = $res['expected_amount'];
+                $payment->expiration_date = Carbon::parse($res['expiration_date'])->format('Y-m-d H:i:s');
+                $payment->channel = $request->type;
+                $payment->status = $res['status'];
+                $payment->save();
+            } elseif ($request->type == 'e_wallet') {
+                $payment = new Payment;
+                $payment->backer_user_id = $backer_user->id;
+                $payment->external_id = $res['reference_id'];
+                $payment->bank_code = $res['channel_code'];
+                $payment->amount = $res['charge_amount'];
+                $payment->channel = $request->type;
+                $payment->status = $res['status'];
+                $payment->save();
+            }
+
 
             DB::commit();
         } catch (\Exception $exception) {
@@ -214,9 +248,9 @@ class BackerUserController extends Controller
             throw new HttpException(500, $exception->getMessage(), $exception);
         }
 
-        $va['backer_user_id'] = $backer_user->id;
+        $res['backer_user_id'] = $backer_user->id;
         return response()->json([
-            'data' => $va
+            'data' => $res
         ])->setStatusCode(200);
 
     }

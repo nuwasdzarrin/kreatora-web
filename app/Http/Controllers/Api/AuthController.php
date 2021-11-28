@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
 use Symfony\Component\HttpKernel\Exception\HttpException;
@@ -29,7 +30,7 @@ class AuthController extends Controller
     */
     public function __construct()
     {
-        $this->middleware('auth:api')->only(['register_creator','change_password','logout','profile']);
+        $this->middleware('auth:api')->only(['refresh_fcm_token','register_creator','change_password','logout','profile']);
         $this->code = 200;
         $this->message = 'Success';
     }
@@ -39,6 +40,7 @@ class AuthController extends Controller
         $validator = Validator::make($request->all(), [
             'email' => 'required|email',
             'password' => 'required|string',
+            'fcm_token' => 'string|nullable',
         ]);
         if ($validator->fails()) {
             return response()->json([
@@ -48,10 +50,13 @@ class AuthController extends Controller
         }
 
         if(Auth::attempt(['email' => $request->email,'password' => $request->password])) {
-            $user = Auth::user();
-            if($user->email_verified_at){
+            $auth = Auth::user();
+            if($auth->email_verified_at){
+                $data['token'] = $auth->createToken('nApp')->accessToken;
+                $user = User::query()->find($auth->id);
+                $user->fcm_token = $request->fcm_token;
+                $user->save();
                 $data['data'] = $user;
-                $data['token'] = $user->createToken('nApp')->accessToken;
                 $data['message'] = 'login successfully';
                 $this->code = 200;
             } else {
@@ -67,6 +72,27 @@ class AuthController extends Controller
                 'message' => 'wrong email or password'
             ], 401);
         }
+    }
+
+    public function refresh_fcm_token(Request $request) {
+        $validator = Validator::make($request->all(), [
+            'fcm_token' => 'string|nullable',
+        ]);
+        if ($validator->fails()) {
+            return response()->json([
+                'data' => [],
+                'message' => $validator->errors()
+            ], 401);
+        }
+
+        $auth = \auth()->user();
+        $user = User::query()->find($auth->id);
+        $user->fcm_token = $request->fcm_token;
+        $user->save();
+        return response()->json([
+            'data' => $user,
+            'message' => 'fcm token has been updated'
+        ], 200);
     }
 
     public function register(Request $request)
@@ -128,7 +154,7 @@ class AuthController extends Controller
             'longitude' => 'string|max:255|nullable',
             'gender' => 'in:male,female,prefer_not_to_tell|nullable',
             'bank_account' => 'required|string|max:255',
-            'ktp' => 'required|mimes:jpg,jpeg,png|max:2048',
+            'ktp' => 'required|string',
         ]);
         if ($validator->fails()) {
             return response()->json([
@@ -137,11 +163,19 @@ class AuthController extends Controller
             ], 401);
         }
         $auth = auth()->user();
-        $ktp = null;
-        if ($request->hasFile('ktp')) {
-            $ktp = $request
-                ->file('ktp')
-                ->storeAs('users', 'ktp_'.$auth->name.'_'.rand(100000,999999).'.'.$request->ktp->getClientOriginalExtension(), 'public');
+        if ($request->ktp) {
+            $baseString = explode(';base64,', $request->ktp);
+            $image = base64_decode($baseString[1]);
+            $image = imagecreatefromstring($image);
+            $ext = explode('/', $baseString[0]);
+            $ext = $ext[1];
+            $imgName = 'ktp_'.$auth->name.'_'.rand(100000,999999).'.'.$ext;
+            if($ext=='png'){
+                imagepng($image,storage_path('app/public/users/ktp/').$imgName,8);
+            } else {
+                imagejpeg($image,storage_path('app/public/users/ktp/').$imgName,20);
+            }
+            $request->ktp = 'users/ktp/'.$imgName;
         }
         $role = Role::query()->where('name', 'creator')->first();
 
@@ -153,7 +187,7 @@ class AuthController extends Controller
         $user->longitude = $request->longitude;
         $user->gender = $request->gender;
         $user->bank_account = $request->bank_account;
-        $user->ktp = $ktp;
+        $user->ktp = $request->ktp;
         $user->save();
 
         $this->message = "Selamat akun anda telah manjadi kreator";

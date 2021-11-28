@@ -95,7 +95,7 @@ class CampaignController extends Controller
         if ($request->has('images')) {
             foreach ($request->images as $image) {
                 $validator = Validator::make(['image' => $image], [
-                    'image' => 'required|mimes:jpg,jpeg,png|max:2048',
+                    'image' => 'required|string',
                 ]);
                 if ($validator->fails()) {
                     return response()->json([
@@ -119,9 +119,21 @@ class CampaignController extends Controller
                 if ($key == 'images') {
                     $images = [];
                     foreach ($request->{$key} as $k => $file) {
-                        $image = Storage::disk('public')->put('campaigns', $file);
-                        if ($image)
-                            array_push($images, $image);
+                        $baseString = explode(';base64,', $file);
+                        $image = base64_decode($baseString[1]);
+                        $image = imagecreatefromstring($image);
+
+                        $ext = explode('/', $baseString[0]);
+                        $ext = $ext[1];
+                        $imgName = strtok($request->title," ").'_'.rand(100000,999999).'.'.$ext;
+                        if($ext=='png'){
+                            imagepng($image,storage_path('app/public/campaigns/').$imgName,8);
+                        } else {
+                            imagejpeg($image,storage_path('app/public/campaigns/').$imgName,20);
+                        }
+                        $image_name = 'campaigns/'.$imgName;
+                        if ($image_name)
+                            array_push($images, $image_name);
                     }
                     $campaign->{$key} = $images;
                 } else {

@@ -2,11 +2,12 @@
 
 namespace App\Http\Controllers\Api\Payment;
 
+use App\BackerUser;
 use App\Payment;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\URL;
 use Xendit\VirtualAccounts;
 use Xendit\Xendit;
 
@@ -25,7 +26,7 @@ class XenditController extends Controller
     {
         $this->api_key = config('payment.xendit.api_key');
         $this->xenditXCallbackToken = config('payment.xendit.callback_token');
-        $this->middleware('auth:api')->except(['callback_virtual_accounts']);
+        $this->middleware('auth:api')->except(['callback_virtual_accounts', 'callback_e_wallet']);
     }
 
     public function virtual_accounts()
@@ -46,7 +47,7 @@ class XenditController extends Controller
         ]);
         Xendit::setApiKey($this->api_key);
         $params = [
-            "external_id" => uniqid().'va'.$request->backer_user_id,
+            "external_id" => uniqid().'-xen-'.$request->backer_user_id,
             "bank_code" => $request->bank_code,
             "name" => auth()->user()->name,
             "expected_amount" => $request->price,
@@ -87,10 +88,83 @@ class XenditController extends Controller
             return response()->json([
                 'message' => 'callback success'
             ], 200);
+        } else {
+            return response()->json([
+                'message' => 'wrong callback token'
+            ], 401);
         }
+    }
 
+    public function e_wallet(Request $request)
+    {
+        $request->validate([
+            'backer_user_id' => 'required|exists:backer_users,id',
+            'channel_code' => 'required|string',
+            'price' => 'required|numeric'
+        ]);
+        Xendit::setApiKey($this->api_key);
+        $params = [
+            'reference_id' => uniqid().'-xen-'.$request->backer_user_id,
+            'currency' => 'IDR',
+            'amount' => (int)($request->price),
+            'checkout_method' => 'ONE_TIME_PAYMENT',
+            'channel_code' => $request->channel_code,
+            'channel_properties' => [
+                'success_redirect_url' => URL::to('/api/payment/callback_e_wallet'),
+            ],
+            'metadata' => [
+                'branch_code' => 'tree_branch'
+            ]
+        ];
+
+        $createEWalletCharge = \Xendit\EWallets::createEWalletCharge($params);
         return response()->json([
-            'message' => 'wrong callback token'
-        ], 401);
+            'data' => $createEWalletCharge
+        ])->setStatusCode(200);
+    }
+
+    public function callback_e_wallet(Request $request)
+    {
+        $headers = getallheaders();
+        $xIncomingCallbackTokenHeader = $headers['x-callback-token'] ?? "";
+        if($xIncomingCallbackTokenHeader === $this->xenditXCallbackToken){
+            if ((!$request->channel_code) || (!$request->reference_id))
+                return response()->json([
+                    'message' => 'body error'
+                ])->setStatusCode(401);
+
+            $channel_code = $request->channel_code;
+            $channel = explode("ID_", $channel_code);
+            $channel = $channel[1];
+            $reference_id = $request->reference_id;
+            $reference_id = explode('-xen-', $reference_id);
+            $reference_id = $reference_id[1];
+            $backer_user = BackerUser::query()->with('user')->find($reference_id);
+            $user = $backer_user->user;
+            $recipients = [$user->fcm_token];
+            $title ='Hai Kak '. $user->name;
+            $body='Pembayaranmu sejumlah Rp '.number_format($request->charge_amount).' via '.$channel.' telah berhasil dilakukan';
+
+            if ($user->fcm_token)
+                fcm()->to($recipients)
+                    ->timeToLive(0)
+                    ->priority('high')
+                    ->data([
+                        'title' => $title,
+                        'body' => $body,
+                    ])
+                    ->notification([
+                        'title' => $title,
+                        'body' => $body,
+                    ])->send();
+
+            return response()->json([
+                'data' => $request
+            ])->setStatusCode(200);
+        } else {
+            return response()->json([
+                'message' => 'wrong callback token'
+            ], 401);
+        }
     }
 }

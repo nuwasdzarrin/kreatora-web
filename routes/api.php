@@ -21,6 +21,7 @@ Route::post('email_code', 'Api\AuthController@email_code')->name('api.email_code
 Route::post('email_verification', 'Api\AuthController@email_verification')->name('api.email_verification');
 Route::post('forget_password', 'Api\AuthController@forget_password')->name('api.forget_password');
 Route::post('change_password', 'Api\AuthController@change_password')->name('api.change_password');
+Route::post('refresh_fcm_token', 'Api\AuthController@refresh_fcm_token')->name('api.refresh_fcm_token');
 Route::get('logout', 'Api\AuthController@logout')->name('api.logout');
 Route::get('profile', 'Api\AuthController@profile')->name('api.profile');
 Route::apiResource('users', 'Api\UserController', [ 'as' => 'api' ]);
@@ -42,6 +43,8 @@ Route::apiResource('backer_users', 'Api\BackerUserController', [ 'as' => 'api' ]
 Route::get('payment/virtual_accounts', 'Api\Payment\XenditController@virtual_accounts')->name('payment.virtual_accounts');
 Route::post('payment/virtual_accounts', 'Api\Payment\XenditController@create_virtual_accounts')->name('payment.create_virtual_accounts');
 Route::post('payment/callback_virtual_accounts', 'Api\Payment\XenditController@callback_virtual_accounts')->name('payment.callback_virtual_accounts');
+Route::post('payment/e_wallet', 'Api\Payment\XenditController@e_wallet')->name('payment.e_wallet');
+Route::post('payment/callback_e_wallet', 'Api\Payment\XenditController@callback_e_wallet')->name('payment.callback_e_wallet');
 Route::get('shipping/province', 'Api\ShippingController@province')->name('api.shipping.province');
 Route::get('shipping/city', 'Api\ShippingController@city')->name('api.shipping.city');
 Route::get('shipping/subdistrict', 'Api\ShippingController@subdistrict')->name('api.shipping.subdistrict');

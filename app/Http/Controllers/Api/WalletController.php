@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Resources\Json\Resource;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Str;
 
 /**
  * WalletController
@@ -24,10 +25,10 @@ class WalletController extends Controller
     {
         return [
             'store' => [
-                'name' => 'required|string|max:255',
+                'user_id' => 'numeric|nullable',
             ],
             'update' => [
-                'name' => 'string|max:255',
+                'user_id' => 'numeric|nullable',
             ]
         ];
     }
@@ -69,9 +70,15 @@ class WalletController extends Controller
         $this->authorize('create', 'App\Wallet');
         $request->validate(self::rules($request)['store']);
 
+        $user = \auth()->user();
+        $check = Wallet::query()->where('user_id', $user->id)->first();
+        if ($check) return response()->json(['message'=>'your wallet is available'], 401);
         $wallet = new Wallet;
+        if (!$request->user_id) {
+            $wallet->user_id = $user->id;
+        }
         foreach (self::rules($request)['store'] as $key => $value) {
-            if (str_contains($value, [ 'file', 'image', 'mimetypes', 'mimes' ])) {
+            if (Str::contains($value, [ 'file', 'image', 'mimetypes', 'mimes' ])) {
                 if ($request->hasFile($key)) {
                     $wallet->{$key} = $request->file($key)->store('wallets');
                 } elseif ($request->exists($key)) {
@@ -114,7 +121,7 @@ class WalletController extends Controller
         $request->validate(self::rules($request, $wallet)['update']);
 
         foreach (self::rules($request, $wallet)['update'] as $key => $value) {
-            if (str_contains($value, [ 'file', 'image', 'mimetypes', 'mimes' ])) {
+            if (Str::contains($value, [ 'file', 'image', 'mimetypes', 'mimes' ])) {
                 if ($request->hasFile($key)) {
                     $wallet->{$key} = $request->file($key)->store('wallets');
                 } elseif ($request->exists($key)) {
