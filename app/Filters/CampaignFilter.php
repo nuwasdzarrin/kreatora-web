@@ -18,7 +18,7 @@ class CampaignFilter extends BaseFilter
     protected $searchables = [
         'id',
         'campaign_category_id',
-        'name'
+        'title'
     ];
 
     /**
