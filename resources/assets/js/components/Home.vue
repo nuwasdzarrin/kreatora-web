@@ -1,13 +1,10 @@
 <template>
-	<div class="wrapper">
-		<navbar></navbar>
-		<sidebar></sidebar>
+	<div class="wrapper-mobile">
+		<TopNavbar></TopNavbar>
 
-		<!-- Content Wrapper. Contains page content -->
-		<div class="content-wrapper">
-			<router-view></router-view>
-		</div>
-		<!-- /.content-wrapper -->
+    <div class="container">
+      <router-view></router-view>
+    </div>
 
 		<!-- Control Sidebar -->
 		<aside class="control-sidebar control-sidebar-dark">
@@ -48,3 +45,10 @@ export default {
 	}
 }
 </script>
+<style>
+.wrapper-mobile {
+  max-width: 480px;
+  background-color: #ECF1F4;
+  margin: 0 auto;
+}
+</style>

@@ -36,6 +36,7 @@ import Store from '../store';
 import Finance from '../pages/Finance';
 import FinanceCreate from '../pages/finances/Create';
 import FinanceEdit from '../pages/finances/Edit';
+import HomePage from "../pages/HomePage";
 
 let routes = [
     {
@@ -45,16 +46,10 @@ let routes = [
         children: [
             {
                 path: '/',
-                component: Dashboard,
-                name: 'dashboard',
+                component: HomePage,
+                name: 'HomePage',
                 meta: {requiresAuth: true},
             },
-            // {
-            //   path: 'items',
-            //   component: Item,
-            //   name: 'item',
-            //   meta: { requiresAuth: true} ,
-            // },
             {
                 path: 'items/create',
                 component: ItemCreate,

@@ -55,24 +55,17 @@ const index = new Vuex.Store({
         },
     },
     actions: {
-        login({ commit }, creds) {
+        login({ commit }, payload) {
             commit(LOGIN);
             return new Promise(resolve => {
                 Api.auth.login({
-                    email: creds.email,
-                    password: creds.password
+                    email: payload.email,
+                    password: payload.password
                 }).then(function (response) {
-                    // localStorage.setItem("token", response.data.data.token);
-                    // localStorage.setItem("myProfile", JSON.stringify(response.data.data.profile));
-                    Cookie.set('token', response.data.data.token, { expires: '6h' });
-                    Cookie.set('myProfile', JSON.stringify(response.data.data.profile), { expires: '6h' });
-                    if(response.data.data.profile.companies.length) {
-                        Cookie.set('companySelected', JSON.stringify(response.data.data.profile.companies[0]), { expires: '6h' });
-                        // localStorage.setItem("companySelected", JSON.stringify(response.data.data.profile.companies[0]));
-                    }
-                    const decoded = jwt_decode(response.data.data.token);
-                    commit(LOGIN_SUCCESS,decoded);
-                    resolve();
+                    Cookie.set('token', response.data.token, { expires: '6h' });
+                    Cookie.set('user', JSON.stringify(response.data.data), { expires: '6h' });
+                    commit(LOGIN_SUCCESS,response.data.data);
+                    resolve(response.data.data);
                 }).catch(function (error) {
                     var errorMsg = "";
                     if(error.response.status == 401){
@@ -80,6 +73,7 @@ const index = new Vuex.Store({
                     }else{
                         errorMsg = "Terjadi Kesalahan pada server.";
                     }
+                    console.log(errorMsg)
                     commit(LOGIN_FAILED,errorMsg);
                     resolve();
                 });
@@ -138,6 +132,9 @@ const index = new Vuex.Store({
         },
         getNotifications(state){
             return state.notifications;
+        },
+        authUser(state){
+            return state.user
         }
     }
 });

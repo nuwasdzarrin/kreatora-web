@@ -33,10 +33,10 @@ Vue.component('my-date-picker', require('./components/MyDatePicker'));
 Vue.component('my-company-select', require('./components/MyCompanySelect'));
 
 Vue.component('home', require('./components/Home.vue'));
-Vue.component('navbar', require('./components/Navbar.vue'));
+Vue.component('TopNavbar', require('./components/navbars/TopNavbar.vue'));
+Vue.component('BottomNavbar', require('./components/navbars/BottomNavbar.vue'));
 Vue.component('layout', require('./components/Layout.vue'));
 Vue.component('login', require('./components/Login.vue'));
-Vue.component('sidebar', require('./components/Sidebar.vue'));
 Vue.component('notification-list', require('./components/NotificationList.vue'));
 Vue.component('notification', require('./components/Notification.vue'));
 Vue.component('pagination', require('./components/Pagination.vue'));

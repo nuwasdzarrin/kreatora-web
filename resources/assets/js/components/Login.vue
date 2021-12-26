@@ -1,57 +1,37 @@
 <template>
-  <div class="sign-in-body" >
-    <div class="text-center" style="margin:auto">
-        <div class="card mt-4" style="width: 350px">
-            <div class="card-body">
-                <form v-if="isLogin" class="form-signin" @submit.prevent="login()" >
-                    <h1 class="h3 mb-3 font-weight-normal">Login dulu disini</h1>
-                    <div v-if="isError" class="alert alert-danger">
-                        <strong>Danger!</strong> {{messages}}
-                    </div>
-                    <div v-if="isRegisterAlert" class="alert alert-success">
-                        <strong>Berhasil!</strong> {{registerMessage}}
-                    </div>
-                    <div class="form-group">
-                        <label for="inputEmail" class="sr-only">Alamat Email</label>
-                        <input type="email" v-model="email" id="inputEmail" class="form-control" placeholder="alamat email" autocomplete="username" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="inputPassword" class="sr-only">Kata Sandi</label>
-                        <input type="password" v-model="password" id="inputPassword" class="form-control" placeholder="kata sandi" autocomplete="current-password" required>
-                    </div>
-                    <p style="text-align: right;"><a href="/password/reset">Lupa kata sandi?</a></p>
-                    <button class="btn btn-lg btn-primary btn-block" type="submit" :disabled="isPending"><i v-if="isPending" class="fa fa-login fa-refresh fa-spin"></i>Masuk</button>
-                    <p style="margin-top:10px;">Belum punya akun: <a @click.prevent="isLogin=false" style="text-decoration: underline;color: #007bff;cursor: pointer;">Daftar disini</a></p>
-                </form>
-
-                <form v-if="!isLogin" class="form-signin" @submit.prevent="doRegister()" >
-                    <h1 class="h3 mb-3 font-weight-normal">Buat akun kamu disini</h1>
-<!--                    <div v-if="isError" class="alert alert-danger">-->
-<!--                        <strong>Danger!</strong> {{messages}}-->
-<!--                    </div>-->
-                    <div class="form-group">
-                        <label for="Name" class="sr-only">Nama</label>
-                        <input type="text" v-model="register.name" id="Name" class="form-control" placeholder="nama" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="Email" class="sr-only">Alamat Email</label>
-                        <input type="email" v-model="register.email" id="Email" class="form-control" placeholder="alamat email" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="Password" class="sr-only">Kata Sandi</label>
-                        <input type="password" v-model="register.password" id="Password" class="form-control" placeholder="kata sandi" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="ConfirmPassword" class="sr-only">Ulangi Kata Sandi</label>
-                        <input type="password" v-model="register.confirm_password" id="ConfirmPassword" class="form-control" placeholder="ulangi kata sandi" required>
-                    </div>
-                    <button class="btn btn-lg btn-primary btn-block" type="submit" :disabled="isRegisterProcess"><i v-if="isRegisterProcess" class="fa fa-login fa-refresh fa-spin"></i>Daftar</button>
-                    <p style="margin-top:10px;">Sudah punya akun: <a @click.prevent="isLogin=true" style="text-decoration: underline;color: #007bff;cursor: pointer;">Login disini</a></p>
-                </form>
-            </div>
+  <div class="sign-in-body text-center">
+      <div class="card" style="min-height: 600px;">
+        <div style="margin-top: 4rem;">
+          <img src="/assets_app/images/logo/logo-blue.png" alt="Kreatora Logo" style="width: 130px; height: 40px;">
         </div>
-        <p class="mt-5 mb-3 text-muted">created by Teknologi Karya Anak Muda</p>
-    </div>
+          <div class="card-body">
+              <div v-if="isStep1" class="form-signin">
+                <p>Mari mendukung Kreasi terbaik anak bangsa</p>
+                <div v-if="isError" class="alert alert-danger">
+                    <strong>Danger!</strong> {{messages}}
+                </div>
+                <div v-if="isRegisterAlert" class="alert alert-success">
+                    <strong>Berhasil!</strong> {{registerMessage}}
+                </div>
+                <div class="form-group">
+                    <input type="text" v-model="email" class="form-control" placeholder="Masukkan email / no. ponsel anda" required>
+                </div>
+                <p style="font-size: 12px;">Belum punya akun? <a href="#">Daftar</a></p>
+                <button class="btn btn-lg btn-primary btn-block" type="button" @click="isStep1=false"><i v-if="isPending" class="fas fa-sign-in-alt fa-refresh fa-spin"></i>LANJUTKAN</button>
+                <p style="margin-top:50px;">Atau lebih cepat ...</p>
+                <button class="btn btn-outline-danger btn-block"><i class="fab fa-google"></i> MASUK DENGAN GOOGLE</button>
+                <button class="btn btn-outline-primary btn-block"><i class="fab fa-facebook"></i> MASUK DENGAN FACEBOOK</button>
+              </div>
+            <div v-else class="form-signin">
+                <p>Nice! Sekarang silakan masukkan
+                  password email <strong>{{email}}</strong></p>
+                <div class="form-group mb-5">
+                    <input type="password" v-model="password" class="form-control" placeholder="Masukkan email / no. ponsel anda" required>
+                </div>
+                <button class="btn btn-lg btn-primary btn-block" type="button" :disabled="isPending" @click="login"><i v-if="isPending" class="fab fa-login fa-refresh fa-spin"></i>MASUK</button>
+              </div>
+          </div>
+      </div>
   </div>
 </template>
 
@@ -62,6 +42,7 @@ import Cookie from "vue-cookie";
 export default {
     data() {
         return {
+          isStep1: true,
             isLogin: true,
             isRegisterProcess: false,
             isRegisterAlert: false,
@@ -82,9 +63,8 @@ export default {
             email: this.email,
             password: this.password
           }).then((res) => {
-              let companies = JSON.parse(Cookie.get("myProfile")).companies;
-              if (companies.length>0) this.$router.push("/");
-              else this.$router.push({ name: 'company-create'});
+            console.log(res);
+            this.$router.push({ name: 'HomePage'});
           });
         },
         doRegister() {
@@ -117,7 +97,10 @@ export default {
         },
         messages(){
           return this.$store.getters.messages;
-        }
+        },
+      authUser(){
+          return this.$store.getters.authUser;
+        },
     }
 }
 </script>
