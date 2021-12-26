@@ -27,7 +27,8 @@ export default {
 
 <style scoped>
 .bottom-navbar-wrapper {
-  width: 480px;
+  width: 100%;
+  max-width: 480px;
   margin: 0 -15px;
   padding: 10px;
   display: flex;

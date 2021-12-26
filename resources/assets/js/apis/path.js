@@ -11,6 +11,10 @@ const path = {
         facebook: '/auth/',
         google: '/api/auth/loginGoogle'
     },
+    campaign: {
+        base: '/api/campaigns/home',
+        detail: '/api/billings/{id}',
+    },
     billing: {
         base: '/api/billings',
         detail: '/api/billings/{id}',

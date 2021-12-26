@@ -25,6 +25,27 @@ const api = {
             return Axios.post(Path.auth.google, user, {params: {}})
         }
     },
+    campaign: {
+        index: (params) => {
+            return Axios.get(Path.campaign.base, {
+                params: params
+            });
+        },
+        show: (id, params) => {
+            return Axios.get(Path.billing.detail.replace('{id}', id), {
+                params: params
+            });
+        },
+        store: (data) => {
+            return Axios.post(Path.billing.base, data);
+        },
+        update: (id,data) => {
+            return Axios.put(Path.billing.detail.replace('{id}', id), data);
+        },
+        destroy: (id) => {
+            return Axios.delete(Path.billing.detail.replace('{id}', id))
+        },
+    },
     billing: {
         index: (params) => {
             return Axios.get(Path.billing.base, {

@@ -1,20 +1,36 @@
 <template>
-  <div class="campaign-item-card">
-    <img src="/assets_app/images/buku-anak.png" alt="img-campaign">
+  <div class="campaign-item-card" v-if="item">
+    <img :src="'/storage/' + item.images[0]" alt="img-campaign" class="campaign-item-img">
     <div class="p-2">
-      <h6><strong>Buku mewarnai Edukasi ...</strong></h6>
-      <div class="d-flex justify-content-between campaign-meta">
-        <div>oleh : <span class="campaign-author">Simon Samin</span></div>
+      <h6><strong>{{item.title}}</strong></h6>
+      <div class="d-flex justify-content-between campaign-meta mb-1">
+        <div>oleh : <span class="campaign-author">{{item.creator_name}}</span></div>
         <div>3 hari tersisa</div>
       </div>
+      <div class="progress mb-1" style="height: 5px;">
+        <div class="progress-bar bg-primary" role="progressbar" :style="'width: '+fundedPercent+'%'" :aria-valuenow="fundedPercent" aria-valuemin="0" aria-valuemax="100"></div>
+      </div>
+      <div class="d-flex justify-content-between campaign-meta mb-1">
+        <div><i class="fa fa-user mr-1"></i><strong>{{item.total_backer}} Backer</strong></div>
+        <div><i class="fa fa-hourglass mr-1"></i><strong>{{fundedPercent}}% Funded</strong></div>
+      </div>
     </div>
-
   </div>
 </template>
 
 <script>
 export default {
-  name: "CampaignItem"
+  name: "CampaignItem",
+  props: {
+    item: {
+      type: Object
+    }
+  },
+  computed: {
+    fundedPercent() {
+      return Math.round((this.item.total_funded / this.item.goal) * 100)
+    }
+  }
 }
 </script>
 
@@ -25,6 +41,12 @@ export default {
   box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.12);
   border-radius: 12px;
   margin-right: 10px;
+}
+.campaign-item-img {
+  width: 256px;
+  height: 152px;
+  border-top-left-radius: 12px;
+  border-top-right-radius: 12px;
 }
 .campaign-meta {
  font-size: 12px;
