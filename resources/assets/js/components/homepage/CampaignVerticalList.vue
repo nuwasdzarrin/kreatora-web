@@ -4,10 +4,10 @@
     <h5><strong>{{title}}</strong></h5>
   </div>
   <div class="col-4 text-right">
-    <a href="javascript:void(0)" @click="onClickSeeAll(url)">Lihat semua</a>
+    <a href="javascript:void(0)" @click="onClickBack">Kecilkan</a>
   </div>
-  <div class="col-12 mt-2 d-flex overflow-auto" style="padding-bottom: 12px;">
-    <CampaignItem v-for="(item, index) in data" :key="index" :item="item"></CampaignItem>
+  <div class="col-12 mt-2">
+    <CampaignItem v-for="(item, index) in data" :key="index" :item="item" parent="CampaignVerticalList"></CampaignItem>
   </div>
 </div>
 </template>
@@ -15,7 +15,7 @@
 <script>
 import CampaignItem from "./CampaignItem";
 export default {
-  name: "CampaignHorizontalList",
+  name: "CampaignVerticalList",
   components: {
     CampaignItem
   },
@@ -28,8 +28,8 @@ export default {
     data: Array
   },
   methods: {
-    onClickSeeAll(payload) {
-      this.$emit('onClickSeeAll', payload)
+    onClickBack() {
+      this.$emit('onClickBack', "")
     }
   }
 }

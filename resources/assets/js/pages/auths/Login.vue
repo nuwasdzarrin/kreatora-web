@@ -14,7 +14,7 @@
                     <strong>Berhasil!</strong> {{registerMessage}}
                 </div>
                 <div class="form-group">
-                    <input type="text" v-model="email" class="form-control" placeholder="Masukkan email / no. ponsel anda" required>
+                    <input type="text" v-model="email" class="form-control" placeholder="Masukkan email / no. ponsel anda" required @keyup.enter="email ? isStep1=false : null">
                 </div>
                 <p style="font-size: 12px;">Belum punya akun? <a href="#">Daftar</a></p>
                 <button class="btn btn-lg btn-primary btn-block" type="button" @click="isStep1=false"><i v-if="isPending" class="fas fa-sign-in-alt fa-refresh fa-spin"></i>LANJUTKAN</button>
@@ -26,7 +26,7 @@
                 <p>Nice! Sekarang silakan masukkan
                   password email <strong>{{email}}</strong></p>
                 <div class="form-group mb-5">
-                    <input type="password" v-model="password" class="form-control" placeholder="Masukkan email / no. ponsel anda" required>
+                    <input type="password" v-model="password" class="form-control" placeholder="Masukkan email / no. ponsel anda" required @keyup.enter="login">
                 </div>
                 <button class="btn btn-lg btn-primary btn-block" type="button" :disabled="isPending" @click="login"><i v-if="isPending" class="fab fa-login fa-refresh fa-spin"></i>MASUK</button>
               </div>
@@ -36,7 +36,7 @@
 </template>
 
 <script>
-import Api from "../apis";
+import Api from "../../apis";
 import toastr from "toastr";
 import Cookie from "vue-cookie";
 export default {
@@ -59,12 +59,12 @@ export default {
     },
     methods: {
         login() {
+          if (!this.email || !this.password) return;
           this.$store.dispatch("login", {
             email: this.email,
             password: this.password
           }).then((res) => {
-            console.log(res);
-            this.$router.push({ name: 'HomePage'});
+            this.$router.push({ name: 'DashboardHomePage'});
           });
         },
         doRegister() {

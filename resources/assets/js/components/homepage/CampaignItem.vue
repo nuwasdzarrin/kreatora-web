@@ -1,7 +1,7 @@
 <template>
-  <div class="campaign-item-card" v-if="item">
-    <img :src="'/storage/' + item.images[0]" alt="img-campaign" class="campaign-item-img">
-    <div class="p-2">
+  <div :class="parent === 'CampaignVerticalList'?'vertical-campaign-item-card':'campaign-item-card'" v-if="item">
+    <img :src="'/storage/' + item.images[0]" alt="img-campaign" :class="parent === 'CampaignVerticalList'?'vertical-campaign-item-img':'campaign-item-img'">
+    <div class="p-3">
       <h6><strong>{{item.title}}</strong></h6>
       <div class="d-flex justify-content-between campaign-meta mb-1">
         <div>oleh : <span class="campaign-author">{{item.creator_name}}</span></div>
@@ -22,6 +22,7 @@
 export default {
   name: "CampaignItem",
   props: {
+    parent: String,
     item: {
       type: Object
     }
@@ -47,6 +48,20 @@ export default {
   height: 152px;
   border-top-left-radius: 12px;
   border-top-right-radius: 12px;
+  margin-bottom: 10px;
+}
+.vertical-campaign-item-card {
+  background: #FAFCFE;
+  box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.12);
+  border-radius: 12px;
+  margin-bottom: 20px;
+}
+.vertical-campaign-item-img {
+  width: 100%;
+  height: auto;
+  border-top-left-radius: 12px;
+  border-top-right-radius: 12px;
+  margin-bottom: 10px;
 }
 .campaign-meta {
  font-size: 12px;

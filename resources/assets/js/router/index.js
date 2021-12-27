@@ -1,9 +1,8 @@
 import VueRouter from 'vue-router';
-// import Item from './components/Item.Vue';
 import ItemCreate from '../components/items/Create.vue';
 import ItemEdit from '../components/items/Edit.vue';
-import Dashboard from '../pages/Dashboard.vue';
-import Home from '../components/Home.vue';
+import Home from '../layouts/Home.vue';
+import HomeWithoutAuth from "../layouts/HomeWithoutAuth";
 import Product from '../components/Product.vue';
 import ProductCreate from '../components/products/Create.vue';
 import ProductEdit from '../components/products/Edit.vue';
@@ -31,7 +30,7 @@ import PriceSetting from '../pages/PriceSetting';
 import PriceSettingCreate from '../pages/price-settings/Create';
 import PriceSettingEdit from '../pages/price-settings/Edit';
 import Billing from '../pages/Billing';
-import Login from '../components/Login.vue';
+import Login from '../pages/auths/Login.vue';
 import Store from '../store';
 import Finance from '../pages/Finance';
 import FinanceCreate from '../pages/finances/Create';
@@ -41,13 +40,26 @@ import HomePage from "../pages/HomePage";
 let routes = [
     {
         path: '/',
-        component: Home,
-        meta: {requiresAuth: true},
+        component: HomeWithoutAuth,
+        meta: {requiresAuth: false},
         children: [
             {
                 path: '/',
                 component: HomePage,
                 name: 'HomePage',
+                meta: {requiresAuth: false},
+            },
+        ]
+    },
+    {
+        path: '/',
+        component: Home,
+        meta: {requiresAuth: true},
+        children: [
+            {
+                path: 'dashboard',
+                component: HomePage,
+                name: 'DashboardHomePage',
                 meta: {requiresAuth: true},
             },
             {
@@ -261,6 +273,7 @@ let routes = [
     },
     {
         path: '/login',
+        name: "Login",
         component: Login,
         meta: {requiresAuth: false},
     },
@@ -288,7 +301,7 @@ router.beforeEach((to, from, next) => {
     } else {
         if (Store.getters.isLoggedIn) {
             next({
-                path: '/',
+                path: '/dashboard',
             });
         }else{
             next();

@@ -4,7 +4,7 @@
       <div class="d-flex justify-content-between align-items-center p-4 home-wallet-wrapper">
         <div>
           <div>Saldo Dompet Kreasi </div>
-          <h4>Rp. 200.000</h4>
+          <h4>Rp. {{ amount | formatCurrency }}</h4>
         </div>
         <div><i class="fas fa-wallet" style="font-size: 30px;"></i></div>
       </div>
@@ -14,7 +14,10 @@
 
 <script>
 export default {
-  name: "HomeWalletComponent"
+  name: "HomeWalletComponent",
+  props: {
+    amount: Number
+  }
 }
 </script>
 

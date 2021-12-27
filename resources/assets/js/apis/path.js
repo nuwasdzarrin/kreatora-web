@@ -12,7 +12,8 @@ const path = {
         google: '/api/auth/loginGoogle'
     },
     campaign: {
-        base: '/api/campaigns/home',
+        home: '/api/campaigns/home',
+        base: '/api/campaigns',
         detail: '/api/billings/{id}',
     },
     billing: {
@@ -51,6 +52,7 @@ const path = {
     user: {
         base: '/api/users',
         detail: '/api/users/{id}',
+        profile: '/api/profile',
         memberElse: '/api/users/profile/{username}',
         avatar: '/api/users/profile/member/updatePhotoProfile'
     }

@@ -26,6 +26,11 @@ const api = {
         }
     },
     campaign: {
+        home: (params) => {
+            return Axios.get(Path.campaign.home, {
+                params: params
+            });
+        },
         index: (params) => {
             return Axios.get(Path.campaign.base, {
                 params: params
@@ -225,6 +230,11 @@ const api = {
         },
         destroy: (id) => {
             return Axios.delete(Path.user.detail.replace('{id}', id))
+        },
+        profile: (params) => {
+            return Axios.get(Path.user.profile, {
+                params: params
+            });
         },
         detailElse: (user) => {
             return Axios.get(Path.user.memberElse.replace('{username}', user))
