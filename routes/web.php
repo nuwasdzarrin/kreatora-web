@@ -48,7 +48,7 @@ Route::get('run_storage', function () {
 });
 
 Route::get('/', function () {
-    return view('welcome');
+    return view('homepage');
 });
 
 
