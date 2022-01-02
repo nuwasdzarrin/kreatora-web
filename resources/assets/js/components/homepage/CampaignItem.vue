@@ -1,5 +1,5 @@
 <template>
-  <div :class="parent === 'CampaignVerticalList'?'vertical-campaign-item-card':'campaign-item-card'" v-if="item">
+  <div :class="parent === 'CampaignVerticalList'?'vertical-campaign-item-card':'campaign-item-card'" @click="$router.push({ name: 'CampaignDetail', params: { slug: item.title }})" v-if="item">
     <img :src="'/storage/' + item.images[0]" alt="img-campaign" :class="parent === 'CampaignVerticalList'?'vertical-campaign-item-img':'campaign-item-img'">
     <div class="p-3">
       <h6><strong>{{item.title}}</strong></h6>

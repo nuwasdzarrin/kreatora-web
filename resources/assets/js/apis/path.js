@@ -14,25 +14,12 @@ const path = {
     campaign: {
         home: '/api/campaigns/home',
         base: '/api/campaigns',
-        detail: '/api/billings/{id}',
-    },
-    billing: {
-        base: '/api/billings',
-        detail: '/api/billings/{id}',
-        print: '/api/print_billings',
-    },
-    company: {
-        base: '/api/companies',
-        detail: '/api/companies/{id}',
-        join: '/api/companies/join'
+        detail: '/api/campaigns/{id}',
+        slug: '/api/campaigns/{slug}',
     },
     customer: {
         base: '/api/customers',
         detail: '/api/customers/{id}'
-    },
-    finance: {
-        base: '/api/finances',
-        detail: '/api/finances/{id}'
     },
     measurement: {
         base: '/api/measurements',
@@ -40,14 +27,6 @@ const path = {
     },
     notification: {
         base: '/api/notifications'
-    },
-    rate_categories: {
-        base: '/api/rate_categories',
-        detail: '/api/rate_categories/{id}'
-    },
-    price_settings: {
-        base: '/api/price_settings',
-        detail: '/api/price_settings/{id}'
     },
     user: {
         base: '/api/users',

@@ -62,7 +62,7 @@ class CampaignController extends Controller
     */
     public function __construct()
     {
-        $this->middleware('auth:api')->except(['home','index','show']);
+        $this->middleware('auth:api')->except(['home','index','show','slug']);
     }
 
     /**
@@ -244,6 +244,12 @@ class CampaignController extends Controller
         $data['data']['latest'] = $latest;
         $data['message'] = 'success';
 
+        return response()->json($data, 200);
+    }
+
+    public function slug($slug=null)
+    {
+        $data = Campaign::query()->where('title', $slug)->with(['faqs','updates'])->first();
         return response()->json($data, 200);
     }
 

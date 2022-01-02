@@ -37,18 +37,23 @@ const api = {
             });
         },
         show: (id, params) => {
-            return Axios.get(Path.billing.detail.replace('{id}', id), {
+            return Axios.get(Path.campaign.detail.replace('{id}', id), {
+                params: params
+            });
+        },
+        slug: (slug, params) => {
+            return Axios.get(Path.campaign.slug.replace('{slug}', slug), {
                 params: params
             });
         },
         store: (data) => {
-            return Axios.post(Path.billing.base, data);
+            return Axios.post(Path.campaign.base, data);
         },
         update: (id,data) => {
-            return Axios.put(Path.billing.detail.replace('{id}', id), data);
+            return Axios.put(Path.campaign.detail.replace('{id}', id), data);
         },
         destroy: (id) => {
-            return Axios.delete(Path.billing.detail.replace('{id}', id))
+            return Axios.delete(Path.campaign.detail.replace('{id}', id))
         },
     },
     billing: {

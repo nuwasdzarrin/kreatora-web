@@ -1,18 +1,8 @@
 <template>
 	<div class="wrapper-mobile">
-		<TopNavbar></TopNavbar>
-
-    <div class="container">
-      <router-view></router-view>
-    </div>
-
-		<!-- Control Sidebar -->
-		<aside class="control-sidebar control-sidebar-dark">
-			<!-- Control sidebar content goes here -->
-		</aside>
-		<!-- /.control-sidebar -->
+    <router-view></router-view>
+<!--		<aside class="control-sidebar control-sidebar-dark"></aside>-->
 	</div>
-	<!-- ./wrapper -->
 </template>
 
 <script>

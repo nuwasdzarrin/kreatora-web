@@ -36,6 +36,7 @@ import Finance from '../pages/Finance';
 import FinanceCreate from '../pages/finances/Create';
 import FinanceEdit from '../pages/finances/Edit';
 import HomePage from "../pages/HomePage";
+import CampaignDetail from "../pages/campaigns/CampaignDetail";
 
 let routes = [
     {
@@ -47,6 +48,12 @@ let routes = [
                 path: '/',
                 component: HomePage,
                 name: 'HomePage',
+                meta: {requiresAuth: false},
+            },
+            {
+                path: '/:slug',
+                component: CampaignDetail,
+                name: 'CampaignDetail',
                 meta: {requiresAuth: false},
             },
         ]

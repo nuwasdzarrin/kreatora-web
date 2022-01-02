@@ -61,6 +61,6 @@ Auth::routes();
 Route::get('/home', 'HomeController@index')->name('home');
 Route::get('shipping', 'ShippingController')->name('shipping');
 
-Route::get('/app', function () {
+Route::get('/campaign/', function () {
     return view('app');
 });

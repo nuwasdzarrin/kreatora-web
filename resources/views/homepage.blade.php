@@ -69,7 +69,7 @@
             </ul>
           </li>
           <li><a class="nav-link scrollto" href="#contact">Contact</a></li>
-          <li><a class="getstarted scrollto" href="/app">App Kreatora</a></li>
+          <li><a class="getstarted scrollto" href="/campaign/">App Kreatora</a></li>
         </ul>
         <i class="bi bi-list mobile-nav-toggle"></i>
       </nav><!-- .navbar -->
@@ -86,7 +86,7 @@
           <h1>Elegant and creative solutions</h1>
           <h2>We are team of talented designers making websites with Bootstrap</h2>
           <div class="d-flex">
-            <a href="/app" class="btn-get-started scrollto">App Kreatora</a>
+            <a href="/campaign/" class="btn-get-started scrollto">App Kreatora</a>
             <a href="https://www.youtube.com/watch?v=jDDaplaOz7Q" class="glightbox btn-watch-video"><i class="bi bi-play-circle"></i><span>Watch Video</span></a>
           </div>
         </div>
