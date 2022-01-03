@@ -1,6 +1,6 @@
 <template>
   <div class="bg-white" style="height: 100vh;position: relative;">
-    <div v-if="isSection === 'description' || isSection === 'risk'">
+    <div v-if="isSection === 'description' || isSection === 'risk' || isSection === 'faq' || isSection === 'update'">
       <div class="container" style="box-shadow: 0 2px 2px rgba(0, 0, 0, 0.15);">
         <div class="d-flex justify-content-between align-items-center py-3 text-14">
           <div @click="$router.push({ name: 'CampaignDetail', params: { slug: detail_campaign.title }})">
@@ -15,15 +15,32 @@
           <div class="text-14" :class="{'text-color-black': isSection === 'description'}" @click="$router.push({ name: 'CampaignDetail', params: { slug: detail_campaign.title }, query: { section: 'description' }})">
             <b>Deskripsi</b>
           </div>
-          <div class="text-14"><b>FAQ</b></div>
+          <div class="text-14" :class="{'text-color-black': isSection === 'faq'}" @click="$router.push({ name: 'CampaignDetail', params: { slug: detail_campaign.title }, query: { section: 'faq' }})">
+            <b>FAQ</b>
+          </div>
           <div class="text-14" :class="{'text-color-black': isSection === 'risk'}" @click="$router.push({ name: 'CampaignDetail', params: { slug: detail_campaign.title }, query: { section: 'risk' }})">
             <b>Risiko</b>
           </div>
-          <div class="text-14"><b>Update</b></div>
+          <div class="text-14" :class="{'text-color-black': isSection === 'update'}" @click="$router.push({ name: 'CampaignDetail', params: { slug: detail_campaign.title }, query: { section: 'update' }})">
+            <b>Update</b>
+          </div>
         </div>
       </div>
       <div class="container" style="height: 80vh; overflow-y: auto;">
-        <div v-html="dataSection" />
+        <div v-html="dataSection" v-show="isSection === 'description' || isSection === 'risk'"/>
+        <div class="pt-3" v-show="isSection === 'faq'">
+          <div class="mb-4" v-for="(item, index) in detail_campaign.faqs" :key="index">
+            <div class="faq-question" :class="{'no-bottom-radius': is_faq_open[index]}">
+              <div style="max-width: 90%">
+                {{ item.question }}
+              </div>
+              <div @click="openFaq(index)"><i class="fas fa-chevron-right" :class="{'fa-rotate-90': is_faq_open[index]}"></i></div>
+            </div>
+            <div class="faq-answer" v-show="is_faq_open[index]">
+              {{ item.answer }}
+            </div>
+          </div>
+        </div>
       </div>
     </div>
     <div v-else>
@@ -73,11 +90,15 @@
           <div class="text-14 text-color-black" @click="$router.push({ name: 'CampaignDetail', params: { slug: detail_campaign.title }, query: { section: 'description' }})">
             <b>Deskripsi</b>
           </div>
-          <div class="text-14"><b>FAQ</b></div>
+          <div class="text-14" @click="$router.push({ name: 'CampaignDetail', params: { slug: detail_campaign.title }, query: { section: 'faq' }})">
+            <b>FAQ</b>
+          </div>
           <div class="text-14" @click="$router.push({ name: 'CampaignDetail', params: { slug: detail_campaign.title }, query: { section: 'risk' }})">
             <b>Risiko</b>
           </div>
-          <div class="text-14"><b>Update</b></div>
+          <div class="text-14" @click="$router.push({ name: 'CampaignDetail', params: { slug: detail_campaign.title }, query: { section: 'update' }})">
+            <b>Update</b>
+          </div>
         </div>
         <div class="text-14">
           <div v-html="detail_campaign.short_desc"></div>
@@ -103,28 +124,39 @@ export default {
     return {
       lodash: _,
       slug: this.$route.params.slug,
-      detail_campaign: {}
+      detail_campaign: {},
+      is_faq_open: []
     }
   },
   computed: {
     isSection() {
       if (this.$route.query.section === 'description') return 'description'
       else if (this.$route.query.section === 'risk') return 'risk'
-      else return ''
+      else if (this.$route.query.section === 'faq') return 'faq'
+      else if (this.$route.query.section === 'update') return 'update'
+      else return null
     },
     dataSection() {
       if (this.$route.query.section === 'description') return this.detail_campaign.long_desc
       else if (this.$route.query.section === 'risk') return this.detail_campaign.risk
-      else return ''
+      else return null
     }
   },
   methods: {
     fetchDetailCampaign() {
       Apis.campaign.slug(this.slug, {}).then(({data}) => {
         this.$set(this, 'detail_campaign', data)
+        let vm = this
+        this.detail_campaign.faqs.forEach(function (item, index) {
+          if (index===0) vm.is_faq_open.push(true)
+          else vm.is_faq_open.push(false)
+        })
       }).catch((error) => {
         throw error
       })
+    },
+    openFaq(index) {
+      this.$set(this.is_faq_open, index, !this.is_faq_open[index])
     }
   },
   mounted() {
@@ -168,5 +200,24 @@ export default {
   top: 15px;
   color: #008FD7;
   font-size: 20px;
+}
+.faq-question {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 15px;
+  box-shadow: 4px 4px 15px rgba(0, 0, 0, 0.12);
+  border-radius: 12px;
+  background: #ECF1F4;
+}
+.no-bottom-radius {
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+}
+.faq-answer {
+  padding: 10px 15px;
+  background: #D6E1E8;
+  border-bottom-left-radius: 12px;
+  border-bottom-right-radius: 12px;
 }
 </style>
