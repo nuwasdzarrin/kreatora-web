@@ -65,17 +65,17 @@ const index = new Vuex.Store({
                     Cookie.set('token', response.data.token, { expires: '6h' });
                     Cookie.set('user', JSON.stringify(response.data.data), { expires: '6h' });
                     commit(LOGIN_SUCCESS,response.data.data);
-                    resolve(response.data.data);
+                    resolve(response.data);
                 }).catch(function (error) {
-                    var errorMsg = "";
-                    if(error.response.status == 401){
-                        errorMsg = error.response.data.error;
+                    let errorMsg = "";
+                    if(error.response.status === 401){
+                        errorMsg = error.response.data.message;
                     }else{
                         errorMsg = "Terjadi Kesalahan pada server.";
                     }
-                    console.log(errorMsg)
                     commit(LOGIN_FAILED,errorMsg);
-                    resolve();
+                    resolve(error.response);
+                    // return error.response
                 });
             });
         },

@@ -51,7 +51,7 @@ let routes = [
                 meta: {requiresAuth: false},
             },
             {
-                path: '/:slug',
+                path: '/campaign/:slug',
                 component: CampaignDetail,
                 name: 'CampaignDetail',
                 meta: {requiresAuth: false},
