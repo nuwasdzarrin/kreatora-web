@@ -17,11 +17,15 @@ Vue.use(VueRouter);
 
 window.Vue = require('vue');
 window._ = require('lodash');
+window.moment = require('moment');
 window.events = new Vue();
 Vue.prototype.window = window;
 Vue.filter('formatCurrency', function (value) {
     return Number(value).toLocaleString('id-ID');
 });
+Vue.filter('dateDDMMYYYY', function (date) {
+    return moment(date).format('DD MMM YYYY')
+})
 /**
  * Next, we will create a fresh Vue application instance and attach it to
  * the page. Then, you may begin adding components to this application
