@@ -11,10 +11,13 @@ import VueRouter from 'vue-router';
 import router from './router';
 import store from './store';
 import 'vue-loading-overlay/dist/vue-loading.css';
+import VueToastr from "vue-toastr";
 
 window.Vue = require('vue');
 Vue.use(VueRouter);
-
+Vue.use(VueToastr, {
+    /* OverWrite Plugin Options if you need */
+});
 window.Vue = require('vue');
 window._ = require('lodash');
 window.moment = require('moment');

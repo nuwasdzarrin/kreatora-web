@@ -23,7 +23,7 @@
 
 <script>
 import Echo from "laravel-echo"
-import Pusher from "pusher-js"
+// import Pusher from "pusher-js"
 import jwt_decode from 'jwt-decode'
 export default {
   methods: {
@@ -34,18 +34,18 @@ export default {
     },
 
     listen(){
-      window.Echo = new Echo({
-          broadcaster: 'pusher',
-          key: 'fec02e47bf8fdcf0bd9b',
-          cluster: 'ap1',
-          encrypted: true,
-          auth: {
-              headers: {
-                  Authorization: 'Bearer ' + localStorage.getItem("token")
-              },
-          },
+      // window.Echo = new Echo({
+      //     broadcaster: 'pusher',
+      //     key: 'fec02e47bf8fdcf0bd9b',
+      //     cluster: 'ap1',
+      //     encrypted: true,
+      //     auth: {
+      //         headers: {
+      //             Authorization: 'Bearer ' + localStorage.getItem("token")
+      //         },
+      //     },
 
-      });
+      // });
 
 
       if(localStorage.getItem("token")) {
