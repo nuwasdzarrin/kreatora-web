@@ -37,6 +37,7 @@ import FinanceCreate from '../pages/finances/Create';
 import FinanceEdit from '../pages/finances/Edit';
 import HomePage from "../pages/HomePage";
 import CampaignDetail from "../pages/campaigns/CampaignDetail";
+import Account from "../pages/Account";
 
 let routes = [
     {
@@ -64,10 +65,19 @@ let routes = [
         meta: {requiresAuth: true},
         children: [
             {
-                path: 'dashboard',
+                path: '/dashboard',
                 component: HomePage,
                 name: 'DashboardHomePage',
-                meta: {requiresAuth: true},
+            },
+            {
+                path: 'dashboard/campaign/:slug',
+                component: CampaignDetail,
+                name: 'DashboardCampaignDetail',
+            },
+            {
+                path: 'dashboard/account',
+                component: Account,
+                name: 'DashboardAccount',
             },
             {
                 path: 'items/create',

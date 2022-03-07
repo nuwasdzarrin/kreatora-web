@@ -9,26 +9,26 @@
       <div class="card-body">
         <div v-if="isStep1" class="form-signin">
           <p>Mari mendukung Kreasi terbaik anak bangsa</p>
-          <div v-if="isError" class="alert alert-danger">
-            <strong>Danger!</strong> {{messages}}
-          </div>
-          <div v-if="isRegisterAlert" class="alert alert-success">
-            <strong>Berhasil!</strong> {{registerMessage}}
-          </div>
           <div class="form-group">
             <input type="text" v-model="email" class="form-control" placeholder="Masukkan email / no. ponsel anda" required @keyup.enter="email ? isStep1=false : null">
           </div>
           <p style="font-size: 12px;">Belum punya akun? <a href="#">Daftar</a></p>
-          <button class="btn btn-lg btn-primary btn-block" type="button" @click="isStep1=false"><i v-if="isPending" class="fas fa-sign-in-alt fa-refresh fa-spin"></i>LANJUTKAN</button>
+          <button class="btn btn-lg btn-primary btn-block" type="button" @click="email ? isStep1=false : null"><i v-if="isPending" class="fas fa-sign-in-alt fa-refresh fa-spin"></i>LANJUTKAN</button>
           <p style="margin-top:50px;">Atau lebih cepat ...</p>
           <button class="btn btn-outline-danger btn-block"><i class="fab fa-google"></i> MASUK DENGAN GOOGLE</button>
           <button class="btn btn-outline-primary btn-block"><i class="fab fa-facebook"></i> MASUK DENGAN FACEBOOK</button>
         </div>
         <div v-else class="form-signin">
           <p>Nice! Sekarang silakan masukkan
-            password email <strong>{{email}}</strong></p>
+            password akun anda</p>
+          <!-- <div v-if="isError" class="alert alert-danger">
+            <strong>Error!</strong> {{messages}}
+          </div>
+          <div v-if="isRegisterAlert" class="alert alert-success">
+            <strong>Berhasil!</strong> {{registerMessage}}
+          </div> -->
           <div class="form-group mb-5">
-            <input type="password" v-model="password" class="form-control" placeholder="Masukkan email / no. ponsel anda" required @keyup.enter="login">
+            <input type="password" v-model="password" class="form-control" placeholder="Masukkan password anda" required @keyup.enter="login">
           </div>
           <button class="btn btn-lg btn-primary btn-block" type="button" :disabled="isPending" @click="login"><i v-if="isPending" class="fab fa-login fa-refresh fa-spin"></i>MASUK</button>
         </div>
@@ -68,11 +68,12 @@ export default {
         email: this.email,
         password: this.password
       }).then((res) => {
-        console.log(res)
         if (res.status === 401)
           this.$toastr.e(res.data.message);
-        else
+        else {
+          this.$toastr.s("login success");
           this.$router.push({ name: 'HomePage'});
+        }
       });
     },
     doRegister() {

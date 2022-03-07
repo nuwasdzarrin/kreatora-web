@@ -1,5 +1,5 @@
 <template>
-  <div :class="parent === 'CampaignVerticalList'?'vertical-campaign-item-card':'campaign-item-card'" @click="$router.push({ name: 'CampaignDetail', params: { slug: item.title }})" v-if="item">
+  <div :class="parent === 'CampaignVerticalList'?'vertical-campaign-item-card':'campaign-item-card'" @click="$router.push({ name: isLoggedIn ? 'DashboardCampaignDetail' : 'CampaignDetail', params: { slug: item.title }})" v-if="item">
     <img :src="'/storage/' + item.images[0]" alt="img-campaign" :class="parent === 'CampaignVerticalList'?'vertical-campaign-item-img':'campaign-item-img'">
     <div class="p-3">
       <h6><strong>{{item.title}}</strong></h6>
@@ -30,6 +30,9 @@ export default {
   computed: {
     fundedPercent() {
       return Math.round((this.item.total_funded / this.item.goal) * 100)
+    },
+    isLoggedIn() {
+      return this.$store.getters.isLoggedIn;
     }
   }
 }

@@ -44,6 +44,7 @@ Vue.component('my-company-select', require('./components/MyCompanySelect'));
 Vue.component('layout', require('./layouts/Layout.vue'));
 Vue.component('home', require('./layouts/Home.vue'));
 Vue.component('TopNavbar', require('./components/navbars/TopNavbar.vue'));
+Vue.component('NoTopNavbar', require('./components/navbars/NoTopNavbar.vue'));
 Vue.component('BottomNavbar', require('./components/navbars/BottomNavbar.vue'));
 Vue.component('login', require('./pages/auths/Login.vue'));
 Vue.component('notification-list', require('./components/NotificationList.vue'));

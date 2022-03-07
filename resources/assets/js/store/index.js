@@ -75,7 +75,6 @@ const index = new Vuex.Store({
                     }
                     commit(LOGIN_FAILED,errorMsg);
                     resolve(error.response);
-                    // return error.response
                 });
             });
         },
