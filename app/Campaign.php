@@ -52,7 +52,7 @@ class Campaign extends Model
         'images' => 'array',
     ];
 
-    protected $appends = ['category_name', 'creator_name','creator_avatar','total_backer','total_funded'];
+    protected $appends = ['category_name', 'creator_name','creator_avatar','total_backer','total_funded', 'pictures'];
 
     public function user()
     {
@@ -95,6 +95,11 @@ class Campaign extends Model
     public function getCategoryNameAttribute()
     {
         return $this->campaign_category ? $this->campaign_category->name : null;
+    }
+
+    public function getPicturesAttribute()
+    {
+        return $this->images ? json_decode($this->images) : [];
     }
 
     public function getCreatorNameAttribute()

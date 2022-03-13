@@ -89,7 +89,7 @@ class CampaignController extends Controller
      */
     public function store(Request $request)
     {
-        $this->authorize('create', 'App\Campaign');
+//        $this->authorize('create', 'App\Campaign');
         $request->validate(self::rules($request)['store']);
 
         if ($request->has('images')) {
@@ -127,15 +127,15 @@ class CampaignController extends Controller
                         $ext = $ext[1];
                         $imgName = strtok($request->title," ").'_'.rand(100000,999999).'.'.$ext;
                         if($ext=='png'){
-                            imagepng($image,storage_path('app/public/campaigns/').$imgName,8);
+                            imagepng($image,public_path('assets/images/campaigns/').$imgName,8);
                         } else {
-                            imagejpeg($image,storage_path('app/public/campaigns/').$imgName,20);
+                            imagejpeg($image,public_path('assets/images/campaigns/').$imgName,20);
                         }
                         $image_name = 'campaigns/'.$imgName;
                         if ($image_name)
                             array_push($images, $image_name);
                     }
-                    $campaign->{$key} = $images;
+                    $campaign->{$key} = json_encode($images);
                 } else {
                     $campaign->{$key} = $request->{$key};
                 }
@@ -249,7 +249,7 @@ class CampaignController extends Controller
 
     public function slug($slug=null)
     {
-        $data = Campaign::query()->where('title', $slug)->with(['faqs','updates'])->first();
+        $data = Campaign::query()->where('title', $slug)->with(['faqs','updates','rewards','campaign_comments.childs'])->first();
         return response()->json($data, 200);
     }
 
