@@ -15,7 +15,7 @@ const path = {
         home: '/api/campaigns/home',
         base: '/api/campaigns',
         detail: '/api/campaigns/{id}',
-        slug: '/api/campaigns/{slug}',
+        slug: '/api/campaigns/slug/{slug}',
     },
     customer: {
         base: '/api/customers',

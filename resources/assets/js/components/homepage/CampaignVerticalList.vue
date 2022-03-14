@@ -4,7 +4,7 @@
     <h5><strong>{{title}}</strong></h5>
   </div>
   <div class="col-4 text-right">
-    <a href="javascript:void(0)" @click="onClickBack">Kecilkan</a>
+    <a href="javascript:void(0)" @click="onClickBack" v-show="clickBack">Kecilkan</a>
   </div>
   <div class="col-12 mt-2">
     <CampaignItem v-for="(item, index) in data" :key="index" :item="item" parent="CampaignVerticalList"></CampaignItem>
@@ -25,7 +25,11 @@ export default {
       default: "Title"
     },
     url: String,
-    data: Array
+    data: Array,
+    clickBack: {
+      type: Boolean,
+      default: true
+    }
   },
   methods: {
     onClickBack() {

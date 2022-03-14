@@ -31,6 +31,7 @@ import PriceSettingCreate from '../pages/price-settings/Create';
 import PriceSettingEdit from '../pages/price-settings/Edit';
 import Billing from '../pages/Billing';
 import Login from '../pages/auths/Login.vue';
+import Register from "../pages/auths/Register";
 import Store from '../store';
 import Finance from '../pages/Finance';
 import FinanceCreate from '../pages/finances/Create';
@@ -41,7 +42,8 @@ import Account from "../pages/Account";
 
 let routes = [
     {
-        path: '/',
+        path: '/campaign',
+        name: HomeWithoutAuth,
         component: HomeWithoutAuth,
         meta: {requiresAuth: false},
         children: [
@@ -49,6 +51,18 @@ let routes = [
                 path: '/',
                 component: HomePage,
                 name: 'HomePage',
+                meta: {requiresAuth: false},
+            },
+            {
+                path: '/campaign/login',
+                name: "Login",
+                component: Login,
+                meta: {requiresAuth: false},
+            },
+            {
+                path: '/campaign/register',
+                name: "Register",
+                component: Register,
                 meta: {requiresAuth: false},
             },
             {
@@ -60,7 +74,7 @@ let routes = [
         ]
     },
     {
-        path: '/',
+        path: '/campaign',
         component: Home,
         meta: {requiresAuth: true},
         children: [
@@ -289,12 +303,6 @@ let routes = [
         ],
     },
     {
-        path: '/login',
-        name: "Login",
-        component: Login,
-        meta: {requiresAuth: false},
-    },
-    {
         path: '/company/create',
         component: CompanyCreate,
         name: 'company-create',
@@ -303,7 +311,9 @@ let routes = [
 ];
 
 const router = new VueRouter({
-    routes
+    mode: 'history',
+    base: '/',
+    routes,
 });
 
 router.beforeEach((to, from, next) => {

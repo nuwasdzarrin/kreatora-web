@@ -29,7 +29,7 @@ Route::apiResource('users', 'Api\UserController', [ 'as' => 'api' ]);
 Route::apiResource('campaign_categories', 'Api\CampaignCategoryController', [ 'as' => 'api' ]);
 Route::get('campaigns/home', 'Api\CampaignController@home')->name('campaigns.home');
 Route::get('campaigns/me', 'Api\CampaignController@me')->name('campaigns.me');
-Route::get('campaigns/{slug}', 'Api\CampaignController@slug')->name('campaigns.slug');
+Route::get('campaigns/slug/{slug}', 'Api\CampaignController@slug')->name('campaigns.slug');
 Route::apiResource('campaigns', 'Api\CampaignController', [ 'as' => 'api' ]);
 Route::post('faqs/ask', 'Api\FaqController@ask')->name('faqs.ask');
 Route::put('faqs/answer/{id}', 'Api\FaqController@answer')->name('faqs.answer');

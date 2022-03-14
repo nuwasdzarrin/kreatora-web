@@ -5,15 +5,17 @@
       <div class="mt-4">
         <HomeWalletComponent :amount="walletAmount" v-if="isLoggedIn"/>
         <NotLoginComponent v-else />
-        <div v-if="urlType">
-          <CampaignVerticalList :title="campaignVerticalListTitle" :data="campaigns" @onClickBack="onClickBack"/>
-        </div>
-        <div v-else>
-          <CampaignHorizontalList title="Trending" :data="campaign_home.trending" url="trending" @onClickSeeAll="onClickSeeAll" />
-          <CampaignHorizontalList title="Akan Berakhir" :data="campaign_home.will_end" url="will_end" @onClickSeeAll="onClickSeeAll" />
-          <CampaignHorizontalList title="Populer" :data="campaign_home.popular" url="popular" @onClickSeeAll="onClickSeeAll" />
-          <CampaignHorizontalList title="Terbaru" :data="campaign_home.latest" url="latest" @onClickSeeAll="onClickSeeAll" />
-        </div>
+        <CampaignVerticalList title="Terbaru" :data="campaigns" :clickBack="false"/>
+
+<!--        <div v-if="urlType">-->
+<!--          <CampaignVerticalList :title="campaignVerticalListTitle" :data="campaigns" @onClickBack="onClickBack"/>-->
+<!--        </div>-->
+<!--        <div v-else>-->
+<!--          <CampaignHorizontalList title="Trending" :data="campaign_home.trending" url="trending" @onClickSeeAll="onClickSeeAll" />-->
+<!--          <CampaignHorizontalList title="Akan Berakhir" :data="campaign_home.will_end" url="will_end" @onClickSeeAll="onClickSeeAll" />-->
+<!--          <CampaignHorizontalList title="Populer" :data="campaign_home.popular" url="popular" @onClickSeeAll="onClickSeeAll" />-->
+<!--          <CampaignHorizontalList title="Semua" :data="campaign_home.latest" url="latest" @onClickSeeAll="onClickSeeAll" />-->
+<!--        </div>-->
         <div class="spacer"></div>
         <BottomNavbar />
       </div>
@@ -110,7 +112,8 @@ export default {
   },
   mounted() {
     this.fetchProfile();
-    this.urlType ? this.fetchCampaign() : this.fetchHomeCampaign();
+    this.fetchCampaign()
+    // this.urlType ? this.fetchCampaign() : this.fetchHomeCampaign();
   }
 }
 </script>

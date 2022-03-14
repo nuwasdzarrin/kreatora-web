@@ -1,6 +1,6 @@
 <template>
   <div :class="parent === 'CampaignVerticalList'?'vertical-campaign-item-card':'campaign-item-card'" @click="$router.push({ name: isLoggedIn ? 'DashboardCampaignDetail' : 'CampaignDetail', params: { slug: item.title }})" v-if="item">
-    <img :src="'/storage/' + item.images[0]" alt="img-campaign" :class="parent === 'CampaignVerticalList'?'vertical-campaign-item-img':'campaign-item-img'">
+    <img :src="item.pictures.length ? api.storage + item.pictures[0] : api.no_image" alt="img-campaign" :class="parent === 'CampaignVerticalList'?'vertical-campaign-item-img':'campaign-item-img'">
     <div class="p-3">
       <h6><strong>{{item.title}}</strong></h6>
       <div class="d-flex justify-content-between campaign-meta mb-1">
@@ -19,12 +19,18 @@
 </template>
 
 <script>
+import Apis from "../../apis";
 export default {
   name: "CampaignItem",
   props: {
     parent: String,
     item: {
       type: Object
+    }
+  },
+  data: function () {
+    return {
+      api: Apis
     }
   },
   computed: {

@@ -56,7 +56,7 @@
     </div>
     <div v-else>
       <div style="position: relative;">
-        <img :src="`/storage/${detail_campaign.images && detail_campaign.images[0]}`" alt="campaign-images" style="width: 100%; height: 215px;">
+        <img :src="detail_campaign.pictures.length ? api.storage + detail_campaign.pictures[0] : api.no_image" alt="campaign-images" style="width: 100%; height: 215px;">
         <span class="back-button-img" @click="$router.push({ name: 'HomePage'})">
           <i class="fas fa-arrow-left"></i>
         </span>
@@ -134,6 +134,7 @@ export default {
   data() {
     return {
       lodash: _,
+      api: Apis,
       slug: this.$route.params.slug,
       detail_campaign: {},
       is_faq_open: []

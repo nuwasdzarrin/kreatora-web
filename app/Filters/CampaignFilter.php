@@ -37,7 +37,7 @@ class CampaignFilter extends BaseFilter
      * Default Sort, null if no default, ex: 'name,asc'
      * @var string|null
      */
-    protected $default_sort = null;
+    protected $default_sort = 'id,desc';
 
     /**
      * Default per page, null if use model per page default, ex: 20

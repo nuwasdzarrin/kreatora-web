@@ -43,7 +43,7 @@ class Campaign extends Model
     /** @var string $connection */
     //protected $connection = '';
 
-    protected $hidden = ['user','backer_users', 'campaign_category'];
+    protected $hidden = ['user','backer_users', 'campaign_category', 'images'];
 
     /**
      * @var array

@@ -8,6 +8,8 @@ Axios.defaults.headers.post['Content-Type'] = Path.header.content_type;
 Axios.defaults.headers.post['Accept'] = Path.header.accept;
 
 const api = {
+    storage: '/assets/images/',
+    no_image: '/assets_homepage/img/no-image.jpg',
     auth: {
         login: (data) => {
             return Axios.post(Path.auth.login, data);
