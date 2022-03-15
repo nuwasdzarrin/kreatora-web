@@ -56,7 +56,7 @@
     </div>
     <div v-else>
       <div style="position: relative;">
-        <img :src="api.storage + detail_campaign.pictures[0]" alt="campaign-images" style="width: 100%; height: 215px;">
+        <img :src="api.storage + detail_campaign.pictures[0]" alt="campaign-images" class="campaign-detail-img">
         <span class="back-button-img" @click="$router.push({ name: 'HomePage'})">
           <i class="fas fa-arrow-left"></i>
         </span>
@@ -67,33 +67,29 @@
             <i class="fa fa-gamepad"></i> {{lodash.upperFirst(detail_campaign.category_name)}}
           </div>
           <div>
-            <i class="fa fa-clock"></i> 3 hari tersisa
-          </div>
-          <div>
-            <a href="#" class="mr-2"><i class="far fa-bookmark text-20"></i></a>
-            <a href="#"><i class="fa fa-share-alt text-20"></i></a>
+            <i class="far fa-clock"></i> 3 hari tersisa
           </div>
         </div>
         <div class="d-flex justify-content-between align-items-center mb-4">
           <div class="text-12">
             oleh:
-            <img :src="`/storage/${detail_campaign.creator_avatar}`" alt="avatar-creator" class="user-avatar">
+            <img :src="api.storage + detail_campaign.creator_avatar" alt="avatar-creator" class="user-avatar ml-1">
             <strong class="text-color-black">{{lodash.startCase(detail_campaign.creator_name)}}</strong>
-            <i class="fas fa-certificate ml-1"></i>
+            <i class="fas fa-certificate ml-1" style="color: #008FD7;"></i>
           </div>
           <div class="text-12">
             backers:
-            <strong class="text-color-black text-14">300+</strong>
+            <strong class="text-color-black text-14 mr-1">300+</strong>
             <img src="/assets_app/images/avatar/photo-avatar.jpg" alt="avatar-creator" class="user-avatar avatar-margin-right">
             <img src="/assets_app/images/avatar/photo-avatar.jpg" alt="avatar-creator" class="user-avatar avatar-margin-right">
             <img src="/assets_app/images/avatar/photo-avatar.jpg" alt="avatar-creator" class="user-avatar">
           </div>
         </div>
-        <h5 class="text-color-black mb-3"><strong>{{lodash.startCase(detail_campaign.title)}}</strong></h5>
-        <div class="progress mb-1 mt-3" style="height: 5px;">
+        <h5 class="text-color-black"><strong>{{lodash.startCase(detail_campaign.title)}}</strong></h5>
+        <div class="progress my-3" style="height: 5px;">
           <div class="progress-bar bg-primary" role="progressbar" :style="'width: '+25+'%'" :aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
         </div>
-        <div class="d-flex justify-content-between campaign-meta mb-4 text-12">
+        <div class="d-flex justify-content-between campaign-meta mb-5 text-12">
           <div>Terkumpul: <strong class="text-color-black text-14">Rp. 127.000.000</strong></div>
           <div>Target: <strong class="text-14">Rp. 145.000.000</strong></div>
         </div>
@@ -119,7 +115,12 @@
         </div>
       </div>
     </div>
-    <div class="container" style="position: absolute; bottom: 15px;">
+    <div class="container d-flex bottom-wrapper">
+      <a href="#">
+        <div class="d-flex align-items-center justify-content-center mr-3 share-button">
+          <i class="fa fa-share-alt text-20"></i>
+        </div>
+      </a>
       <button class="btn btn-primary btn-block">DUKUNG</button>
     </div>
   </div>
@@ -184,7 +185,7 @@ export default {
   border-radius: 50%;
 }
 .avatar-margin-right {
-  margin-right: -17px;
+  margin-right: -15px;
 }
 .text-color-black {
   color: #001B29;
@@ -236,5 +237,21 @@ export default {
   padding: 20px 10px;
   box-shadow: 4px 4px 15px rgba(0, 0, 0, 0.12);
   border-radius: 12px;
+}
+.campaign-detail-img {
+  width: 100%;
+  height: 215px;
+  object-fit: cover;
+}
+.bottom-wrapper {
+  position: absolute;
+  bottom: 15px;
+  height: 50px;
+}
+.share-button {
+  width: 50px;
+  height: 50px;
+  border-radius: 5px;
+  border: 1px solid #008FD7;
 }
 </style>

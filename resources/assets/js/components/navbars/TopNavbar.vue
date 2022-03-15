@@ -5,15 +5,15 @@
       <li class="nav-item d-flex align-items-center">
         <a class="nav-link" data-widget="pushmenu" href="#"><i class="fa fa-bars"></i></a>
       </li>
-      <li class="nav-item d-flex ml-3">
+      <li class="nav-item d-flex ml-1" style="flex: 1">
         <input type="text" class="input-search" placeholder='Coba cari "ide hebat"'>
       </li>
     </ul>
     <ul class="navbar-nav ml-auto">
       <!--   <notification-list />-->
       <li class="nav-item">
-        <a href="#" class="nav-link text-danger" v-if="isLoggedIn" @click="logout">
-          <i class="fas fa-bell" style="font-size: 20px;" title="Keluar"></i>
+        <a href="#" class="nav-link text-white text-center header-account bg-primary" @click="logout">
+          <i class="fas fa-user" style="font-size: 20px;" title="Keluar"></i>
         </a>
       </li>
 
@@ -72,7 +72,7 @@ export default {
 
 }
 </script>
-<style>
+<style lang="css" scoped>
 .top-navbar-fixed {
   width: 480px;
   position: fixed;
@@ -83,17 +83,30 @@ export default {
   min-height: 50px;
   min-width: 85%;
   background: #FAFCFE;
-  box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
   border-radius: 12px;
   padding-left: 10px;
   padding-right: 10px;
 }
 .input-search {
+  flex: 1;
   border: none;
   background-color: inherit;
+}
+@media screen and (max-width: 330px) {
+  .left-nav{
+    min-width: 80%;
+  }
+  .input-search {
+    width: 170px;
+  }
 }
 .input-search:focus {
   outline-width: 0;
 }
-
+.header-account {
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+}
 </style>

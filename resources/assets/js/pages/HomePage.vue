@@ -4,9 +4,9 @@
     <div class="container">
       <div class="mt-4">
         <HomeWalletComponent :amount="walletAmount" v-if="isLoggedIn"/>
-        <NotLoginComponent v-else />
+        <NotLoginComponent class="mb-4" v-else />
+        <CampaignCategory :labels="['Semua', 'Aksi', 'Olahraga', 'Simulasi', 'Lainnya']" />
         <CampaignVerticalList title="Terbaru" :data="campaigns" :clickBack="false"/>
-
 <!--        <div v-if="urlType">-->
 <!--          <CampaignVerticalList :title="campaignVerticalListTitle" :data="campaigns" @onClickBack="onClickBack"/>-->
 <!--        </div>-->
@@ -17,7 +17,7 @@
 <!--          <CampaignHorizontalList title="Semua" :data="campaign_home.latest" url="latest" @onClickSeeAll="onClickSeeAll" />-->
 <!--        </div>-->
         <div class="spacer"></div>
-        <BottomNavbar />
+<!--        <BottomNavbar />-->
       </div>
     </div>
   </div>
@@ -29,6 +29,7 @@ import CampaignHorizontalList from "../components/homepage/CampaignHorizontalLis
 import HomeWalletComponent from "../components/wallets/HomeWalletComponent";
 import Apis from "../apis";
 import CampaignVerticalList from "../components/homepage/CampaignVerticalList";
+import CampaignCategory from "../components/homepage/CampaignCategory";
 
 export default {
   name: "HomePage",
@@ -36,6 +37,7 @@ export default {
     CampaignVerticalList,
     HomeWalletComponent,
     CampaignHorizontalList,
+    CampaignCategory,
     NotLoginComponent
   },
   data() {
