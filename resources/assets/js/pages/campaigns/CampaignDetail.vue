@@ -56,7 +56,7 @@
     </div>
     <div v-else>
       <div style="position: relative;">
-        <img :src="detail_campaign.pictures.length ? api.storage + detail_campaign.pictures[0] : api.no_image" alt="campaign-images" style="width: 100%; height: 215px;">
+        <img :src="api.storage + detail_campaign.pictures[0]" alt="campaign-images" style="width: 100%; height: 215px;">
         <span class="back-button-img" @click="$router.push({ name: 'HomePage'})">
           <i class="fas fa-arrow-left"></i>
         </span>
