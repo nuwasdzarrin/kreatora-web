@@ -258,7 +258,7 @@ h1, h2, h3, h4, h5, h6 {
   color: #5f687b;
 }
 .navbar-mobile a:hover, .navbar-mobile .active, .navbar-mobile li:hover > a {
-  color: #16df7e;
+  color: #008FD7;
 }
 .navbar-mobile .getstarted, .navbar-mobile .getstarted:focus {
   margin: 15px;
