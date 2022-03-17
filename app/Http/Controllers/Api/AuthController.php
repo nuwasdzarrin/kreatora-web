@@ -115,7 +115,7 @@ class AuthController extends Controller
             ], 401);
         }
 
-        $code = rand(100000,999999);
+        $code = rand(1000,9999);
         Mail::to($request->email)->send(new EmailCodeVerification($code));
 
         try {

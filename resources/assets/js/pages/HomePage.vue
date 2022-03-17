@@ -3,8 +3,8 @@
     <TopNavbar />
     <div class="container">
       <div class="mt-4">
-        <HomeWalletComponent :amount="walletAmount" v-if="isLoggedIn"/>
-        <NotLoginComponent class="mb-4" v-else />
+<!--        <HomeWalletComponent :amount="walletAmount" v-if="isLoggedIn"/>-->
+        <NotLoginComponent class="mb-4" v-show="!isLoggedIn" />
         <CampaignCategory :labels="['Semua', 'Aksi', 'Olahraga', 'Simulasi', 'Lainnya']" />
         <CampaignVerticalList title="Terbaru" :data="campaigns" :clickBack="false"/>
 <!--        <div v-if="urlType">-->
