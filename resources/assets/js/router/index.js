@@ -32,6 +32,7 @@ import PriceSettingEdit from '../pages/price-settings/Edit';
 import Billing from '../pages/Billing';
 import Login from '../pages/auths/Login.vue';
 import Register from "../pages/auths/Register";
+import Verification from "../pages/auths/Verification";
 import Store from '../store';
 import Finance from '../pages/Finance';
 import FinanceCreate from '../pages/finances/Create';
@@ -63,6 +64,12 @@ let routes = [
                 path: '/campaign/register',
                 name: "Register",
                 component: Register,
+                meta: {requiresAuth: false},
+            },
+            {
+                path: '/campaign/verification',
+                name: "Verification",
+                component: Verification,
                 meta: {requiresAuth: false},
             },
             {
