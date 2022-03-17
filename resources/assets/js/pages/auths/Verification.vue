@@ -1,5 +1,6 @@
 <template>
-  <div class="card text-center d-flex justify-content-center" style="height: 100vh">
+  <div class="card text-center d-flex justify-content-center" style="position: relative; height: 100vh">
+    <router-link class="verification-back" :to="{ name: 'Register' }"><i class="fas fa-arrow-left verification-back-icon"></i></router-link>
     <div>
       <div class="card-body">
         <div class="form-signin">
@@ -94,6 +95,15 @@ export default {
 }
 </script>
 <style lang="css" scoped>
+.verification-back {
+  position: absolute;
+  top: 20px;
+  left: 25px;
+}
+.verification-back-icon {
+  font-size: 22px;
+  color: #008FD7;
+}
 .auth-section-title {
   font-family: 'Nunito Sans';
   font-style: normal;
