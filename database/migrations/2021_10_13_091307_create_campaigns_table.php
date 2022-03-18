@@ -30,9 +30,9 @@ class CreateCampaignsTable extends Migration
             $table->softDeletes();
 
             $table->foreign('user_id')->references('id')
-                ->on('users')->onUpdate('cascade')->onDelete('restrict');
+                ->on('users')->onUpdate('cascade')->onDelete('set null');
             $table->foreign('campaign_category_id')->references('id')
-                ->on('campaign_categories')->onUpdate('cascade')->onDelete('restrict');
+                ->on('campaign_categories')->onUpdate('cascade')->onDelete('set null');
         });
     }
 

@@ -23,11 +23,11 @@ class CreateFaqsTable extends Migration
             $table->timestamps();
 
             $table->foreign('campaign_id')->references('id')
-                ->on('campaigns')->onUpdate('cascade')->onDelete('restrict');
+                ->on('campaigns')->onUpdate('cascade')->onDelete('set null');
             $table->foreign('user_question_id')->references('id')
-                ->on('users')->onUpdate('cascade')->onDelete('restrict');
+                ->on('users')->onUpdate('cascade')->onDelete('set null');
             $table->foreign('user_answer_id')->references('id')
-                ->on('users')->onUpdate('cascade')->onDelete('restrict');
+                ->on('users')->onUpdate('cascade')->onDelete('set null');
         });
     }
 

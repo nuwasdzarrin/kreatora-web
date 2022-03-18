@@ -64,3 +64,4 @@ Route::get('shipping', 'ShippingController')->name('shipping');
 Route::get('/app', function () {
     return view('app');
 });
+Route::resource('campaigns', 'CampaignController');

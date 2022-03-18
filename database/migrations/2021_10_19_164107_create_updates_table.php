@@ -22,7 +22,7 @@ class CreateUpdatesTable extends Migration
             $table->timestamps();
 
             $table->foreign('campaign_id')->references('id')
-                ->on('campaigns')->onUpdate('cascade')->onDelete('restrict');
+                ->on('campaigns')->onUpdate('cascade')->onDelete('set null');
         });
     }
 
