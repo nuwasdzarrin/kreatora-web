@@ -24,7 +24,7 @@ class CreateWalletsTable extends Migration
             $table->softDeletes();
 
             $table->foreign('user_id')->references('id')
-                ->on('users')->onUpdate('cascade')->onDelete('restrict');
+                ->on('users')->onUpdate('cascade')->onDelete('set null');
         });
     }
 
