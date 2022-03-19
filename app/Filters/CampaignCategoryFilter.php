@@ -23,6 +23,7 @@ class CampaignCategoryFilter extends BaseFilter
      */
     protected $sortables = [
         'id',
+        'sorting',
         'name',
         'created_at',
         'updated_at'
