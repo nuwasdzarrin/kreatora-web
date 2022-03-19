@@ -15,8 +15,8 @@ class CreateCampaignsTable extends Migration
     {
         Schema::create('campaigns', function (Blueprint $table) {
             $table->increments('id');
-            $table->unsignedInteger('user_id');
-            $table->unsignedInteger('campaign_category_id');
+            $table->unsignedInteger('user_id')->nullable();
+            $table->unsignedInteger('campaign_category_id')->nullable();
             $table->string('title');
             $table->string('short_desc')->nullable();
             $table->longText('long_desc')->nullable();
@@ -30,9 +30,9 @@ class CreateCampaignsTable extends Migration
             $table->softDeletes();
 
             $table->foreign('user_id')->references('id')
-                ->on('users')->onUpdate('cascade')->onDelete('restrict');
+                ->on('users')->onUpdate('cascade')->onDelete('set null');
             $table->foreign('campaign_category_id')->references('id')
-                ->on('campaign_categories')->onUpdate('cascade')->onDelete('restrict');
+                ->on('campaign_categories')->onUpdate('cascade')->onDelete('set null');
         });
     }
 

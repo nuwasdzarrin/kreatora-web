@@ -15,7 +15,7 @@ class CreateRewardsTable extends Migration
     {
         Schema::create('rewards', function (Blueprint $table) {
             $table->increments('id');
-            $table->unsignedInteger('campaign_id');
+            $table->unsignedInteger('campaign_id')->nullable();
             $table->string('title');
             $table->longText('description')->nullable();
             $table->double('min_donation')->nullable();
@@ -24,7 +24,7 @@ class CreateRewardsTable extends Migration
             $table->softDeletes();
 
             $table->foreign('campaign_id')->references('id')
-                ->on('campaigns')->onUpdate('cascade')->onDelete('restrict');
+                ->on('campaigns')->onUpdate('cascade')->onDelete('set null');
         });
     }
 

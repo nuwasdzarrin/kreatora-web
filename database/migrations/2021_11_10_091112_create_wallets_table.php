@@ -16,7 +16,7 @@ class CreateWalletsTable extends Migration
         Schema::create('wallets', function (Blueprint $table) {
             $table->increments('id');
             $table->string('uuid')->nullable();
-            $table->unsignedInteger('user_id');
+            $table->unsignedInteger('user_id')->nullable();
             $table->string('balance')->default(0);
             $table->string('currency')->default('IDR');
             $table->string('status')->nullable();
@@ -24,7 +24,7 @@ class CreateWalletsTable extends Migration
             $table->softDeletes();
 
             $table->foreign('user_id')->references('id')
-                ->on('users')->onUpdate('cascade')->onDelete('restrict');
+                ->on('users')->onUpdate('cascade')->onDelete('set null');
         });
     }
 
