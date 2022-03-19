@@ -99,15 +99,6 @@ export default {
     isPending(){
       return this.$store.getters.isPending;
     },
-    isError(){
-      return this.$store.getters.isError;
-    },
-    messages(){
-      return this.$store.getters.messages;
-    },
-    authUser(){
-      return this.$store.getters.authUser;
-    },
   }
 }
 </script>

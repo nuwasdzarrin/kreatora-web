@@ -72,10 +72,7 @@ export default {
   computed: {
     verificationEmail() {
       return Cookie.get('verification_email')
-    },
-    authUser(){
-      return this.$store.getters.authUser;
-    },
+    }
   }
 }
 </script>

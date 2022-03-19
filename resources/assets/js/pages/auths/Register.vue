@@ -78,17 +78,6 @@ export default {
       this.$set(this.register,'password','');
       this.$set(this.register,'confirm_password','');
     }
-  },
-  computed: {
-    isError(){
-      return this.$store.getters.isError;
-    },
-    messages(){
-      return this.$store.getters.messages;
-    },
-    authUser(){
-      return this.$store.getters.authUser;
-    },
   }
 }
 </script>
