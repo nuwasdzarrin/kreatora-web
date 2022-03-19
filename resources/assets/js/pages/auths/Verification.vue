@@ -4,19 +4,29 @@
     <div>
       <div class="card-body">
         <div class="form-signin">
-          <div class="auth-section-title">Masukkan Kode Autentikasi</div>
-          <p style="margin: 2rem 0;">Kode autentikasi baru saja dikirimkan ke alamat email <b>dianahmad@gmail.com</b></p>
+          <div class="auth-section-title">Masukkan Kode Verifikasi</div>
+          <p style="margin: 2rem 0;">Kode verifikasi baru saja dikirimkan ke alamat email <b>{{verificationEmail}}</b></p>
           <div class="d-flex justify-content-center">
-            <input min="0" max="9" maxlength="1" pattern="[0-9]" type="tel" class="verification-input">
-            <input min="0" max="9" maxlength="1" pattern="[0-9]" type="tel" class="verification-input">
-            <input min="0" max="9" maxlength="1" pattern="[0-9]" type="tel" class="verification-input">
-            <input min="0" max="9" maxlength="1" pattern="[0-9]" type="tel" class="verification-input">
+            <v-otp-input
+              ref="otpInput"
+              input-classes="verification-input"
+              separator=""
+              :num-inputs="4"
+              :should-auto-focus="true"
+              :is-input-num="true"
+              @on-complete="handleOnComplete"
+            />
           </div>
-          <p class="my-4"><router-link :to="{ name: 'Login' }">Kirim ulang kode ?</router-link> 04:30</p>
-          <button class="btn btn-lg btn-primary btn-block" type="button" @click="login"><i v-if="isPending" class="fas fa-sign-in-alt fa-refresh fa-spin"></i>Verifikasi</button>
+          <p class="my-4"><a href="javascript:void(0)" @click="resendCode">Kirim ulang kode ?</a> 04:30</p>
+          <button class="btn btn-lg btn-primary btn-block" type="button" @click="doVerification">Verifikasi</button>
         </div>
       </div>
     </div>
+    <loading :active.sync="is_loading"
+             :can-cancel="false"
+             :is-full-page="true"
+             color="#008FD7"
+    ></loading>
   </div>
 </template>
 
@@ -27,66 +37,41 @@ import Cookie from "vue-cookie";
 export default {
   data() {
     return {
-      isLogin: true,
-      isRegisterProcess: false,
-      isRegisterAlert: false,
-      isPassword: true,
-      registerMessage: "",
-      register: {
-        name: '',
-        email: '',
-        password: '',
-        confirm_password:''
-      }
+      is_loading: false,
+      code: '',
     }
   },
   mounted() {
   },
   methods: {
-    async login() {
-      if (!this.email || !this.password) return;
-      await this.$store.dispatch("login", {
-        email: this.email,
-        password: this.password
-      }).then((res) => {
-        if (res.status === 401)
-          this.$toastr.e(res.data.message);
-        else {
-          this.$toastr.s("login success");
-          this.$router.push({ name: 'HomePage'});
-        }
-      });
+    handleOnComplete(value) {
+      this.$set(this, "code", value)
     },
-    doRegister() {
-      this.$set(this,'isRegisterProcess',true);
-      Api.auth.register(this.register).then((res)=>{
-        this.$set(this,'isLogin',true);
-        this.$set(this,'isRegisterAlert',true);
-        this.$set(this,'registerMessage',res.data.message);
-        this.$set(this,'isRegisterProcess',false);
-        this.clearForm();
+    doVerification() {
+      this.$set(this,'is_loading',true);
+      Api.auth.email_verification({code: this.code}).then((res)=>{
+        this.$set(this, 'is_loading', false)
+        this.$toastr.s(res.data.message + '. Silahkan login kembali');
+        this.$router.push({ name: 'Login'});
       }).catch((err)=>{
-        toastr.options.progressBar = true;
-        toastr.error(err.response.data.message ? err.response.data.message : err.response.data.exception.split('\\').pop());
-        this.$set(this,'isRegisterProcess',false);
+        this.$set(this, 'is_loading', false)
+        if (err && err.response.data && err.response.data.message) this.$toastr.e(err.response.data.message);
       });
     },
-    clearForm() {
-      this.$set(this.register,'name','');
-      this.$set(this.register,'email','');
-      this.$set(this.register,'password','');
-      this.$set(this.register,'confirm_password','');
-    }
+    resendCode() {
+      this.$set(this,'is_loading',true);
+      Api.auth.resend_code({email: this.verificationEmail}).then((res)=>{
+        this.$set(this, 'is_loading', false)
+        this.$toastr.s(res.data.message);
+      }).catch((err)=>{
+        this.$set(this, 'is_loading', false)
+        if (err && err.response.data && err.response.data.message) this.$toastr.e(err.response.data.message);
+      });
+    },
   },
   computed: {
-    isPending(){
-      return this.$store.getters.isPending;
-    },
-    isError(){
-      return this.$store.getters.isError;
-    },
-    messages(){
-      return this.$store.getters.messages;
+    verificationEmail() {
+      return Cookie.get('verification_email')
     },
     authUser(){
       return this.$store.getters.authUser;
@@ -94,7 +79,8 @@ export default {
   }
 }
 </script>
-<style lang="css" scoped>
+
+<style lang="css">
 .verification-back {
   position: absolute;
   top: 20px;

@@ -9,13 +9,21 @@ const path = {
         logout: '/api/logout',
         register: '/api/register',
         facebook: '/auth/',
-        google: '/api/auth/loginGoogle'
+        google: '/api/auth/loginGoogle',
+        email_verification: '/api/email_verification',
+        resend_code: '/api/email_code',
     },
     campaign: {
         home: '/api/campaigns/home',
         base: '/api/campaigns',
         detail: '/api/campaigns/{id}',
         slug: '/api/campaigns/slug/{slug}',
+    },
+    campaign_category: {
+        home: '/api/campaign_categories/home',
+        base: '/api/campaign_categories',
+        detail: '/api/campaign_categories/{id}',
+        slug: '/api/campaign_categories/slug/{slug}',
     },
     customer: {
         base: '/api/customers',

@@ -81,22 +81,22 @@ let routes = [
         ]
     },
     {
-        path: '/campaign',
+        path: '/dashboard',
         component: Home,
         meta: {requiresAuth: true},
         children: [
             {
-                path: '/dashboard',
+                path: '/',
                 component: HomePage,
                 name: 'DashboardHomePage',
             },
             {
-                path: 'dashboard/campaign/:slug',
+                path: '/dashboard/campaign/:slug',
                 component: CampaignDetail,
                 name: 'DashboardCampaignDetail',
             },
             {
-                path: 'dashboard/account',
+                path: '/dashboard/account',
                 component: Account,
                 name: 'DashboardAccount',
             },

@@ -21,7 +21,7 @@
             <i class="fa fa-eye-slash auth-eye" v-else @click="isPassword = true"></i>
           </div>
           <p class="my-4">Belum punya akun? <router-link :to="{ name: 'Register' }">Daftar</router-link></p>
-          <button class="btn btn-lg btn-primary btn-block" type="button" @click="doLogin"><i v-if="isPending" class="fas fa-sign-in-alt fa-refresh fa-spin"></i>Masuk</button>
+          <button class="btn btn-lg btn-primary btn-block" type="button" @click="doLogin">Masuk</button>
           <p class="mt-5">Atau lebih cepat ...</p>
           <div class="d-flex justify-content-center">
             <div class="auth-social mr-2"><i class="fab fa-google text-danger" style="font-size: 22px;"></i></div>
@@ -46,6 +46,11 @@
 <!--        </div>-->
       </div>
     </div>
+    <loading :active.sync="isPending"
+             :can-cancel="false"
+             :is-full-page="true"
+             color="#008FD7"
+    ></loading>
   </div>
 </template>
 
@@ -84,29 +89,10 @@ export default {
           this.$toastr.e(res.data.message);
         else {
           this.$toastr.s("login success");
-          this.$router.push({ name: 'HomePage'});
+          window.location.href = '/dashboard';
+          // this.$router.push({ name: 'HomePage'});
         }
       });
-    },
-    doRegister() {
-      this.$set(this,'isRegisterProcess',true);
-      Api.auth.register(this.register).then((res)=>{
-        this.$set(this,'isLogin',true);
-        this.$set(this,'isRegisterAlert',true);
-        this.$set(this,'registerMessage',res.data.message);
-        this.$set(this,'isRegisterProcess',false);
-        this.clearForm();
-      }).catch((err)=>{
-        toastr.options.progressBar = true;
-        toastr.error(err.response.data.message ? err.response.data.message : err.response.data.exception.split('\\').pop());
-        this.$set(this,'isRegisterProcess',false);
-      });
-    },
-    clearForm() {
-      this.$set(this.register,'name','');
-      this.$set(this.register,'email','');
-      this.$set(this.register,'password','');
-      this.$set(this.register,'confirm_password','');
     }
   },
   computed: {

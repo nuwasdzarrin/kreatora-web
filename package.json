@@ -34,6 +34,7 @@
         "vuex-flash": "^1.0.0"
     },
     "dependencies": {
+        "@bachdgvn/vue-otp-input": "^1.0.8",
         "toastr": "^2.1.4",
         "vue-toastr": "^2.1.2"
     }

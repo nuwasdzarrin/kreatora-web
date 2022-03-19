@@ -19,69 +19,58 @@
             <input type="email" v-model="register.email" class="form-control auth-input" placeholder="Email" required>
           </div>
           <div class="form-group" style="position: relative">
-            <input :type="isPassword ? 'password':'text'" v-model="register.password" class="form-control auth-input" placeholder="Password" required @keyup.enter="login">
+            <input :type="isPassword ? 'password':'text'" v-model="register.password" class="form-control auth-input" placeholder="Password" required @keyup.enter="doRegister">
             <i class="fa fa-eye auth-eye" v-if="isPassword" @click="isPassword = false"></i>
             <i class="fa fa-eye-slash auth-eye" v-else @click="isPassword = true"></i>
           </div>
           <p class="my-4">Sudah punya akun? <router-link :to="{ name: 'Login' }">Login</router-link></p>
-          <button class="btn btn-lg btn-primary btn-block" type="button" @click="doRegister"><i v-if="isPending" class="fas fa-sign-in-alt fa-refresh fa-spin"></i>Daftar</button>
+          <button class="btn btn-lg btn-primary btn-block" type="button" @click="doRegister">Daftar</button>
         </div>
       </div>
     </div>
+    <loading :active.sync="is_loading"
+             :can-cancel="false"
+             :is-full-page="true"
+             color="#008FD7"
+    ></loading>
   </div>
 </template>
 
 <script>
 import Api from "../../apis";
-import toastr from "toastr";
 import Cookie from "vue-cookie";
 export default {
   data() {
     return {
-      isLogin: true,
-      isRegisterProcess: false,
-      isRegisterAlert: false,
+      is_loading: false,
       isPassword: true,
-      registerMessage: "",
       register: {
         name: '',
         email: '',
-        password: '',
-        confirm_password:''
+        password: ''
       }
     }
   },
   mounted() {
   },
   methods: {
-    async login() {
-      if (!this.email || !this.password) return;
-      await this.$store.dispatch("login", {
-        email: this.email,
-        password: this.password
-      }).then((res) => {
-        if (res.status === 401)
-          this.$toastr.e(res.data.message);
-        else {
-          this.$toastr.s("login success");
-          this.$router.push({ name: 'HomePage'});
+    doRegister() {
+      this.$set(this, 'is_loading', true)
+      Api.auth.register(this.register).then((res)=>{
+        Cookie.set('verification_email', res.data.data.email, { expires: '1h' });
+        this.$set(this, 'is_loading', false)
+        this.$toastr.s(res.data.message);
+        this.$router.push({ name: 'Verification'});
+        // this.clearForm();
+      }).catch((err)=>{
+        this.$set(this, 'is_loading', false)
+        if (err && err.response.data && err.response.data.message) {
+          let messages = Object.values(err.response.data.message)
+          messages.forEach((item) => {
+            this.$toastr.e(item);
+          })
         }
       });
-    },
-    doRegister() {
-      this.$router.push({name: 'Verification'})
-      // this.$set(this,'isRegisterProcess',true);
-      // Api.auth.register(this.register).then((res)=>{
-      //   this.$set(this,'isLogin',true);
-      //   this.$set(this,'isRegisterAlert',true);
-      //   this.$set(this,'registerMessage',res.data.message);
-      //   this.$set(this,'isRegisterProcess',false);
-      //   this.clearForm();
-      // }).catch((err)=>{
-      //   toastr.options.progressBar = true;
-      //   toastr.error(err.response.data.message ? err.response.data.message : err.response.data.exception.split('\\').pop());
-      //   this.$set(this,'isRegisterProcess',false);
-      // });
     },
     clearForm() {
       this.$set(this.register,'name','');
@@ -91,9 +80,6 @@ export default {
     }
   },
   computed: {
-    isPending(){
-      return this.$store.getters.isPending;
-    },
     isError(){
       return this.$store.getters.isError;
     },
