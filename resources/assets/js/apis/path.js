@@ -29,10 +29,6 @@ const path = {
         base: '/api/customers',
         detail: '/api/customers/{id}'
     },
-    measurement: {
-        base: '/api/measurements',
-        detail: '/api/measurements/{id}'
-    },
     notification: {
         base: '/api/notifications'
     },
