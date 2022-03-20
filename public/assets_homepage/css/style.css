@@ -37,7 +37,7 @@ h1, h2, h3, h4, h5, h6 {
   right: 15px;
   bottom: 15px;
   z-index: 996;
-  background: #16df7e;
+  background: #008FD7;
   width: 40px;
   height: 40px;
   border-radius: 4px;
@@ -49,7 +49,7 @@ h1, h2, h3, h4, h5, h6 {
   line-height: 0;
 }
 .back-to-top:hover {
-  background: #33eb92;
+  background: #0072ac;
   color: #fff;
 }
 .back-to-top.active {
@@ -94,7 +94,7 @@ h1, h2, h3, h4, h5, h6 {
 # Navigation Menu
 --------------------------------------------------------------*/
 /**
-* Desktop Navigation 
+* Desktop Navigation
 */
 .navbar {
   padding: 0;
@@ -127,17 +127,17 @@ h1, h2, h3, h4, h5, h6 {
   margin-left: 5px;
 }
 .navbar a:hover, .navbar .active, .navbar .active:focus, .navbar li:hover > a {
-  color: #16df7e;
+  color: #008FD7;
 }
 .navbar .getstarted, .navbar .getstarted:focus {
   padding: 10px 25px;
   margin-left: 30px;
   border-radius: 4px;
   line-height: 1;
-  color: #5f687b;
+  color: #008FD7;
   font-size: 14px;
   font-weight: 500;
-  border: 1px solid #cdd1d9;
+  border: 1px solid #008FD7;
 }
 .navbar .getstarted:hover, .navbar .getstarted:focus:hover {
   background: #206bfb;
@@ -200,7 +200,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 /**
-* Mobile Navigation 
+* Mobile Navigation
 */
 .mobile-nav-toggle {
   color: #5f687b;
@@ -258,7 +258,7 @@ h1, h2, h3, h4, h5, h6 {
   color: #5f687b;
 }
 .navbar-mobile a:hover, .navbar-mobile .active, .navbar-mobile li:hover > a {
-  color: #16df7e;
+  color: #008FD7;
 }
 .navbar-mobile .getstarted, .navbar-mobile .getstarted:focus {
   margin: 15px;
@@ -322,8 +322,8 @@ h1, h2, h3, h4, h5, h6 {
   border-radius: 4px;
   transition: 0.5s;
   color: #fff;
-  background: #16df7e;
-  box-shadow: 0 8px 28px rgba(22, 223, 126, 0.45);
+  background: #008FD7;
+  box-shadow: 0 8px 28px rgba(32, 107, 251, 0.45);
 }
 #hero .btn-get-started:hover {
   background: #206bfb;
@@ -479,7 +479,7 @@ section {
   margin: 0 0 15px 0;
 }
 .featured-services .icon i {
-  color: #16df7e;
+  color: #008FD7;
   font-size: 36px;
 }
 .featured-services .title {
@@ -495,7 +495,7 @@ section {
   border-color: #eaecef;
 }
 .featured-services .icon-box:hover .title a {
-  color: #16df7e;
+  color: #008FD7;
 }
 .featured-services .description {
   line-height: 24px;
@@ -565,7 +565,7 @@ section {
   transition: ease-in-out 0.3s;
 }
 .services .icon-box .icon i {
-  color: #16df7e;
+  color: #008FD7;
   font-size: 36px;
   transition: 0.3s;
 }
@@ -587,7 +587,7 @@ section {
   border-color: #eaecef;
 }
 .services .icon-box:hover h4 a {
-  color: #16df7e;
+  color: #008FD7;
 }
 
 /*--------------------------------------------------------------

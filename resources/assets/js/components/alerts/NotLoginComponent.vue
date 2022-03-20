@@ -1,11 +1,11 @@
 <template>
-<div class="row">
-  <div class="col-9">
-    <div class="not-login-title">Ups! Kamu belum login</div>
-    <div>Login dan dapatkan kartu backer pertama mu! </div>
+<div class="d-flex justify-content-between">
+  <div>
+    <div class="not-login-title">Ups! Kamu belum masuk</div>
+    <div>Login dan dapatkan kartu backer pertamamu! </div>
   </div>
-  <div class="col-3 text-right">
-    <button class="btn btn-primary" @click="onClickLogin">Login</button>
+  <div class="d-flex align-items-center">
+    <button class="btn btn-primary" @click="onClickLogin">MASUK</button>
   </div>
 </div>
 </template>

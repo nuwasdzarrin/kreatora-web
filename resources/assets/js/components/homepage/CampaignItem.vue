@@ -1,7 +1,7 @@
 <template>
   <div :class="parent === 'CampaignVerticalList'?'vertical-campaign-item-card':'campaign-item-card'" @click="$router.push({ name: isLoggedIn ? 'DashboardCampaignDetail' : 'CampaignDetail', params: { slug: item.title }})" v-if="item">
-    <img :src="item.pictures.length ? api.storage + item.pictures[0] : api.no_image" alt="img-campaign" :class="parent === 'CampaignVerticalList'?'vertical-campaign-item-img':'campaign-item-img'">
-    <div class="p-3">
+    <img :src="api.storage + item.pictures[0]" alt="img-campaign" :class="parent === 'CampaignVerticalList'?'vertical-campaign-item-img':'campaign-item-img'">
+    <div class="p-4">
       <h6><strong>{{item.title}}</strong></h6>
       <div class="d-flex justify-content-between campaign-meta mb-1">
         <div>oleh : <span class="campaign-author">{{item.creator_name}}</span></div>
@@ -67,7 +67,8 @@ export default {
 }
 .vertical-campaign-item-img {
   width: 100%;
-  height: auto;
+  height: 200px;
+  object-fit: cover;
   border-top-left-radius: 12px;
   border-top-right-radius: 12px;
   margin-bottom: 10px;

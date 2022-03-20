@@ -25,7 +25,13 @@ const api = {
         },
         google: (user) => {
             return Axios.post(Path.auth.google, user, {params: {}})
-        }
+        },
+        resend_code: (data) => {
+            return Axios.post(Path.auth.resend_code, data);
+        },
+        email_verification: (data) => {
+            return Axios.post(Path.auth.email_verification, data);
+        },
     },
     campaign: {
         home: (params) => {
@@ -56,6 +62,37 @@ const api = {
         },
         destroy: (id) => {
             return Axios.delete(Path.campaign.detail.replace('{id}', id))
+        },
+    },
+    campaign_category: {
+        home: (params) => {
+            return Axios.get(Path.campaign_category.home, {
+                params: params
+            });
+        },
+        index: (params) => {
+            return Axios.get(Path.campaign_category.base, {
+                params: params
+            });
+        },
+        show: (id, params) => {
+            return Axios.get(Path.campaign_category.detail.replace('{id}', id), {
+                params: params
+            });
+        },
+        slug: (slug, params) => {
+            return Axios.get(Path.campaign_category.slug.replace('{slug}', slug), {
+                params: params
+            });
+        },
+        store: (data) => {
+            return Axios.post(Path.campaign_category.base, data);
+        },
+        update: (id,data) => {
+            return Axios.put(Path.campaign_category.detail.replace('{id}', id), data);
+        },
+        destroy: (id) => {
+            return Axios.delete(Path.campaign_category.detail.replace('{id}', id))
         },
     },
     billing: {

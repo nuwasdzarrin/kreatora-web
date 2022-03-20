@@ -32,6 +32,7 @@ import PriceSettingEdit from '../pages/price-settings/Edit';
 import Billing from '../pages/Billing';
 import Login from '../pages/auths/Login.vue';
 import Register from "../pages/auths/Register";
+import Verification from "../pages/auths/Verification";
 import Store from '../store';
 import Finance from '../pages/Finance';
 import FinanceCreate from '../pages/finances/Create';
@@ -66,6 +67,12 @@ let routes = [
                 meta: {requiresAuth: false},
             },
             {
+                path: '/campaign/verification',
+                name: "Verification",
+                component: Verification,
+                meta: {requiresAuth: false},
+            },
+            {
                 path: '/campaign/:slug',
                 component: CampaignDetail,
                 name: 'CampaignDetail',
@@ -74,22 +81,22 @@ let routes = [
         ]
     },
     {
-        path: '/campaign',
+        path: '/dashboard',
         component: Home,
         meta: {requiresAuth: true},
         children: [
             {
-                path: '/dashboard',
+                path: '/',
                 component: HomePage,
                 name: 'DashboardHomePage',
             },
             {
-                path: 'dashboard/campaign/:slug',
+                path: '/dashboard/campaign/:slug',
                 component: CampaignDetail,
                 name: 'DashboardCampaignDetail',
             },
             {
-                path: 'dashboard/account',
+                path: '/dashboard/account',
                 component: Account,
                 name: 'DashboardAccount',
             },

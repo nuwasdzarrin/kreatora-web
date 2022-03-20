@@ -99,7 +99,7 @@ class Campaign extends Model
 
     public function getPicturesAttribute()
     {
-        return $this->images ? json_decode($this->images) : [];
+        return $this->images ? json_decode($this->images) : ['no-image.jpg'];
     }
 
     public function getCreatorNameAttribute()

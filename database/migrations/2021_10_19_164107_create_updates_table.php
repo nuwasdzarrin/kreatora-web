@@ -15,7 +15,7 @@ class CreateUpdatesTable extends Migration
     {
         Schema::create('updates', function (Blueprint $table) {
             $table->increments('id');
-            $table->unsignedInteger('campaign_id');
+            $table->unsignedInteger('campaign_id')->nullable();
             $table->string('index');
             $table->string('title');
             $table->string('description')->nullable();

@@ -23,6 +23,7 @@ class CampaignCategoryFilter extends BaseFilter
      */
     protected $sortables = [
         'id',
+        'sorting',
         'name',
         'created_at',
         'updated_at'
@@ -32,7 +33,7 @@ class CampaignCategoryFilter extends BaseFilter
      * Default Sort, null if no default, ex: 'name,asc'
      * @var string|null
      */
-    protected $default_sort = null;
+    protected $default_sort = 'sorting,asc';
 
     /**
      * Default per page, null if use model per page default, ex: 20

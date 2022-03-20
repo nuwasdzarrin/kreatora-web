@@ -15,8 +15,8 @@ class CreateCampaignsTable extends Migration
     {
         Schema::create('campaigns', function (Blueprint $table) {
             $table->increments('id');
-            $table->unsignedInteger('user_id');
-            $table->unsignedInteger('campaign_category_id');
+            $table->unsignedInteger('user_id')->nullable();
+            $table->unsignedInteger('campaign_category_id')->nullable();
             $table->string('title');
             $table->string('short_desc')->nullable();
             $table->longText('long_desc')->nullable();

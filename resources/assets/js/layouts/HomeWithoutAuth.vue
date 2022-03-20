@@ -15,5 +15,6 @@ name: "HomeWithoutAuth"
   max-width: 480px;
   background-color: #ECF1F4;
   margin: 0 auto;
+  height: 100vh;
 }
 </style>

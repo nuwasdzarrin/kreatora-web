@@ -20,7 +20,7 @@
     <div class="auth-box" style="width: 180px;margin: 30px auto;padding: 15px 10px;border-style: solid;border-width: 1px;border-color: #e8e8e8;border-radius: 4px;">
         <div class="text-block" style="color: #00aeef;font-size: 27px;font-weight: 600;text-align: center;letter-spacing:5px;"> {{ $code }}</div>
     </div>
-    <p class="paragraph" style="font-size: 13px;line-height: 16px;margin-top: 10px;">Masukkan 6 digit kode di atas untuk menggunakan akun Kreatora anda.</p>
+    <p class="paragraph" style="font-size: 13px;line-height: 16px;margin-top: 10px;">Masukkan 4 digit kode di atas untuk menggunakan akun Kreatora anda.</p>
     <div class="divider" style="margin-top: 30px;margin-bottom: 30px;border-top: 1px dashed #e8e8e8;"></div>
     <p class="paragraph" style="font-size: 13px;line-height: 16px;margin-top: 10px;"><strong>PENTING!<br></strong></p>
     <p class="paragraph" style="font-size: 13px;line-height: 16px;margin-top: 10px;">Jangan berikan kode ini kepada siapa pun termasuk pihak Kreatora.</p>

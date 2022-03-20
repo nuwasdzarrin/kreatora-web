@@ -100,13 +100,14 @@ class AuthController extends Controller
         $validator = Validator::make($request->all(), [
             'name' => 'required|string',
             'email' => 'required|email|unique:users',
-            'password' => [
-                'required', 'string', 'min:6',
-                'regex:/[a-z]/',
-                'regex:/[A-Z]/',
-                'regex:/[0-9]/',
-                'regex:/[@$!%*#?&.s]/'],
-            'password_confirmation' => 'required|same:password',
+//            'password' => [
+//                'required', 'string', 'min:6',
+//                'regex:/[a-z]/',
+//                'regex:/[A-Z]/',
+//                'regex:/[0-9]/',
+//                'regex:/[@$!%*#?&.s]/'],
+            'password' => 'required|string|min:6',
+//            'password_confirmation' => 'required|same:password',
         ]);
         if ($validator->fails()) {
             return response()->json([
@@ -115,7 +116,7 @@ class AuthController extends Controller
             ], 401);
         }
 
-        $code = rand(100000,999999);
+        $code = rand(1000,9999);
         Mail::to($request->email)->send(new EmailCodeVerification($code));
 
         try {
@@ -213,7 +214,7 @@ class AuthController extends Controller
         $this->message = "Email tidak valid";
         $this->code = 404;
 
-        $code = rand(100000,999999);
+        $code = rand(1000,9999);
 
         if ($data){
             $data->remember_token = $code;

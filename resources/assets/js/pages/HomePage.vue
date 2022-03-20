@@ -3,10 +3,10 @@
     <TopNavbar />
     <div class="container">
       <div class="mt-4">
-        <HomeWalletComponent :amount="walletAmount" v-if="isLoggedIn"/>
-        <NotLoginComponent v-else />
+<!--        <HomeWalletComponent :amount="walletAmount" v-if="isLoggedIn"/>-->
+        <NotLoginComponent class="mb-4" v-if="!isLoggedIn" />
+        <CampaignCategory :originData="campaign_categories" @onCategoryClick="onCategoryClick" />
         <CampaignVerticalList title="Terbaru" :data="campaigns" :clickBack="false"/>
-
 <!--        <div v-if="urlType">-->
 <!--          <CampaignVerticalList :title="campaignVerticalListTitle" :data="campaigns" @onClickBack="onClickBack"/>-->
 <!--        </div>-->
@@ -17,9 +17,14 @@
 <!--          <CampaignHorizontalList title="Semua" :data="campaign_home.latest" url="latest" @onClickSeeAll="onClickSeeAll" />-->
 <!--        </div>-->
         <div class="spacer"></div>
-        <BottomNavbar />
+<!--        <BottomNavbar />-->
       </div>
     </div>
+    <loading :active.sync="is_loading"
+             :can-cancel="false"
+             :is-full-page="true"
+             color="#008FD7"
+    ></loading>
   </div>
 </template>
 
@@ -29,6 +34,7 @@ import CampaignHorizontalList from "../components/homepage/CampaignHorizontalLis
 import HomeWalletComponent from "../components/wallets/HomeWalletComponent";
 import Apis from "../apis";
 import CampaignVerticalList from "../components/homepage/CampaignVerticalList";
+import CampaignCategory from "../components/homepage/CampaignCategory";
 
 export default {
   name: "HomePage",
@@ -36,13 +42,17 @@ export default {
     CampaignVerticalList,
     HomeWalletComponent,
     CampaignHorizontalList,
+    CampaignCategory,
     NotLoginComponent
   },
   data() {
     return {
+      is_loading: false,
       profile: {},
-      campaign_home: {},
-      campaigns: []
+      // campaign_home: {},
+      campaigns: [],
+      campaign_categories: [],
+      category_id_selected: ''
     }
   },
   methods: {
@@ -54,21 +64,36 @@ export default {
         throw error
       })
     },
-    fetchHomeCampaign(){
-      Apis.campaign.home().then(({data}) => {
-        this.$set(this, 'campaign_home', data.data);
+    // fetchHomeCampaign(){
+    //   Apis.campaign.home().then(({data}) => {
+    //     this.$set(this, 'campaign_home', data.data);
+    //   }).catch((error) => {
+    //     throw error
+    //   })
+    // },
+    fetchCampaign(){
+      this.$set(this, 'is_loading', true);
+      Apis.campaign.index({
+        type: this.urlType,
+        campaign_category_id: this.category_id_selected || ''
+      }).then(({data}) => {
+        this.$set(this, 'campaigns', data.data);
+        this.$set(this, 'is_loading', false);
+      }).catch((error) => {
+        this.$set(this, 'is_loading', false);
+        throw error;
+      })
+    },
+    fetchCampaignCategory(){
+      Apis.campaign_category.index().then(({data}) => {
+        this.$set(this, 'campaign_categories', data.data);
       }).catch((error) => {
         throw error
       })
     },
-    fetchCampaign(){
-      Apis.campaign.index({
-        type: this.urlType
-      }).then(({data}) => {
-        this.$set(this, 'campaigns', data.data);
-      }).catch((error) => {
-        throw error
-      })
+    onCategoryClick(payload) {
+      this.$set(this, 'category_id_selected', payload ? payload.id : '');
+      this.fetchCampaign();
     },
     onClickSeeAll(payload) {
       this.$router.push({ name: this.isLoggedIn ? 'DashboardHomePage':'HomePage', query: { type: payload } }).then(()=>{
@@ -113,6 +138,7 @@ export default {
   mounted() {
     this.fetchProfile();
     this.fetchCampaign()
+    this.fetchCampaignCategory()
     // this.urlType ? this.fetchCampaign() : this.fetchHomeCampaign();
   }
 }

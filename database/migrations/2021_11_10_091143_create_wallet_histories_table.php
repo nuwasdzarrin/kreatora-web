@@ -15,8 +15,8 @@ class CreateWalletHistoriesTable extends Migration
     {
         Schema::create('wallet_histories', function (Blueprint $table) {
             $table->increments('id');
-            $table->unsignedInteger('user_id');
-            $table->unsignedInteger('wallet_id');
+            $table->unsignedInteger('user_id')->nullable();
+            $table->unsignedInteger('wallet_id')->nullable();
             $table->double('amount');
             $table->string('type')->nullable();
             $table->string('noted')->nullable();
