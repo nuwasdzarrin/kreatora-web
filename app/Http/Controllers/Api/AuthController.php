@@ -99,7 +99,7 @@ class AuthController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'name' => 'required|string',
-            'email' => 'required|email|unique:users',
+            'email' => 'required|email',
 //            'password' => [
 //                'required', 'string', 'min:6',
 //                'regex:/[a-z]/',
@@ -107,14 +107,34 @@ class AuthController extends Controller
 //                'regex:/[0-9]/',
 //                'regex:/[@$!%*#?&.s]/'],
             'password' => 'required|string|min:6',
-//            'password_confirmation' => 'required|same:password',
+            'password_confirmation' => 'required|same:password',
         ]);
         if ($validator->fails()) {
             return response()->json([
                 'data' => [],
+                'redirect_to' => '',
                 'message' => $validator->errors()
             ], 401);
         }
+
+//        check if user exist
+        $user = User::query()->where('email', $request->email)->first();
+        if ($user) {
+            $redirect = '';
+            if (!$user->email_verified_at) {
+                $this->message = "Email telah terdaftar, silahkan verifikasi email anda";
+                $redirect = 'verification';
+            } else {
+                $this->message = "Email telah terdaftar dan terverifikasi, silahkan login kembali";
+                $redirect = 'login';
+            }
+            return response()->json([
+                'data' => $user,
+                'redirect_to' => $redirect,
+                'message' => $this->message
+            ], 200);
+        }
+
 
         $code = rand(1000,9999);
         Mail::to($request->email)->send(new EmailCodeVerification($code));
@@ -142,6 +162,7 @@ class AuthController extends Controller
 
         return response()->json([
             'data' => $user,
+            'redirect_to' => 'verification',
             'message' => $this->message
         ], 200);
     }

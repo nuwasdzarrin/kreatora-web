@@ -19,9 +19,14 @@
             <input type="email" v-model="register.email" class="form-control auth-input" placeholder="Email" required>
           </div>
           <div class="form-group" style="position: relative">
-            <input :type="isPassword ? 'password':'text'" v-model="register.password" class="form-control auth-input" placeholder="Password" required @keyup.enter="doRegister">
+            <input :type="isPassword ? 'password':'text'" v-model="register.password" class="form-control auth-input" placeholder="Password" required>
             <i class="fa fa-eye auth-eye" v-if="isPassword" @click="isPassword = false"></i>
             <i class="fa fa-eye-slash auth-eye" v-else @click="isPassword = true"></i>
+          </div>
+          <div class="form-group" style="position: relative">
+            <input :type="isPasswordConfirmation ? 'password':'text'" v-model="register.password_confirmation" class="form-control auth-input" placeholder="Konfirmasi Password" required @keyup.enter="doRegister">
+            <i class="fa fa-eye auth-eye" v-if="isPasswordConfirmation" @click="isPasswordConfirmation = false"></i>
+            <i class="fa fa-eye-slash auth-eye" v-else @click="isPasswordConfirmation = true"></i>
           </div>
           <p class="my-4">Sudah punya akun? <router-link :to="{ name: 'Login' }">Login</router-link></p>
           <button class="btn btn-lg btn-primary btn-block" type="button" @click="doRegister">Daftar</button>
@@ -44,10 +49,12 @@ export default {
     return {
       is_loading: false,
       isPassword: true,
+      isPasswordConfirmation: true,
       register: {
         name: '',
         email: '',
-        password: ''
+        password: '',
+        password_confirmation: ''
       }
     }
   },
@@ -60,7 +67,8 @@ export default {
         Cookie.set('verification_email', res.data.data.email, { expires: '1h' });
         this.$set(this, 'is_loading', false)
         this.$toastr.s(res.data.message);
-        this.$router.push({ name: 'Verification'});
+        if (res.data.redirect_to === 'login') return this.$router.push({ name: 'Login'});
+        return this.$router.push({ name: 'Verification'});
         // this.clearForm();
       }).catch((err)=>{
         this.$set(this, 'is_loading', false)
