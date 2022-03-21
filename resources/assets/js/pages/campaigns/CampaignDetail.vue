@@ -67,7 +67,7 @@
             <i class="fa fa-gamepad"></i> {{lodash.upperFirst(detail_campaign.category_name)}}
           </div>
           <div>
-            <i class="far fa-clock"></i> 3 hari tersisa
+            <i class="far fa-clock"></i> {{ daysLeft }} hari tersisa
           </div>
         </div>
         <div class="d-flex justify-content-between align-items-center mb-4">
@@ -90,8 +90,8 @@
           <div class="progress-bar bg-primary" role="progressbar" :style="'width: '+25+'%'" :aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
         </div>
         <div class="d-flex justify-content-between campaign-meta mb-5 text-12">
-          <div>Terkumpul: <strong class="text-color-black text-14">Rp. 127.000.000</strong></div>
-          <div>Target: <strong class="text-14">Rp. 145.000.000</strong></div>
+          <div>Terkumpul: <strong class="text-color-black text-14">Rp. {{ detail_campaign.total_funded | formatCurrency }}</strong></div>
+          <div>Target: <strong class="text-14">Rp. {{ detail_campaign.goal | formatCurrency }}</strong></div>
         </div>
         <div class="d-flex justify-content-around align-items-center mb-4 text-14">
           <div class="text-14 text-color-black" @click="$router.push({ name: 'CampaignDetail', params: { slug: detail_campaign.title }, query: { section: 'description' }})">
@@ -153,7 +153,17 @@ export default {
       if (this.$route.query.section === 'description') return this.detail_campaign.long_desc
       else if (this.$route.query.section === 'risk') return this.detail_campaign.risk
       else return null
-    }
+    },
+    daysLeft() {
+      let result = 0;
+      if (this.detail_campaign.end) {
+        let diff = moment(this.detail_campaign.end).diff(moment(), 'days');
+        if (diff > 0) {
+          result = diff;
+        }
+      }
+      return result;
+    },
   },
   methods: {
     fetchDetailCampaign() {

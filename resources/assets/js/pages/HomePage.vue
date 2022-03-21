@@ -20,10 +20,11 @@
 <!--        <BottomNavbar />-->
       </div>
     </div>
-    <loading :active.sync="is_loading"
-             :can-cancel="false"
-             :is-full-page="true"
-             color="#008FD7"
+    <loading 
+      :active.sync="is_loading"
+      :can-cancel="false"
+      :is-full-page="true"
+      color="#008FD7"
     ></loading>
   </div>
 </template>

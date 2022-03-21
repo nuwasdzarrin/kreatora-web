@@ -5,7 +5,7 @@
       <h6><strong>{{item.title}}</strong></h6>
       <div class="d-flex justify-content-between campaign-meta mb-1">
         <div>oleh : <span class="campaign-author">{{item.creator_name}}</span></div>
-        <div>3 hari tersisa</div>
+        <div>{{ daysLeft }} hari tersisa</div>
       </div>
       <div class="progress mb-1" style="height: 5px;">
         <div class="progress-bar bg-primary" role="progressbar" :style="'width: '+fundedPercent+'%'" :aria-valuenow="fundedPercent" aria-valuemin="0" aria-valuemax="100"></div>
@@ -20,6 +20,7 @@
 
 <script>
 import Apis from "../../apis";
+import moment from "moment";
 export default {
   name: "CampaignItem",
   props: {
@@ -35,7 +36,18 @@ export default {
   },
   computed: {
     fundedPercent() {
-      return Math.round((this.item.total_funded / this.item.goal) * 100)
+      let result = Math.round((this.item.total_funded / this.item.goal) * 100);
+      return (result > 100) ? 100 : result;
+    },
+    daysLeft() {
+      let result = 0;
+      if (this.item.end) {
+        let diff = moment(this.item.end).diff(moment(), 'days');
+        if (diff > 0) {
+          result = diff;
+        }
+      }
+      return result;
     },
     isLoggedIn() {
       return this.$store.getters.isLoggedIn;

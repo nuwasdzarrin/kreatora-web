@@ -1,21 +1,21 @@
 <template>
     <div class="dataTables_paginate paging_simple_numbers">
-    <ul class="pagination">
-    <li v-if="pagination.current_page > 1" class="page-item" >
-        <a class="page-link" href="javascript:void(0)" aria-label="Previous" v-on:click.prevent="changePage(pagination.current_page - 1)">
-            <span aria-hidden="true">«</span>
-            </a>
+      <ul class="pagination">
+        <li v-if="pagination.current_page > 1" class="page-item" >
+          <a class="page-link" href="javascript:void(0)" aria-label="Previous" v-on:click.prevent="changePage(pagination.current_page - 1)">
+              <span aria-hidden="true">«</span>
+              </a>
         </li>
-    <li v-for="page in pagesNumber" class="page-item" :class="{'active': page == pagination.current_page}">
-        <a class="page-link" href="javascript:void(0)" v-on:click.prevent="changePage(page)">{{ page }}</a>
+        <li v-for="(page, index) in pagesNumber" class="page-item" :class="{'active': page == pagination.current_page}" :key="index">
+          <a class="page-link" href="javascript:void(0)" v-on:click.prevent="changePage(page)">{{ page }}</a>
         </li>
-    <li v-if="pagination.current_page < pagination.last_page" class="page-item" >
-        <a class="page-link" href="javascript:void(0)" aria-label="Next" v-on:click.prevent="changePage(pagination.current_page + 1)">
+        <li v-if="pagination.current_page < pagination.last_page" class="page-item" >
+          <a class="page-link" href="javascript:void(0)" aria-label="Next" v-on:click.prevent="changePage(pagination.current_page + 1)">
             <span aria-hidden="true">»</span>
-            </a>
+          </a>
         </li>
-    </ul>
-     </div>
+      </ul>
+    </div>
 </template>
 <script>
   export default{
