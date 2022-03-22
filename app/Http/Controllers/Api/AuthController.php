@@ -58,10 +58,12 @@ class AuthController extends Controller
                 $user->save();
                 $data['data'] = $user;
                 $data['message'] = 'login successfully';
+                $data['redirect_to'] = 'homepage';
                 $this->code = 200;
             } else {
                 $data['data'] = [];
-                $data['message'] = "Email belum diverifikasi";
+                $data['message'] = "Email belum diverifikasi. Silahkan verifikasi email anda terlebih dahulu";
+                $data['redirect_to'] = 'verification';
                 $this->code = 401;
             }
 
@@ -69,7 +71,8 @@ class AuthController extends Controller
         } else {
             return response()->json([
                 'data' => [],
-                'message' => 'wrong email or password'
+                'message' => 'wrong email or password',
+                'redirect_to' => ''
             ], 401);
         }
     }

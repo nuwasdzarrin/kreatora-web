@@ -14,11 +14,18 @@
               :num-inputs="4"
               :should-auto-focus="true"
               :is-input-num="true"
+              @on-change="handleOnChange"
               @on-complete="handleOnComplete"
             />
           </div>
-          <p class="my-4"><a href="javascript:void(0)" @click="resendCode">Kirim ulang kode ?</a> 04:30</p>
-          <button class="btn btn-lg btn-primary btn-block" type="button" @click="doVerification">Verifikasi</button>
+          <p class="my-4">
+            <a href="javascript:void(0)" @click="resendCode" :class="{'verification-resend-disable': is_countdown}">Kirim ulang kode ?</a>
+            <countdown :time="60 * 1000" :transform="transformSlotProps" v-slot="{ minutes, seconds }" @end="is_countdown= false" v-if="is_countdown">
+              {{ minutes }}:{{ seconds }}
+            </countdown>
+            <span v-else>01:00</span>
+          </p>
+          <button class="btn btn-lg btn-primary btn-block" :class="{'disabled verification-button-disabled': !code}" type="button" @click="doVerification">Verifikasi</button>
         </div>
       </div>
     </div>
@@ -32,11 +39,19 @@
 
 <script>
 import Api from "../../apis";
-import toastr from "toastr";
 import Cookie from "vue-cookie";
+import OtpInput from "@bachdgvn/vue-otp-input";
+import Vue from 'vue';
+import VueCountdown from '@chenfengyuan/vue-countdown'
+
+Vue.component(VueCountdown.name, VueCountdown)
 export default {
+  components: {
+    'v-otp-input': OtpInput
+  },
   data() {
     return {
+      is_countdown: true,
       is_loading: false,
       code: '',
     }
@@ -44,10 +59,14 @@ export default {
   mounted() {
   },
   methods: {
+    handleOnChange(value) {
+      this.$set(this, "code", value)
+    },
     handleOnComplete(value) {
       this.$set(this, "code", value)
     },
     doVerification() {
+      if (!this.code) return null;
       this.$set(this,'is_loading',true);
       Api.auth.email_verification({code: this.code}).then((res)=>{
         this.$set(this, 'is_loading', false)
@@ -55,18 +74,34 @@ export default {
         this.$router.push({ name: 'Login'});
       }).catch((err)=>{
         this.$set(this, 'is_loading', false)
-        if (err && err.response.data && err.response.data.message) this.$toastr.e(err.response.data.message);
+        if (err && err.response.data && err.response.data.message) {
+          if (typeof err.response.data.message === 'object') {
+            let messages = Object.values(err.response.data.message)
+            messages.forEach((item) => {
+              this.$toastr.e(item);
+            })
+          } else this.$toastr.e(err.response.data.message);
+        }
       });
     },
     resendCode() {
+      if (this.is_countdown) return null;
       this.$set(this,'is_loading',true);
       Api.auth.resend_code({email: this.verificationEmail}).then((res)=>{
         this.$set(this, 'is_loading', false)
+        this.$set(this, 'is_countdown', true)
         this.$toastr.s(res.data.message);
       }).catch((err)=>{
         this.$set(this, 'is_loading', false)
         if (err && err.response.data && err.response.data.message) this.$toastr.e(err.response.data.message);
       });
+    },
+    transformSlotProps(props) {
+      const formattedProps = {};
+      Object.entries(props).forEach(([key, value]) => {
+        formattedProps[key] = value < 10 ? `0${value}` : String(value);
+      });
+      return formattedProps;
     },
   },
   computed: {
@@ -96,6 +131,15 @@ export default {
   color: #23232E;
   margin-bottom: 15px;
 }
+.verification-resend-disable {
+  cursor: not-allowed;
+  color: #5C5C70;
+}
+.verification-resend-disable:hover {
+  cursor: not-allowed;
+  text-decoration: unset;
+  color: #5C5C70;
+}
 .verification-input {
   width: 50px;
   height: 65px;
@@ -110,5 +154,8 @@ export default {
   font-size: 24px;
   line-height: 140%;
   color: #000000;
+}
+.verification-button-disabled:hover {
+  cursor: not-allowed;
 }
 </style>
