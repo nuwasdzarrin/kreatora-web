@@ -1,5 +1,5 @@
 <template>
-  <div class="d-flex pb-3" style="overflow-x: auto">
+  <div class="d-flex pb-3 category-scroll-x">
     <button class="button-category" :class="{'active': isActive === null}" @click="categoryClick(null)">Semua</button>
     <button class="button-category" :class="{'active': (isActive && item.id === isActive.id)}" v-for="(item, index) in originData" :key="index" @click="categoryClick(item)">{{item.name}}</button>
   </div>
@@ -47,4 +47,13 @@ export default {
   opacity: unset;
   background-color: #008FD7;
 }
+.category-scroll-x {
+  overflow-x: auto;
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+}
+.category-scroll-x::-webkit-scrollbar {
+  display: none;
+}
+
 </style>

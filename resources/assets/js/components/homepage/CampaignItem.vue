@@ -3,11 +3,11 @@
     <img :src="api.storage + item.pictures[0]" alt="img-campaign" :class="parent === 'CampaignVerticalList'?'vertical-campaign-item-img':'campaign-item-img'">
     <div class="p-4">
       <h6><strong>{{item.title}}</strong></h6>
-      <div class="d-flex justify-content-between campaign-meta mb-1">
+      <div class="d-flex justify-content-between campaign-meta mb-2">
         <div>oleh : <span class="campaign-author">{{item.creator_name}}</span></div>
-        <div>3 hari tersisa</div>
+        <div>{{ daysLeft }} hari tersisa</div>
       </div>
-      <div class="progress mb-1" style="height: 5px;">
+      <div class="progress mb-2" style="height: 5px;">
         <div class="progress-bar bg-primary" role="progressbar" :style="'width: '+fundedPercent+'%'" :aria-valuenow="fundedPercent" aria-valuemin="0" aria-valuemax="100"></div>
       </div>
       <div class="d-flex justify-content-between campaign-meta mb-1">
@@ -20,6 +20,7 @@
 
 <script>
 import Apis from "../../apis";
+import moment from "moment";
 export default {
   name: "CampaignItem",
   props: {
@@ -39,6 +40,10 @@ export default {
     },
     isLoggedIn() {
       return this.$store.getters.isLoggedIn;
+    },
+    daysLeft() {
+      let cal = moment(this.item.end).diff(moment(), 'days')
+      return cal > 0 ? cal : 0
     }
   }
 }
