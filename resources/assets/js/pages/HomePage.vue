@@ -6,7 +6,7 @@
 <!--        <HomeWalletComponent :amount="walletAmount" v-if="isLoggedIn"/>-->
         <NotLoginComponent class="mb-4" v-if="!isLoggedIn" />
         <CampaignCategory :originData="campaign_categories" @onCategoryClick="onCategoryClick" />
-        <CampaignVerticalList title="Terbaru" :data="campaigns" :clickBack="false"/>
+        <CampaignVerticalList :title="category_selected ? category_selected.name : 'Semua'" :data="campaigns" :categories="campaign_categories" :clickBack="false"/>
 <!--        <div v-if="urlType">-->
 <!--          <CampaignVerticalList :title="campaignVerticalListTitle" :data="campaigns" @onClickBack="onClickBack"/>-->
 <!--        </div>-->
@@ -53,7 +53,7 @@ export default {
       // campaign_home: {},
       campaigns: [],
       campaign_categories: [],
-      category_id_selected: ''
+      category_selected: null
     }
   },
   methods: {
@@ -76,7 +76,7 @@ export default {
       this.$set(this, 'is_loading', true);
       Apis.campaign.index({
         type: this.urlType,
-        campaign_category_id: this.category_id_selected || ''
+        campaign_category_id: this.category_selected ? this.category_selected.id : ''
       }).then(({data}) => {
         this.$set(this, 'campaigns', data.data);
         this.$set(this, 'is_loading', false);
@@ -93,7 +93,7 @@ export default {
       })
     },
     onCategoryClick(payload) {
-      this.$set(this, 'category_id_selected', payload ? payload.id : '');
+      this.$set(this, 'category_selected', payload ? payload : null);
       this.fetchCampaign();
     },
     onClickSeeAll(payload) {

@@ -60,11 +60,13 @@
         <span class="back-button-img" @click="$router.push({ name: 'HomePage'})">
           <i class="fas fa-arrow-left"></i>
         </span>
+        <img :src="api.storage + 'kreatora-mark.png'" style="position: absolute; bottom: 10px; right: 10px;">
       </div>
       <div class="container mt-4">
         <div class="d-flex justify-content-between align-items-center mb-3 text-14">
-          <div style="padding: 5px 10px;border: 1px solid #5C5C70;border-radius: 100px;">
-            <i class="fa fa-gamepad"></i> {{lodash.upperFirst(detail_campaign.category_name)}}
+          <div class="campaign-detail-category">
+<!--            <i class="fa fa-gamepad"></i> -->
+            {{lodash.upperFirst(detail_campaign.category_name || 'semua')}}
           </div>
           <div>
             <i class="far fa-clock"></i> {{ daysLeft }} hari tersisa
@@ -77,21 +79,19 @@
             <strong class="text-color-black">{{lodash.startCase(detail_campaign.creator_name)}}</strong>
             <i class="fas fa-certificate ml-1" style="color: #008FD7;"></i>
           </div>
-          <div class="text-12">
+          <div class="text-14">
             backers:
-            <strong class="text-color-black text-14 mr-1">300+</strong>
-            <img src="/assets_app/images/avatar/photo-avatar.jpg" alt="avatar-creator" class="user-avatar avatar-margin-right">
-            <img src="/assets_app/images/avatar/photo-avatar.jpg" alt="avatar-creator" class="user-avatar avatar-margin-right">
-            <img src="/assets_app/images/avatar/photo-avatar.jpg" alt="avatar-creator" class="user-avatar">
+            <strong class="mr-1">{{detail_campaign.total_backer}}</strong>
+            <img :src="api.storage + item" alt="avatar-creator" class="user-avatar avatar-margin-right" v-for="(item, index) in detail_campaign.backer_avatar" :key="index">
           </div>
         </div>
         <h5 class="text-color-black"><strong>{{lodash.startCase(detail_campaign.title)}}</strong></h5>
         <div class="progress my-3" style="height: 5px;">
-          <div class="progress-bar bg-primary" role="progressbar" :style="'width: '+25+'%'" :aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
+          <div class="progress-bar bg-primary" role="progressbar" :style="'width: '+fundedPercent+'%'" :aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
         </div>
         <div class="d-flex justify-content-between campaign-meta mb-5 text-12">
-          <div>Terkumpul: <strong class="text-color-black text-14">Rp. {{ detail_campaign.total_funded | formatCurrency }}</strong></div>
-          <div>Target: <strong class="text-14">Rp. {{ detail_campaign.goal | formatCurrency }}</strong></div>
+          <div><strong class="text-color-primary text-14">Rp. {{detail_campaign.total_funded | formatCurrency}}</strong></div>
+          <div class="text-14">dari: <strong>Rp. {{detail_campaign.goal | formatCurrency}}</strong></div>
         </div>
         <div class="d-flex justify-content-around align-items-center mb-4 text-14">
           <div class="text-14 text-color-black" @click="$router.push({ name: 'CampaignDetail', params: { slug: detail_campaign.title }, query: { section: 'description' }})">
@@ -121,14 +121,20 @@
           <i class="fa fa-share-alt text-20"></i>
         </div>
       </a>
-      <button class="btn btn-primary btn-block">DUKUNG</button>
+      <button class="btn btn-primary btn-block"><b>Dukung</b></button>
     </div>
+    <loading :active.sync="is_loading"
+             :can-cancel="false"
+             :is-full-page="true"
+             color="#008FD7"
+    ></loading>
   </div>
 </template>
 
 <script>
 import Apis from "../../apis"
 import _ from "lodash"
+import moment from "moment";
 
 export default {
   name: "CampaignDetail",
@@ -136,6 +142,7 @@ export default {
     return {
       lodash: _,
       api: Apis,
+      is_loading: false,
       slug: this.$route.params.slug,
       detail_campaign: {},
       is_faq_open: []
@@ -154,20 +161,19 @@ export default {
       else if (this.$route.query.section === 'risk') return this.detail_campaign.risk
       else return null
     },
-    daysLeft() {
-      let result = 0;
-      if (this.detail_campaign.end) {
-        let diff = moment(this.detail_campaign.end).diff(moment(), 'days');
-        if (diff > 0) {
-          result = diff;
-        }
-      }
-      return result;
+    fundedPercent() {
+      return Math.round((this.detail_campaign.total_funded / this.detail_campaign.goal) * 100)
     },
+    daysLeft() {
+      let cal = moment(this.detail_campaign.end).diff(moment(), 'days')
+      return cal > 0 ? cal : 0
+    }
   },
   methods: {
     fetchDetailCampaign() {
+      this.$set(this, 'is_loading', true)
       Apis.campaign.slug(this.slug, {}).then(({data}) => {
+        this.$set(this, 'is_loading', false)
         this.$set(this, 'detail_campaign', data)
         let vm = this
         this.detail_campaign.faqs.forEach(function (item, index) {
@@ -175,6 +181,7 @@ export default {
           else vm.is_faq_open.push(false)
         })
       }).catch((error) => {
+        this.$set(this, 'is_loading', false)
         throw error
       })
     },
@@ -195,10 +202,19 @@ export default {
   border-radius: 50%;
 }
 .avatar-margin-right {
-  margin-right: -15px;
+  margin-right: -10px;
+}
+.campaign-detail-category {
+  padding: 6px 20px;
+  border: 1px solid #5C5C70;
+  border-radius: 100px;
 }
 .text-color-black {
   color: #001B29;
+}
+.text-color-primary {
+  color: #008FD7;
+;
 }
 .text-12 {
   font-size: 12px;

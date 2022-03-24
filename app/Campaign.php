@@ -52,7 +52,7 @@ class Campaign extends Model
         'images' => 'array',
     ];
 
-    protected $appends = ['category_name', 'creator_name','creator_avatar','total_backer','total_funded', 'pictures'];
+    protected $appends = ['category_name', 'creator_name','creator_avatar','backer_avatar','total_backer','total_funded', 'pictures'];
 
     public function user()
     {
@@ -112,7 +112,7 @@ class Campaign extends Model
         return $this->user ? $this->user->avatar : null;
     }
 
-    public function getBackersAvatarAttribute()
+    public function getBackerAvatarAttribute()
     {
         if (!$this->backer_users) return null;
         $result = [];

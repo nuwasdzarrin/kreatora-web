@@ -12,7 +12,6 @@ import router from './router';
 import store from './store';
 import 'vue-loading-overlay/dist/vue-loading.css';
 import VueToastr from "vue-toastr";
-import OtpInput from "@bachdgvn/vue-otp-input";
 
 window.Vue = require('vue');
 Vue.use(VueRouter);
@@ -38,7 +37,6 @@ Vue.filter('dateDDMMYYYY', function (date) {
 
 Vue.component('image-form', require('./components/ImageForm'));
 Vue.component('loading', require('vue-loading-overlay'));
-Vue.component("v-otp-input", OtpInput);
 
 Vue.component('my-vue-select', require('./components/MyVueSelect'));
 Vue.component('my-date-picker', require('./components/MyDatePicker'));

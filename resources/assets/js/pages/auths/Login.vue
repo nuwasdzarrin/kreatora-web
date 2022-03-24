@@ -87,6 +87,10 @@ export default {
       }).then((res) => {
         if (res.status === 401)
           this.$toastr.e(res.data.message);
+          if (res.data.redirect_to === 'verification') {
+            Cookie.set('verification_email', this.email, { expires: '1h' });
+            this.$router.push({ name: 'Verification'});
+          }
         else {
           this.$toastr.s("login success");
           window.location.href = '/dashboard';
