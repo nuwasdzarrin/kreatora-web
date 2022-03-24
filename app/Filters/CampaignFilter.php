@@ -16,9 +16,10 @@ class CampaignFilter extends BaseFilter
      * @var array
      */
     protected $searchables = [
-        'id',
         'campaign_category_id',
-        'title'
+        'title',
+        'short_desc',
+        'long_desc'
     ];
 
     /**
@@ -43,7 +44,7 @@ class CampaignFilter extends BaseFilter
      * Default per page, null if use model per page default, ex: 20
      * @var int|null
      */
-    protected $default_per_page = null;
+    protected $default_per_page = 10;
 
     public function type($value)
     {

@@ -2,11 +2,11 @@
   <nav class="navbar navbar-expand navbar-light">
     <!-- Left navbar links -->
     <ul class="navbar-nav left-nav">
-      <li class="nav-item d-flex align-items-center">
+      <!-- <li class="nav-item d-flex align-items-center">
         <a class="nav-link" data-widget="pushmenu" href="#"><i class="fa fa-bars"></i></a>
-      </li>
+      </li> -->
       <li class="nav-item d-flex ml-1" style="flex: 1">
-        <input type="text" class="input-search" placeholder='Coba cari "ide hebat"'>
+        <input type="text" class="input-search" placeholder='Coba cari "ide hebat"' v-model="q" @keyup.enter="onSearch">
       </li>
     </ul>
     <ul class="navbar-nav ml-auto">
@@ -26,9 +26,21 @@ import Echo from "laravel-echo"
 // import Pusher from "pusher-js"
 import jwt_decode from 'jwt-decode'
 export default {
+  name: 'TopNavbar',
+  props: {
+    search: String
+  },
+  data: function() {
+    return {
+      q: this.search
+    }
+  },
   methods: {
+    onSearch() {
+      this.$emit('update:search', this.q)
+    },
     logout() {
-     this.$store.dispatch('logout').then(() => {
+      this.$store.dispatch('logout').then(() => {
         this.$router.push({name: 'HomePage'})
       });
     },

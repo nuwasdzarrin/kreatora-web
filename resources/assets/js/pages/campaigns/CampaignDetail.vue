@@ -123,10 +123,11 @@
       </a>
       <button class="btn btn-primary btn-block"><b>Dukung</b></button>
     </div>
-    <loading :active.sync="is_loading"
-             :can-cancel="false"
-             :is-full-page="true"
-             color="#008FD7"
+    <loading 
+      :active.sync="is_loading"
+      :can-cancel="false"
+      :is-full-page="true"
+      color="#008FD7"
     ></loading>
   </div>
 </template>
