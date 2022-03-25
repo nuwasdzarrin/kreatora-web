@@ -56,7 +56,7 @@
     </div>
     <div v-else>
       <div style="position: relative;">
-        <img :src="api.storage + detail_campaign.pictures[0]" alt="campaign-images" class="campaign-detail-img">
+        <img :src="(detail_campaign && detail_campaign.pictures) ? (api.storage + detail_campaign.pictures[0]) : api.no_image" alt="campaign-images" class="campaign-detail-img">
         <span class="back-button-img" @click="$router.push({ name: 'HomePage'})">
           <i class="fas fa-arrow-left"></i>
         </span>
@@ -75,7 +75,7 @@
         <div class="d-flex justify-content-between align-items-center mb-4">
           <div class="text-12">
             oleh:
-            <img :src="api.storage + detail_campaign.creator_avatar" alt="avatar-creator" class="user-avatar ml-1">
+            <img :src="(detail_campaign && detail_campaign.creator_avatar) ? api.storage + detail_campaign.creator_avatar : api.no_image" alt="avatar-creator" class="user-avatar ml-1">
             <strong class="text-color-black">{{lodash.startCase(detail_campaign.creator_name)}}</strong>
             <i class="fas fa-certificate ml-1" style="color: #008FD7;"></i>
           </div>
@@ -116,13 +116,12 @@
       </div>
     </div>
     <div class="container d-flex bottom-wrapper">
-      <a href="#">
-        <div class="d-flex align-items-center justify-content-center mr-3 share-button">
-          <i class="fa fa-share-alt text-20"></i>
-        </div>
-      </a>
+      <div class="d-flex align-items-center justify-content-center mr-2 share-button" @click="is_show_share = true">
+        <i class="fa fa-share-alt text-20"></i>
+      </div>
       <button class="btn btn-primary btn-block"><b>Dukung</b></button>
     </div>
+    <modal-share-button :active.sync="is_show_share" :originData="detail_campaign" />
     <loading 
       :active.sync="is_loading"
       :can-cancel="false"
@@ -136,14 +135,19 @@
 import Apis from "../../apis"
 import _ from "lodash"
 import moment from "moment";
+import ModalShareButton from "../../components/modals/ModalShareButton";
 
 export default {
   name: "CampaignDetail",
+  components: {
+    ModalShareButton
+  },
   data() {
     return {
       lodash: _,
       api: Apis,
       is_loading: false,
+      is_show_share: false,
       slug: this.$route.params.slug,
       detail_campaign: {},
       is_faq_open: []
@@ -276,9 +280,12 @@ export default {
   height: 50px;
 }
 .share-button {
-  width: 50px;
+  box-sizing: border-box;
+  width: 60px;
   height: 50px;
   border-radius: 5px;
   border: 1px solid #008FD7;
+  color: #008FD7;
+  cursor: pointer;
 }
 </style>

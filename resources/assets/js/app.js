@@ -12,12 +12,14 @@ import router from './router';
 import store from './store';
 import 'vue-loading-overlay/dist/vue-loading.css';
 import VueToastr from "vue-toastr";
+import VueSocialSharing from 'vue-social-sharing'
 
 window.Vue = require('vue');
 Vue.use(VueRouter);
 Vue.use(VueToastr, {
     /* OverWrite Plugin Options if you need */
 });
+Vue.use(VueSocialSharing);
 window.Vue = require('vue');
 window._ = require('lodash');
 window.moment = require('moment');
