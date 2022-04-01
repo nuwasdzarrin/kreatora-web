@@ -10,6 +10,7 @@ import Verification from "../pages/auths/Verification";
 import Store from '../store';
 import HomePage from "../pages/HomePage";
 import CampaignDetail from "../pages/campaigns/CampaignDetail";
+import CampaignReward from "../pages/campaigns/CampaignReward";
 import Account from "../pages/Account";
 
 let routes = [
@@ -47,6 +48,12 @@ let routes = [
                 path: '/campaign/:slug',
                 component: CampaignDetail,
                 name: 'CampaignDetail',
+                meta: {requiresAuth: false},
+            },
+            {
+                path: '/campaign/:slug/reward',
+                component: CampaignReward,
+                name: 'CampaignReward',
                 meta: {requiresAuth: false},
             },
         ]
