@@ -119,7 +119,7 @@
       <div class="d-flex align-items-center justify-content-center mr-2 share-button" @click="is_show_share = true">
         <i class="fa fa-share-alt text-20"></i>
       </div>
-      <button class="btn btn-primary btn-block"><b>Dukung</b></button>
+      <button class="btn btn-primary btn-block" @click="$router.push({ name: 'CampaignReward', params: { slug: detail_campaign.title }})"><b>Dukung</b></button>
     </div>
     <modal-share-button :active.sync="is_show_share" :originData="detail_campaign" />
     <loading 
