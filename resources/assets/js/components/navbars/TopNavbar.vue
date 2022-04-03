@@ -1,10 +1,13 @@
 <template>
-  <nav class="navbar navbar-expand navbar-light">
+  <nav class="navbar navbar-expand navbar-light bg-primary">
     <!-- Left navbar links -->
+    <a class="navbar-brand mr-auto" href="#">
+      <img src="/assets_app/images/logo/icon-logo-kreatora-small.png" alt="logo-kreatora" class="header-logo-kreatora">
+    </a>
     <ul class="navbar-nav left-nav">
-      <!-- <li class="nav-item d-flex align-items-center">
-        <a class="nav-link" data-widget="pushmenu" href="#"><i class="fa fa-bars"></i></a>
-      </li> -->
+      <li class="nav-item d-flex align-items-center">
+        <a class="nav-link" data-widget="pushmenu" href="javascript:void(0)" @click="onSearch"><i class="fa fa-search"></i></a>
+      </li>
       <li class="nav-item d-flex ml-1" style="flex: 1">
         <input type="text" class="input-search" placeholder='Coba cari "ide hebat"' v-model="q" @keyup.enter="onSearch">
       </li>
@@ -12,8 +15,8 @@
     <ul class="navbar-nav ml-auto">
       <!--   <notification-list />-->
       <li class="nav-item">
-        <a href="#" class="nav-link text-white text-center header-account bg-primary" @click="logout">
-          <i class="fas fa-user" style="font-size: 20px;" title="Keluar"></i>
+        <a href="#" class="nav-link text-primary text-center header-account bg-white" @click="logout">
+          <i class="far fa-user" style="font-size: 20px;" title="Keluar"></i>
         </a>
       </li>
 
@@ -22,8 +25,6 @@
 </template>
 
 <script>
-import Echo from "laravel-echo"
-// import Pusher from "pusher-js"
 import jwt_decode from 'jwt-decode'
 export default {
   name: 'TopNavbar',
@@ -85,6 +86,16 @@ export default {
 }
 </script>
 <style lang="css" scoped>
+.header-logo-kreatora {
+  margin-left: -12px;
+}
+@media screen and (max-width: 350px) {
+  .header-logo-kreatora {
+    margin-left: -15px;
+    width: 40px;
+    height: auto;
+  }
+}
 .top-navbar-fixed {
   width: 480px;
   position: fixed;
@@ -93,7 +104,7 @@ export default {
 }
 .left-nav {
   min-height: 50px;
-  min-width: 85%;
+  min-width: 75%;
   background: #FAFCFE;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
   border-radius: 12px;
@@ -107,7 +118,9 @@ export default {
 }
 @media screen and (max-width: 330px) {
   .left-nav{
-    min-width: 80%;
+    min-width: 65%;
+    padding-left: 2px;
+    padding-right: 2px;
   }
   .input-search {
     width: 170px;

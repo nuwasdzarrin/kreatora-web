@@ -1,5 +1,5 @@
 <template>
-  <div class="d-flex pb-3 category-scroll-x">
+  <div class="d-flex pt-2 category-scroll-x">
     <button class="button-category" :class="{'active': isActive === null}" @click="categoryClick(null)">Semua</button>
     <button class="button-category" :class="{'active': (isActive && item.id === isActive.id)}" v-for="(item, index) in originData" :key="index" @click="categoryClick(item)">{{item.name}}</button>
   </div>

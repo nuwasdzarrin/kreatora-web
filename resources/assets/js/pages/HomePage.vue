@@ -1,14 +1,15 @@
 <template>
   <div>
     <TopNavbar :search.sync="search" />
-    <div class="container my-3 homepage-content">
+    <div class="container pt-3 mb-3 homepage-content" id="infinite-list">
       <div>
 <!--        <HomeWalletComponent :amount="walletAmount" v-if="isLoggedIn"/>-->
-        <NotLoginComponent class="mb-4" v-if="!isLoggedIn" />
-        <CampaignCategory :originData="campaign_categories" @onCategoryClick="onCategoryClick" />
+        <NotLoginComponent class="mb-2" v-if="!isLoggedIn" />
+        <CampaignCategory :originData="campaign_categories" @onCategoryClick="onCategoryClick" v-if="!is_search"/>
       </div>
-      <div id="infinite-list" class="homepage-list">
-        <CampaignVerticalList :title="category_selected ? category_selected.name : 'Semua'" :data="campaigns" :categories="campaign_categories" :clickBack="false"/>
+      <CampaignVerticalList :title='`Hasil Pencarian "${search}..."`' :data="campaigns_search" :clickBack="false" v-if="is_search"/>
+      <div class="homepage-list">
+        <CampaignVerticalList :title="category_selected ? category_selected.name : (is_search ? 'Mungkin kamu suka':'Semua')" :data="campaigns" :categories="campaign_categories" :clickBack="false"/>
       </div>
 <!--        <div v-if="urlType">-->
 <!--          <CampaignVerticalList :title="campaignVerticalListTitle" :data="campaigns" @onClickBack="onClickBack"/>-->
@@ -51,9 +52,10 @@ export default {
   data() {
     return {
       is_loading: false,
+      is_search: false,
       search: '',
       profile: {},
-      // campaign_home: {},
+      campaigns_search: [],
       campaigns: [],
       campaign_categories: [],
       category_selected: null,
@@ -62,7 +64,7 @@ export default {
   },
   watch: {
     'search': function(n, o) {
-      if (n!== o) this.fetchCampaign();
+      if (n!== o) this.fetchSearchCampaign();
     }
   },
   methods: {
@@ -74,20 +76,27 @@ export default {
         throw error
       })
     },
-    // fetchHomeCampaign(){
-    //   Apis.campaign.home().then(({data}) => {
-    //     this.$set(this, 'campaign_home', data.data);
-    //   }).catch((error) => {
-    //     throw error
-    //   })
-    // },
-    fetchCampaign(load_more = false){
-      load_more ? this.page++ : this.page=1;
+    fetchSearchCampaign(){
       this.$set(this, 'is_loading', true);
       Apis.campaign.index({
-        search: this.search,
+        search: this.search
+      }).then(({data}) => {
+        this.$set(this, 'campaigns_search', data.data);
+        this.$set(this, 'is_search', true);
+        this.$set(this, 'category_selected', null);
+        this.$set(this, 'is_loading', false);
+        this.fetchCampaign();
+      }).catch((error) => {
+        this.$set(this, 'is_loading', false);
+        throw error
+      })
+    },
+    fetchCampaign(load_more = false){
+      load_more ? this.page++ : this.page=1;
+      if(!this.search) this.$set(this, 'is_search', false);
+      this.$set(this, 'is_loading', true);
+      Apis.campaign.index({
         campaign_category_id: this.category_selected ? this.category_selected.id : '',
-        // type: this.urlType,
         page: this.page
       }).then(({data}) => {
         if (load_more) {
@@ -172,10 +181,9 @@ export default {
   display: flex; 
   flex-direction: column;
   height: calc(100vh - 50px);
-}
-.homepage-list {
   flex: 1;
   overflow-x: hidden;
+  scrollbar-width: thin;
 }
 .spacer {
   height: 50px;
