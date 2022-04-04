@@ -242,7 +242,7 @@ class CampaignController extends Controller
         $data['data']['will_end'] = $will_end;
         $data['data']['popular'] = $popular;
         $data['data']['latest'] = $latest;
-        $data['message'] = 'success';
+        $data['message'] = array('Berhasil!');
 
         return response()->json($data, 200);
     }
