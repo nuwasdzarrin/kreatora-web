@@ -15,8 +15,10 @@
       <div class="mb-1">Judul Kreasi:</div>
       <div class="text-color-black mb-2"><b>Game Dadu Mengasah Otak</b></div>
       <div class="mb-1">Dukungan akan dikirimkan ke Kreator :</div>
-      <div class="d-flex mb-3">
-        <b class="text-color-black">Simon Samin </b>
+      <div class="d-flex align-items-center mb-3">
+        <img :src="(detail_campaign && detail_campaign.creator_avatar) ? api.storage + detail_campaign.creator_avatar : api.no_image" alt="avatar-creator" class="user-avatar mr-1">
+        <strong class="text-color-black">{{lodash.startCase(detail_campaign.creator_name)}}</strong>
+        <i class="fas fa-certificate ml-1" style="color: #008FD7;"></i>
       </div>
       <div class="card-support-content d-flex justify-content-between text-color-black mb-3">
         <div><b>Nilai Dukungan</b></div>
@@ -27,7 +29,9 @@
           <div class="text-color-black mb-1"><b>Tip (opsional)</b></div>
           <div>Yuk beri tip kepada kreator agar mendukung semakin lancarnya projek ini </div>
         </div>
-        <div><b>Rp 50.000</b></div>
+        <div class="d-flex align-items-center ml-2">
+          <my-currency-input class="form-control support-tip-input" v-model="form_data.tip" />
+        </div>
       </div>
       <hr>
       <div class="card-support-content d-flex justify-content-between text-primary">
@@ -52,8 +56,8 @@
           <input type="text" class="form-control support-identity" placeholder="Nomor Telepon atau email">
         </div>
         <div class="form-group d-flex justify-content-end">
-          <b>Sebagai anonim</b>
-          <input type="radio" style="margin: 7px 0 0 5px;">
+          <div style="cursor: pointer;" @click="uncheck('anonymous')"><b>Sebagai anonim</b></div>
+          <input type="radio" style="margin: 7px 0 0 5px;" value="anonymous" v-model="form_data.is_anonymous" @click="uncheck('anonymous')">
         </div>
       </div>
       <div class="bg-white" style="padding: 15px;">
@@ -72,15 +76,26 @@
 
 <script>
 import Apis from "../../apis"
+import MyCurrencyInput from "../../components/core/MyCurrencyInput"
+import lodash from "lodash"
 
 export default {
   name: "CampaignReward",
+  components: {
+    MyCurrencyInput
+  },
   data() {
     return {
+      lodash: lodash,
       api: Apis,
       is_loading: false,
       slug: this.$route.params.slug,
       detail_campaign: {},
+      previouslySelected: 'anonymous',
+      form_data: {
+        is_anonymous: false,
+        tip: 0
+      }
     }
   },
   computed: {
@@ -97,6 +112,12 @@ export default {
         this.$set(this, 'is_loading', false)
         throw error
       })
+    },
+    uncheck: function(val) {
+      if (val !== this.previouslySelected) {
+        this.form_data.is_anonymous = false;
+      }
+      this.previouslySelected = this.form_data.is_anonymous
     }
   },
   mounted() {
@@ -118,6 +139,20 @@ export default {
   background-color: #FFFFFF;
   box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.15);
   border-radius: 12px;
+}
+.user-avatar {
+  width: 25px;
+  height: 25px;
+  border-radius: 50%;
+}
+.support-tip-input {
+  border: 1px solid #5C5C70;
+  box-sizing: border-box;
+  border-radius: 12px;
+  min-width: 100px;
+  padding: 5px;
+  text-align: right;
+  font-weight: 700;
 }
 .support-identity {
   height: 55px;
