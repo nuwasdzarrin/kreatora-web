@@ -10,7 +10,7 @@
     </div>
     <div class="container d-flex mt-5 reward-horizontal">
       <div class="mr-3" v-for="(item, index) in detail_campaign.rewards" :key="index">
-        <div class="card-body card-reward-content">
+        <div class="card-reward-content">
           <div class="reward-header mb-3">
             {{ item.title }}
           </div>

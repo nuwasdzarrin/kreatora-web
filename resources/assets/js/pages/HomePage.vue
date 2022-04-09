@@ -7,7 +7,7 @@
         <NotLoginComponent class="mb-2" v-if="!isLoggedIn" />
         <CampaignCategory :originData="campaign_categories" @onCategoryClick="onCategoryClick" v-if="!is_search"/>
       </div>
-      <CampaignVerticalList :title='`Hasil Pencarian "${search}..."`' :data="campaigns_search" :clickBack="false" v-if="is_search"/>
+      <CampaignVerticalList :title='`Hasil Pencarian "${search}..."`' :data="campaigns_search" :clickBack="false" :isSearch="is_search" v-if="is_search"/>
       <div class="homepage-list">
         <CampaignVerticalList :title="category_selected ? category_selected.name : (is_search ? 'Mungkin kamu suka':'Semua')" :data="campaigns" :categories="campaign_categories" :clickBack="false"/>
       </div>

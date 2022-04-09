@@ -8,6 +8,10 @@
     <div class="campaign-list-dot mr-1" :class="{'dot-active': item.name === title}" v-for="(item, index) in categories" :key="index">&nbsp;</div>
     <a href="javascript:void(0)" @click="onClickBack" v-show="clickBack">Kecilkan</a>
   </div>
+  <div class="col-12 mt-4 text-center" v-if="isSearch && !data.length">
+    <img src="/assets_app/images/search_not_found.png" alt="campaign not found" class="mb-2">
+    <h6>Ups! Pencarian tidak ditemukan</h6>
+  </div>
   <div class="col-12 mt-2">
     <CampaignItem v-for="(item, index) in data" :key="index" :item="item" parent="CampaignVerticalList"></CampaignItem>
   </div>
@@ -27,7 +31,12 @@ export default {
       default: "Title"
     },
     url: String,
-    data: Array,
+    data: {
+      type: Array,
+      default: function() {
+        return []
+      }
+    },
     categories: {
       type: Array,
       default: function() {
@@ -37,6 +46,10 @@ export default {
     clickBack: {
       type: Boolean,
       default: true
+    },
+    isSearch: {
+      type: Boolean,
+      default: false
     }
   },
   methods: {

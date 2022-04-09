@@ -11,6 +11,7 @@ import Store from '../store';
 import HomePage from "../pages/HomePage";
 import CampaignDetail from "../pages/campaigns/CampaignDetail";
 import CampaignReward from "../pages/campaigns/CampaignReward";
+import CampaignSupport from "../pages/campaigns/CampaignSupport";
 import Account from "../pages/Account";
 
 let routes = [
@@ -54,6 +55,12 @@ let routes = [
                 path: '/campaign/:slug/reward',
                 component: CampaignReward,
                 name: 'CampaignReward',
+                meta: {requiresAuth: false},
+            },
+            {
+                path: '/campaign/:slug/support',
+                component: CampaignSupport,
+                name: 'CampaignSupport',
                 meta: {requiresAuth: false},
             },
         ]
