@@ -14,10 +14,10 @@
           <div class="reward-header mb-3">
             {{ item.title }}
           </div>
-          <div class="text-primary text-14" style="font-weight: 600">5 Backer</div>
-          <div class="text-primary text-14">sisa kuota: <span style="font-weight: 600">10 Backer</span></div>
+          <div class="text-primary text-14" style="font-weight: 600">{{ item.backer_count }} Backer</div>
+          <div class="text-primary text-14">sisa kuota: <span style="font-weight: 600">{{ remainingBacker(item) }} Backer</span></div>
           <p class="mt-3 mb-5" v-html="item.description"></p>
-          <button class="btn btn-primary btn-block" @click="$router.push({ name: 'CampaignSupport', params: { slug: detail_campaign.title }, query: { reward: item.id }})">Pilih</button>
+          <button class="btn btn-primary btn-block" :disabled="remainingBacker(item) == 0" @click="$router.push({ name: 'CampaignSupport', params: { slug: detail_campaign.title }, query: { reward: item.id }})">Pilih</button>
         </div>
       </div>
     </div>
@@ -58,6 +58,9 @@ export default {
         this.$set(this, 'is_loading', false)
         throw error
       })
+    },
+    remainingBacker(item) {
+      return item.max_backer ? (item.max_backer - item.backer_count) : '~'
     }
   },
   mounted() {
