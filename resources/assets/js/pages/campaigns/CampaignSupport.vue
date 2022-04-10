@@ -2,7 +2,7 @@
   <div style="height: 100vh; position: relative;">
     <div class="container bg-white" style="box-shadow: 0 2px 2px rgba(0, 0, 0, 0.15);">
       <div class="d-flex align-items-center py-3 text-14">
-        <div @click="$router.push({ name: 'CampaignDetail', params: { slug: detail_campaign.title }})">
+        <div @click="$router.push({ name: 'CampaignReward', params: { slug: detail_campaign.title }})" style="cursor: pointer;">
           <i class="fas fa-arrow-left" style="color: #008FD7;font-size: 20px;"></i>
         </div>
         <div class="support-header ml-5">Dukung Kreasi</div>
@@ -10,10 +10,10 @@
     </div>
     <div class="container mt-4 pb-4">
       <div class="support-header mb-3">
-        Dukung = Hadiah Stiker
+        {{ reward_selected.title }}
       </div>
       <div class="mb-1">Judul Kreasi:</div>
-      <div class="text-color-black mb-2"><b>Game Dadu Mengasah Otak</b></div>
+      <div class="text-color-black mb-2"><b>{{ lodash.startCase(detail_campaign.title) }}</b></div>
       <div class="mb-1">Dukungan akan dikirimkan ke Kreator :</div>
       <div class="d-flex align-items-center mb-3">
         <img :src="(detail_campaign && detail_campaign.creator_avatar) ? api.storage + detail_campaign.creator_avatar : api.no_image" alt="avatar-creator" class="user-avatar mr-1">
@@ -22,7 +22,7 @@
       </div>
       <div class="card-support-content d-flex justify-content-between text-color-black mb-3">
         <div><b>Nilai Dukungan</b></div>
-        <div><b>Rp 50.000</b></div>
+        <div><b>Rp {{ (reward_selected.min_donation || 0) | formatCurrency }}</b></div>
       </div>
       <div class="card-support-content d-flex justify-content-between">
         <div>
@@ -36,7 +36,7 @@
       <hr>
       <div class="card-support-content d-flex justify-content-between text-primary">
         <div><b>Total</b></div>
-        <div><b>Rp 55.000</b></div>
+        <div><b>Rp {{ totalDonation | formatCurrency }}</b></div>
       </div>
       <hr>
       <div class="my-3">
@@ -91,23 +91,37 @@ export default {
       is_loading: false,
       slug: this.$route.params.slug,
       detail_campaign: {},
+      reward_selected: {},
       previouslySelected: 'anonymous',
       form_data: {
+        campaign_id: null,
+        reward_id: null,
         is_anonymous: false,
         tip: 0
       }
     }
   },
   computed: {
-  
+    totalDonation() {
+      return this.form_data.tip + (Object.keys(this.reward_selected).length ? this.reward_selected.min_donation : 0)
+    }
   },
   methods: {
     fetchDetailCampaign() {
       this.$set(this, 'is_loading', true)
       Apis.campaign.slug(this.slug, {}).then(({data}) => {
-        this.$set(this, 'is_loading', false)
         this.$set(this, 'detail_campaign', data)
-        
+        let reward_id_selected = (this.$route.query && this.$route.query.reward) || 0
+        if (data.rewards.length) {
+          let rewardSelected = lodash.filter( data.rewards, function(reward) {
+            return reward_id_selected == reward.id
+          })
+          if (!rewardSelected.length) return this.$router.push({ name: 'CampaignReward', params: { slug: data.title }})
+          this.$set(this, 'reward_selected', rewardSelected[0])
+          this.$set(this.form_data, 'campaign_id', data.id)
+          this.$set(this.form_data, 'reward_id', reward_id_selected)
+        } else return this.$router.push({ name: 'CampaignDetail', params: { slug: data.title }})
+        this.$set(this, 'is_loading', false)
       }).catch((error) => {
         this.$set(this, 'is_loading', false)
         throw error

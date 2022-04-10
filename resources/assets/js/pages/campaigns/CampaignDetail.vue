@@ -57,7 +57,7 @@
     <div v-else>
       <div style="position: relative;">
         <img :src="(detail_campaign && detail_campaign.pictures) ? (api.storage + detail_campaign.pictures[0]) : api.no_image" alt="campaign-images" class="campaign-detail-img">
-        <span class="back-button-img" @click="$router.push({ name: 'HomePage'})">
+        <span class="back-button-img" @click="$router.push({ name: 'HomePage'})"  style="cursor: pointer;">
           <i class="fas fa-arrow-left"></i>
         </span>
         <img :src="api.storage + 'kreatora-mark.png'" style="position: absolute; bottom: 10px; right: 10px;">

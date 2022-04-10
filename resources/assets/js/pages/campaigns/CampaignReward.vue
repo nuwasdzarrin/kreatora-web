@@ -2,7 +2,7 @@
   <div style="height: 100vh; position: relative;">
     <div class="container bg-white" style="box-shadow: 0 2px 2px rgba(0, 0, 0, 0.15);">
       <div class="d-flex align-items-center py-3 text-14">
-        <div @click="$router.push({ name: 'CampaignDetail', params: { slug: detail_campaign.title }})">
+        <div @click="$router.push({ name: 'CampaignDetail', params: { slug: detail_campaign.title }})"  style="cursor: pointer;">
           <i class="fas fa-arrow-left" style="color: #008FD7;font-size: 20px;"></i>
         </div>
         <div class="reward-header ml-5">Pilih Hadiah Anda</div>
@@ -17,7 +17,7 @@
           <div class="text-primary text-14" style="font-weight: 600">5 Backer</div>
           <div class="text-primary text-14">sisa kuota: <span style="font-weight: 600">10 Backer</span></div>
           <p class="mt-3 mb-5" v-html="item.description"></p>
-          <button class="btn btn-primary btn-block">Pilih</button>
+          <button class="btn btn-primary btn-block" @click="$router.push({ name: 'CampaignSupport', params: { slug: detail_campaign.title }, query: { reward: item.id }})">Pilih</button>
         </div>
       </div>
     </div>
