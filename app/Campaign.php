@@ -52,7 +52,7 @@ class Campaign extends Model
         'images' => 'array',
     ];
 
-    protected $appends = ['category_name', 'creator_name','creator_avatar','backer_avatar','total_backer','total_funded', 'pictures'];
+    protected $appends = ['category_name', 'creator_name','creator_avatar','backer_avatar','total_backer','total_funded', 'avail_backer', 'pictures'];
 
     public function user()
     {
@@ -132,5 +132,12 @@ class Campaign extends Model
         return $this->backer_users->sum(function ($item) {
             return $item['amount'] + $item['tip'];
         });
+    }
+
+    public function getAvailBackerAttribute()
+    {
+        $totalBacker = $this->backer_users->count();
+        
+        return $this->rewards();
     }
 }

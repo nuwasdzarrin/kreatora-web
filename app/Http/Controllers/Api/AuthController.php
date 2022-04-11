@@ -57,14 +57,14 @@ class AuthController extends Controller
                 $user = User::query()->find($auth->id);
                 $user->fcm_token = $request->fcm_token;
                 $user->save();
-                $data['data'] = $user;
                 $data['message'] = $msg;
+                $data['data'] = $user;
                 $data['redirect_to'] = 'homepage';
                 $this->code = 200;
             } else {
                 $arrayMsg = array('Mohon maaf email belum diverifikasi!', 'Silahkan verifikasi email anda terlebih dahulu');
-                $data['data'] = [];
                 $data['message'] = $arrayMsg;
+                $data['data'] = [];
                 $data['redirect_to'] = 'verification';
                 $this->code = 401;
             }
@@ -88,7 +88,7 @@ class AuthController extends Controller
         if ($validator->fails()) {
             return response()->json([
                 'data' => [],
-                'message' => $validator->errors()
+                'message' => $validator->errors(),
             ], 401);
         }
 
@@ -98,8 +98,9 @@ class AuthController extends Controller
         $user->save();
         $msg = array('Token telah diperbarui!');
         return response()->json([
+            'message' => $msg,
             'data' => $user,
-            'message' => $msg
+            
         ], 200);
     }
 
@@ -129,7 +130,7 @@ class AuthController extends Controller
         if ($user) {
             $redirect = '';
             if (!$user->email_verified_at) {
-                $msg = array('Mohon maaf email yang anda masukan telah terdaftar.', 'Silahkan cek di email anda agar dapat memverifikasi.');
+                $msg = array('Mohon maaf email yang anda masukan telah terdaftar. Silahkan cek di email anda agar dapat memverifikasi.');
                 $this->message = $msg;
                 $redirect = 'verification';
             } else {
@@ -170,9 +171,10 @@ class AuthController extends Controller
         }
 
         return response()->json([
+            'message' => $this->message,
             'data' => $user,
             'redirect_to' => 'verification',
-            'message' => $this->message
+            
         ], 200);
     }
 
@@ -189,8 +191,9 @@ class AuthController extends Controller
         ]);
         if ($validator->fails()) {
             return response()->json([
+                'message' => $validator->errors(),
                 'data' => [],
-                'message' => $validator->errors()
+                
             ], 401);
         }
         $auth = auth()->user();
@@ -223,8 +226,8 @@ class AuthController extends Controller
         $msg = array('Selamat akun anda telah manjadi kreator!');
        
         return response()->json([
-            'data' => $user,
             'message' => $msg,
+            'data' => $user,
             'redirect_to' => 'login',
         ], 200);
     }
@@ -236,8 +239,9 @@ class AuthController extends Controller
         ]);
         if ($validator->fails()) {
             return response()->json([
+                'message' => $validator->errors(),
                 'data' => [],
-                'message' => $validator->errors()
+               
             ], 401);
         }
         $data = User::where('email', $request->email)->first();
@@ -250,15 +254,15 @@ class AuthController extends Controller
         if ($data){
             $data->remember_token = $code;
             $data->save();
-
             $this->code = 200;
             $this->message = array("Berhasil mengirimkan ulang kode verifikasi!");
             Mail::to($request->email)->send(new EmailCodeVerification($code));
         }
 
         return response()->json([
+            'message' => $this->message,
             'data' => [],
-            'message' => $this->message
+            
         ], $this->code);
     }
 
@@ -269,12 +273,15 @@ class AuthController extends Controller
         ]);
         if ($validator->fails()) {
             return response()->json([
+                'message' => $validator->errors(),
                 'data' => [],
-                'message' => $validator->errors()
             ], 401);
         }
         
-        $data = User::query()->where('remember_token', $request->code)->first();
+        $data = User::query()->where([
+            ['remember_token', $request->code],
+            ['email', $request->email],
+            ])->first();
         $this->message = array("Mohon maaf kode tidak valid! Silahkan perbarui kode verifikasi anda.");
         $this->code = 404;
 
@@ -291,8 +298,8 @@ class AuthController extends Controller
         }
 
         return response()->json([
+            'message' => $this->message,
             'data' => [],
-            'message' => $this->message
         ], $this->code);
     }
 
@@ -305,8 +312,8 @@ class AuthController extends Controller
         ]);
         if ($validator->fails()) {
             return response()->json([
+                'message' => $validator->errors(),
                 'data' => [],
-                'message' => $validator->errors()
             ], 401);
         }
         $data = User::query()->where('remember_token', $request->code)->first();
@@ -318,14 +325,13 @@ class AuthController extends Controller
             $data->remember_token = null;
             $data->password = bcrypt($request->password);
             $data->save();
-
             $this->code = 200;
             $this->message = array("Berhasil mengatur ulang password!");
         }
 
         return response()->json([
+            'message' => $this->message,
             'data' => [],
-            'message' => $this->message
         ], $this->code);
     }
 
@@ -337,8 +343,8 @@ class AuthController extends Controller
         ]);
         if ($validator->fails()) {
             return response()->json([
+                'message' => $validator->errors(),
                 'data' => [],
-                'message' => $validator->errors()
             ], 401);
         }
 
@@ -349,26 +355,51 @@ class AuthController extends Controller
 
         $msg = array("Berhasil mengubah password anda!");
         return response()->json([
+            'message' => $msg,
             'data' => [],
-            'message' => $msg
         ], $this->code);
     }
 
     public function logout()
     {
-        Auth::user()->tokens->each(function($token, $key) {
+        $auth = Auth::user()->tokens->each(function($token, $key) {
             $token->delete();
         });
-        $msg = array('Berhasil keluar dari halaman!');
-        return response()->json([
-            'data' => [],
-            'message' => $msg
-        ], $this->code);
+        if ($auth) {
+            $msg = array('Berhasil keluar dari halaman!');
+            return response()->json([
+                'message' => $msg,
+                'data' => [],
+            ], $this->code);
+        } else {
+            $msg = array('Mohon maaf anda belum login!');
+            return response()->json([
+                'message' => $msg,
+                'data' => [],
+            ], $this->code);
+        }
+        
     }
 
     public function profile()
     {
         $user =User::query()->with(['wallet'])->findOrFail(Auth::user()->id);
-        return response()->json($user, $this->code);
+        if ($user) {
+            $msg = array('Berhasil mendapatkan data profil!');
+            return response()->json([
+                'message' => $msg,
+                'data' => $user,
+            ], $this->code);
+           
+        } else {
+            $msg = array('Mohon maaf anda belum login!');
+            return response()->json([
+                'message' => $msg,
+                'data' => [],
+            ], $this->code);
+        }
+        
+       
+        // return response()->json($user, $this->code);
     }
 }

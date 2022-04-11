@@ -90,7 +90,7 @@ class CampaignController extends Controller
     public function store(Request $request)
     {
 //        $this->authorize('create', 'App\Campaign');
-        $request->validate(self::rules($request)['store']);
+        $request->validate(self::rules($request)['store' ]);
 
         if ($request->has('images')) {
             foreach ($request->images as $image) {

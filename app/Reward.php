@@ -41,8 +41,18 @@ class Reward extends Model
     /** @var string $connection */
     //protected $connection = '';
 
+    protected $appends = ['total_backer'];
+
     public function campaign()
     {
         return $this->belongsTo(Campaign::class);
+    }
+    public function backer_users()
+    {
+        return $this->hasMany(BackerUser::class)->with(['user']);
+    }
+    public function getTotalBackerAttribute()
+    {
+        return $this->backer_users->count();
     }
 }

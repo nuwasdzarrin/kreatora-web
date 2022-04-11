@@ -29,6 +29,7 @@ class CreateBackerUsersTable extends Migration
                 ->on('users')->onUpdate('cascade')->onDelete('set null');
             $table->foreign('reward_id')->references('id')
                 ->on('rewards')->onUpdate('cascade')->onDelete('set null');
+                
         });
     }
 
