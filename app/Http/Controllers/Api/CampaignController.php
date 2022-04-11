@@ -90,7 +90,7 @@ class CampaignController extends Controller
     public function store(Request $request)
     {
 //        $this->authorize('create', 'App\Campaign');
-        $request->validate(self::rules($request)['store']);
+        $request->validate(self::rules($request)['store' ]);
 
         if ($request->has('images')) {
             foreach ($request->images as $image) {
@@ -242,7 +242,7 @@ class CampaignController extends Controller
         $data['data']['will_end'] = $will_end;
         $data['data']['popular'] = $popular;
         $data['data']['latest'] = $latest;
-        $data['message'] = 'success';
+        $data['message'] = array('Berhasil!');
 
         return response()->json($data, 200);
     }

@@ -14,15 +14,15 @@
           <div class="reward-header mb-3">
             {{ item.title }}
           </div>
-          <div class="text-primary text-14" style="font-weight: 600">{{ item.backer_count }} Backer</div>
+          <div class="text-primary text-14" style="font-weight: 600">{{ item.total_backer }} Backer</div>
           <div class="text-primary text-14">sisa kuota: <span style="font-weight: 600">{{ remainingBacker(item) }} Backer</span></div>
           <p class="mt-3 mb-5" v-html="item.description"></p>
           <button class="btn btn-primary btn-block" :disabled="remainingBacker(item) == 0" @click="$router.push({ name: 'CampaignSupport', params: { slug: detail_campaign.title }, query: { reward: item.id }})">Pilih</button>
         </div>
       </div>
     </div>
-    
-    <loading 
+
+    <loading
       :active.sync="is_loading"
       :can-cancel="false"
       :is-full-page="true"
@@ -45,7 +45,7 @@ export default {
     }
   },
   computed: {
-  
+
   },
   methods: {
     fetchDetailCampaign() {
@@ -53,14 +53,14 @@ export default {
       Apis.campaign.slug(this.slug, {}).then(({data}) => {
         this.$set(this, 'is_loading', false)
         this.$set(this, 'detail_campaign', data)
-        
+
       }).catch((error) => {
         this.$set(this, 'is_loading', false)
         throw error
       })
     },
     remainingBacker(item) {
-      return item.max_backer ? (item.max_backer - item.backer_count) : '~'
+      return item.max_backer ? (item.max_backer - item.total_backer) : '~'
     }
   },
   mounted() {
@@ -83,7 +83,7 @@ export default {
 }
 .reward-horizontal::-webkit-scrollbar-track {
   background-color: var(--blue-light);
-  
+
 }
 .reward-horizontal::-webkit-scrollbar-thumb {
   background-color: var(--primary);

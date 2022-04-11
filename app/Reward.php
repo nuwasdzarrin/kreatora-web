@@ -43,28 +43,19 @@ class Reward extends Model
 
     protected $hidden = ['backer_users'];
 
-    protected $appends = [
-        'backer_count', 
-        // 'backer_remaining_quota'
-    ];
+
+    protected $appends = ['total_backer'];
 
     public function campaign()
     {
         return $this->belongsTo(Campaign::class);
     }
-    
     public function backer_users()
     {
         return $this->hasMany(BackerUser::class);
     }
-
-    public function getBackerCountAttribute()
+    public function getTotalBackerAttribute()
     {
         return $this->backer_users->count();
     }
-
-    // public function getBackerRemainingQuotaAttribute()
-    // {
-    //     return $this->max_backer ? (($this->max_backer) - ($this->getBackerCountAttribute() ?? 0)) : '~';
-    // }
 }
