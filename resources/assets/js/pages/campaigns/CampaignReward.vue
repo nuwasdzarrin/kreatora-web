@@ -65,6 +65,7 @@ export default {
   },
   mounted() {
     this.fetchDetailCampaign()
+  //  trigger push
   }
 }
 </script>
