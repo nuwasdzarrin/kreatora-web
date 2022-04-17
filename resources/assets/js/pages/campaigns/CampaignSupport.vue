@@ -50,10 +50,10 @@
           </div>
         </div>
         <div class="form-group">
-          <input type="text" class="form-control support-identity" placeholder="Nama Lengkap">
+          <input type="text" class="form-control support-identity" placeholder="Nama Lengkap" v-model="form_data.name">
         </div>
         <div class="form-group">
-          <input type="text" class="form-control support-identity" placeholder="Nomor Telepon atau email">
+          <input type="text" class="form-control support-identity" placeholder="email" v-model="form_data.email">
         </div>
         <div class="form-group d-flex justify-content-end">
           <div style="cursor: pointer;" @click="uncheck('anonymous')"><b>Sebagai anonim</b></div>
@@ -61,7 +61,7 @@
         </div>
       </div>
       <div class="bg-white" style="padding: 15px;">
-        <button class="btn btn-primary btn-block">Konfirmasi</button>
+        <button class="btn btn-primary btn-block" @click="storeSupport">Konfirmasi</button>
       </div>
     </div>
     
@@ -80,7 +80,7 @@ import MyCurrencyInput from "../../components/core/MyCurrencyInput"
 import lodash from "lodash"
 
 export default {
-  name: "CampaignReward",
+  name: "CampaignSupport",
   components: {
     MyCurrencyInput
   },
@@ -96,8 +96,10 @@ export default {
       form_data: {
         campaign_id: null,
         reward_id: null,
-        is_anonymous: false,
-        tip: 0
+        tip: 0,
+        name: '',
+        email: '',
+        is_anonymous: false
       }
     }
   },
@@ -119,7 +121,7 @@ export default {
           if (!rewardSelected.length) return this.$router.push({ name: 'CampaignReward', params: { slug: data.title }})
           this.$set(this, 'reward_selected', rewardSelected[0])
           this.$set(this.form_data, 'campaign_id', data.id)
-          this.$set(this.form_data, 'reward_id', reward_id_selected)
+          this.$set(this.form_data, 'reward_id', parseInt(reward_id_selected))
         } else return this.$router.push({ name: 'CampaignDetail', params: { slug: data.title }})
         this.$set(this, 'is_loading', false)
       }).catch((error) => {
@@ -127,11 +129,25 @@ export default {
         throw error
       })
     },
-    uncheck: function(val) {
+    uncheck(val) {
       if (val !== this.previouslySelected) {
         this.form_data.is_anonymous = false;
       }
       this.previouslySelected = this.form_data.is_anonymous
+    },
+    storeSupport() {
+      this.$set(this, 'is_loading', true)
+      Apis.campaign.support({
+        ...this.form_data,
+        is_anonymous: !!this.form_data.is_anonymous,
+        amount: this.reward_selected.min_donation ? this.reward_selected.min_donation : 0
+      }).then(({data}) => {
+        this.$toastr.s("Dukungan telah tersimpan, silahkan lanjutkan pembayaran");
+        this.$set(this, 'is_loading', false)
+      }).catch((error) => {
+        this.$set(this, 'is_loading', false)
+        throw error
+      })
     }
   },
   mounted() {

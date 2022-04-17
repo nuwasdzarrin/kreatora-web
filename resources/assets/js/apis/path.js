@@ -18,6 +18,7 @@ const path = {
         base: '/api/campaigns',
         detail: '/api/campaigns/{id}',
         slug: '/api/campaigns/slug/{slug}',
+        support: '/api/support',
     },
     campaign_category: {
         home: '/api/campaign_categories/home',
