@@ -6,14 +6,6 @@ import Cookie from 'vue-cookie';
 
 Vue.use(Vuex);
 
-const LOGIN = "LOGIN";
-const LOGIN_SUCCESS = "LOGIN_SUCCESS";
-const LOGOUT = "LOGOUT";
-const LOGIN_FAILED = "LOGIN_FAILED";
-const SHOW_SUCCESS = "SHOW_SUCCESS";
-const SET_NOTIF = "SET_NOTIF";
-const ADD_NOTIF = "ADD_NOTIF";
-
 const index = new Vuex.Store({
     state: {
         // isLoggedIn: !!localStorage.getItem("token"),
@@ -26,37 +18,40 @@ const index = new Vuex.Store({
         notifications : []
     },
     mutations: {
-        [LOGIN] (state) {
+        ['LOGIN'] (state) {
             state.isPending = true;
         },
-        [LOGIN_SUCCESS] (state,user) {
+        ['LOGIN_SUCCESS'] (state,user) {
             state.isLoggedIn = true;
             state.isPending = false;
             state.user = user;
         },
-        [SET_NOTIF] (state,notifications) {
+        ['SET_USER'] (state, payload) {
+            state.user = payload;
+        },
+        ['SET_NOTIF'] (state,notifications) {
             state.notifications = notifications;
         },
-        [ADD_NOTIF] (state,notification) {
+        ['ADD_NOTIF'] (state,notification) {
             state.notifications.push(notification);
         },
-        [LOGIN_FAILED] (state,message) {
+        ['LOGIN_FAILED'] (state,message) {
             state.isPending = false;
             state.isError = true;
             state.messages = message;
         },
-        [LOGOUT](state) {
+        ['LOGOUT'](state) {
             state.user = {};
             state.isLoggedIn = false;
         },
-        [SHOW_SUCCESS](state,message) {
+        ['SHOW_SUCCESS'](state,message) {
             state.isSuccess = true;
             state.messages = message;
         },
     },
     actions: {
         login({ commit }, payload) {
-            commit(LOGIN);
+            commit('LOGIN');
             return new Promise(resolve => {
                 Api.auth.login({
                     email: payload.email,
@@ -64,7 +59,7 @@ const index = new Vuex.Store({
                 }).then(function (response) {
                     Cookie.set('token', response.data.token, { expires: '6h' });
                     Cookie.set('user', JSON.stringify(response.data.data), { expires: '6h' });
-                    commit(LOGIN_SUCCESS,response.data.data);
+                    commit('LOGIN_SUCCESS', response.data.data);
                     resolve(response.data);
                 }).catch(function (error) {
                     let errorMsg = "";
@@ -73,7 +68,7 @@ const index = new Vuex.Store({
                     }else{
                         errorMsg = "Terjadi Kesalahan pada server.";
                     }
-                    commit(LOGIN_FAILED,errorMsg);
+                    commit('LOGIN_FAILED', errorMsg);
                     resolve(error.response);
                 });
             });
@@ -85,18 +80,18 @@ const index = new Vuex.Store({
             // localStorage.removeItem("token");
             // localStorage.removeItem("myProfile");
             // localStorage.removeItem("companySelected");
-            commit(LOGOUT);
+            commit('LOGOUT');
         },
         success({ commit },message) {
-            commit(SHOW_SUCCESS,message);
+            commit('SHOW_SUCCESS', message);
         },
         addNotif({ commit },notification) {
-            commit(ADD_NOTIF,notification);
+            commit('ADD_NOTIF', notification);
         },
         getNotification({ commit }) {
             return new Promise(resolve => {
                 Api.notification.index({}).then(function (response) {
-                    commit(SET_NOTIF,response.data);
+                    commit('SET_NOTIF', response.data);
                     resolve();
                 }).catch(function (error) {
                     var errorMsg = "";

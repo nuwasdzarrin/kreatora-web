@@ -81,6 +81,16 @@ let routes = [
                 name: 'DashboardCampaignDetail',
             },
             {
+                path: '/dashboard/campaign/:slug/reward',
+                component: CampaignReward,
+                name: 'DashboardCampaignReward'
+            },
+            {
+                path: '/dashboard/campaign/:slug/support',
+                component: CampaignSupport,
+                name: 'DashboardCampaignSupport'
+            },
+            {
                 path: '/dashboard/account',
                 component: Account,
                 name: 'DashboardAccount',

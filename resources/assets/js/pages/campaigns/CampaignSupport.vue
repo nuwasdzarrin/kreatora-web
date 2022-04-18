@@ -2,7 +2,7 @@
   <div style="height: 100vh; position: relative;">
     <div class="container bg-white" style="box-shadow: 0 2px 2px rgba(0, 0, 0, 0.15);">
       <div class="d-flex align-items-center py-3 text-14">
-        <div @click="$router.push({ name: 'CampaignReward', params: { slug: detail_campaign.title }})" style="cursor: pointer;">
+        <div @click="$router.push({ name: isLoggedIn ? 'DashboardCampaignReward':'CampaignReward', params: { slug: detail_campaign.title }})" style="cursor: pointer;">
           <i class="fas fa-arrow-left" style="color: #008FD7;font-size: 20px;"></i>
         </div>
         <div class="support-header ml-5">Dukung Kreasi</div>
@@ -40,7 +40,7 @@
       </div>
       <hr>
       <div class="my-3">
-        <div class="d-flex justify-content-between mt-4 mb-3">
+        <div class="d-flex justify-content-between mt-4 mb-3" v-if="!isLoggedIn">
           <div>
             <div class="text-color-black"><b>Ups! Kamu belum login</b></div>
             <div>Lengkapi data dibawah ini</div>
@@ -50,10 +50,10 @@
           </div>
         </div>
         <div class="form-group">
-          <input type="text" class="form-control support-identity" placeholder="Nama Lengkap" v-model="form_data.name">
+          <input type="text" class="form-control support-identity" :disabled="isLoggedIn" placeholder="Nama Lengkap" v-model="form_data.name">
         </div>
         <div class="form-group">
-          <input type="text" class="form-control support-identity" placeholder="email" v-model="form_data.email">
+          <input type="text" class="form-control support-identity" :disabled="isLoggedIn" placeholder="email" v-model="form_data.email">
         </div>
         <div class="form-group d-flex justify-content-end">
           <div style="cursor: pointer;" @click="uncheck('anonymous')"><b>Sebagai anonim</b></div>
@@ -104,11 +104,24 @@ export default {
     }
   },
   computed: {
+    isLoggedIn() {
+      return this.$store.getters.isLoggedIn;
+    },
     totalDonation() {
       return this.form_data.tip + (Object.keys(this.reward_selected).length ? this.reward_selected.min_donation : 0)
     }
   },
   methods: {
+    fetchProfile(){
+      if (!this.isLoggedIn) return
+      Apis.user.profile().then(({data}) => {
+        this.$store.commit('SET_USER', data.data)
+        this.$set(this.form_data, 'name', data.data.name)
+        this.$set(this.form_data, 'email', data.data.email)
+      }).catch((error) => {
+        throw error
+      })
+    },
     fetchDetailCampaign() {
       this.$set(this, 'is_loading', true)
       Apis.campaign.slug(this.slug, {}).then(({data}) => {
@@ -152,6 +165,7 @@ export default {
   },
   mounted() {
     this.fetchDetailCampaign()
+    this.fetchProfile()
   }
 }
 </script>
