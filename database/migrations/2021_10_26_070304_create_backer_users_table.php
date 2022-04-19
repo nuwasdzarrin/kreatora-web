@@ -21,6 +21,7 @@ class CreateBackerUsersTable extends Migration
             $table->unsignedInteger('reward_id')->nullable();
             $table->double('amount')->nullable();
             $table->double('tip')->nullable();
+            $table->boolean('is_anonymous')->nullable()->default(false);
             $table->timestamps();
 
             $table->foreign('campaign_id')->references('id')

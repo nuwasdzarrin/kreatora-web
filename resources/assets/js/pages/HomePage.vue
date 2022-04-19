@@ -54,7 +54,6 @@ export default {
       is_loading: false,
       is_search: false,
       search: '',
-      profile: {},
       campaigns_search: [],
       campaigns: [],
       campaign_categories: [],
@@ -71,7 +70,7 @@ export default {
     fetchProfile(){
       if (!this.isLoggedIn) return
       Apis.user.profile().then(({data}) => {
-        this.$set(this, 'profile', data);
+        this.$store.commit('SET_USER', data.data)
       }).catch((error) => {
         throw error
       })
@@ -151,10 +150,13 @@ export default {
       else if (this.urlType === 'latest') return "Terbaru";
       else return "";
     },
-    walletAmount() {
-      if (this.profile.wallet) return parseFloat(this.profile.wallet.balance);
-      return 0;
-    },
+    // profile() {
+    //   return this.$store.getters.authUser;
+    // },
+    // walletAmount() {
+    //   if (this.profile.wallet) return parseFloat(this.profile.wallet.balance);
+    //   return 0;
+    // },
     isLoggedIn() {
       return this.$store.getters.isLoggedIn;
     }

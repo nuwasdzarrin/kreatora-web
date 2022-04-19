@@ -15,7 +15,8 @@
     <ul class="navbar-nav ml-auto">
       <!--   <notification-list />-->
       <li class="nav-item">
-        <a href="#" class="nav-link text-primary text-center header-account bg-white" @click="logout">
+        <img :src="(profile && profile.avatar) ? api.storage + profile.avatar : api.no_image" alt="avatar" class="nav-link header-account" style="padding: 0;" v-if="isLoggedIn" @click="logout">
+        <a href="#" class="nav-link text-primary text-center header-account bg-white" v-else>
           <i class="far fa-user" style="font-size: 20px;" title="Keluar"></i>
         </a>
       </li>
@@ -26,6 +27,7 @@
 
 <script>
 import jwt_decode from 'jwt-decode'
+import Apis from "../../apis"
 export default {
   name: 'TopNavbar',
   props: {
@@ -33,7 +35,8 @@ export default {
   },
   data: function() {
     return {
-      q: this.search
+      q: this.search,
+      api: Apis
     }
   },
   methods: {
@@ -80,6 +83,9 @@ export default {
   computed: {
     isLoggedIn() {
       return this.$store.getters.isLoggedIn;
+    },
+    profile() {
+      return this.$store.getters.authUser;
     }
   }
 

@@ -57,7 +57,7 @@
     <div v-else>
       <div style="position: relative;">
         <img :src="(detail_campaign && detail_campaign.pictures) ? (api.storage + detail_campaign.pictures[0]) : api.no_image" alt="campaign-images" class="campaign-detail-img">
-        <span class="back-button-img" @click="$router.push({ name: 'HomePage'})"  style="cursor: pointer;">
+        <span class="back-button-img" @click="$router.push({ name: isLoggedIn ? 'DashboardHomePage':'HomePage'})"  style="cursor: pointer;">
           <i class="fas fa-arrow-left"></i>
         </span>
         <img :src="api.storage + 'kreatora-mark.png'" style="position: absolute; bottom: 10px; right: 10px;">
@@ -119,7 +119,7 @@
       <div class="d-flex align-items-center justify-content-center mr-2 share-button" @click="is_show_share = true">
         <i class="fa fa-share-alt text-20"></i>
       </div>
-      <button class="btn btn-primary btn-block" @click="$router.push({ name: 'CampaignReward', params: { slug: detail_campaign.title }})"><b>Dukung</b></button>
+      <button class="btn btn-primary btn-block" @click="$router.push({ name: isLoggedIn ? 'DashboardCampaignReward':'CampaignReward', params: { slug: detail_campaign.title }})"><b>Dukung</b></button>
     </div>
     <modal-share-button :active.sync="is_show_share" :originData="detail_campaign" />
     <loading 
@@ -154,6 +154,9 @@ export default {
     }
   },
   computed: {
+    isLoggedIn() {
+      return this.$store.getters.isLoggedIn;
+    },
     isSection() {
       if (this.$route.query.section === 'description') return 'description'
       else if (this.$route.query.section === 'risk') return 'risk'

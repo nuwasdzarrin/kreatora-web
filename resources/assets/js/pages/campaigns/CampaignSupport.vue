@@ -2,7 +2,7 @@
   <div style="height: 100vh; position: relative;">
     <div class="container bg-white" style="box-shadow: 0 2px 2px rgba(0, 0, 0, 0.15);">
       <div class="d-flex align-items-center py-3 text-14">
-        <div @click="$router.push({ name: 'CampaignReward', params: { slug: detail_campaign.title }})" style="cursor: pointer;">
+        <div @click="$router.push({ name: isLoggedIn ? 'DashboardCampaignReward':'CampaignReward', params: { slug: detail_campaign.title }})" style="cursor: pointer;">
           <i class="fas fa-arrow-left" style="color: #008FD7;font-size: 20px;"></i>
         </div>
         <div class="support-header ml-5">Dukung Kreasi</div>
@@ -40,7 +40,7 @@
       </div>
       <hr>
       <div class="my-3">
-        <div class="d-flex justify-content-between mt-4 mb-3">
+        <div class="d-flex justify-content-between mt-4 mb-3" v-if="!isLoggedIn">
           <div>
             <div class="text-color-black"><b>Ups! Kamu belum login</b></div>
             <div>Lengkapi data dibawah ini</div>
@@ -50,10 +50,10 @@
           </div>
         </div>
         <div class="form-group">
-          <input type="text" class="form-control support-identity" placeholder="Nama Lengkap">
+          <input type="text" class="form-control support-identity" :disabled="isLoggedIn" placeholder="Nama Lengkap" v-model="form_data.name">
         </div>
         <div class="form-group">
-          <input type="text" class="form-control support-identity" placeholder="Nomor Telepon atau email">
+          <input type="text" class="form-control support-identity" :disabled="isLoggedIn" placeholder="email" v-model="form_data.email">
         </div>
         <div class="form-group d-flex justify-content-end">
           <div style="cursor: pointer;" @click="uncheck('anonymous')"><b>Sebagai anonim</b></div>
@@ -61,7 +61,7 @@
         </div>
       </div>
       <div class="bg-white" style="padding: 15px;">
-        <button class="btn btn-primary btn-block">Konfirmasi</button>
+        <button class="btn btn-primary btn-block" @click="storeSupport">Konfirmasi</button>
       </div>
     </div>
     
@@ -80,7 +80,7 @@ import MyCurrencyInput from "../../components/core/MyCurrencyInput"
 import lodash from "lodash"
 
 export default {
-  name: "CampaignReward",
+  name: "CampaignSupport",
   components: {
     MyCurrencyInput
   },
@@ -96,17 +96,32 @@ export default {
       form_data: {
         campaign_id: null,
         reward_id: null,
-        is_anonymous: false,
-        tip: 0
+        tip: 0,
+        name: '',
+        email: '',
+        is_anonymous: false
       }
     }
   },
   computed: {
+    isLoggedIn() {
+      return this.$store.getters.isLoggedIn;
+    },
     totalDonation() {
       return this.form_data.tip + (Object.keys(this.reward_selected).length ? this.reward_selected.min_donation : 0)
     }
   },
   methods: {
+    fetchProfile(){
+      if (!this.isLoggedIn) return
+      Apis.user.profile().then(({data}) => {
+        this.$store.commit('SET_USER', data.data)
+        this.$set(this.form_data, 'name', data.data.name)
+        this.$set(this.form_data, 'email', data.data.email)
+      }).catch((error) => {
+        throw error
+      })
+    },
     fetchDetailCampaign() {
       this.$set(this, 'is_loading', true)
       Apis.campaign.slug(this.slug, {}).then(({data}) => {
@@ -119,7 +134,7 @@ export default {
           if (!rewardSelected.length) return this.$router.push({ name: 'CampaignReward', params: { slug: data.title }})
           this.$set(this, 'reward_selected', rewardSelected[0])
           this.$set(this.form_data, 'campaign_id', data.id)
-          this.$set(this.form_data, 'reward_id', reward_id_selected)
+          this.$set(this.form_data, 'reward_id', parseInt(reward_id_selected))
         } else return this.$router.push({ name: 'CampaignDetail', params: { slug: data.title }})
         this.$set(this, 'is_loading', false)
       }).catch((error) => {
@@ -127,15 +142,30 @@ export default {
         throw error
       })
     },
-    uncheck: function(val) {
+    uncheck(val) {
       if (val !== this.previouslySelected) {
         this.form_data.is_anonymous = false;
       }
       this.previouslySelected = this.form_data.is_anonymous
+    },
+    storeSupport() {
+      this.$set(this, 'is_loading', true)
+      Apis.campaign.support({
+        ...this.form_data,
+        is_anonymous: !!this.form_data.is_anonymous,
+        amount: this.reward_selected.min_donation ? this.reward_selected.min_donation : 0
+      }).then(({data}) => {
+        this.$toastr.s("Dukungan telah tersimpan, silahkan lanjutkan pembayaran");
+        this.$set(this, 'is_loading', false)
+      }).catch((error) => {
+        this.$set(this, 'is_loading', false)
+        throw error
+      })
     }
   },
   mounted() {
     this.fetchDetailCampaign()
+    this.fetchProfile()
   }
 }
 </script>

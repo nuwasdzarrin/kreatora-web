@@ -63,6 +63,9 @@ const api = {
         destroy: (id) => {
             return Axios.delete(Path.campaign.detail.replace('{id}', id))
         },
+        support: (data) => {
+            return Axios.post(Path.campaign.support, data);
+        },
     },
     campaign_category: {
         home: (params) => {
