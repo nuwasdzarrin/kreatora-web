@@ -53,8 +53,6 @@ Vue.component('login', require('./pages/auths/Login.vue'));
 Vue.component('notification-list', require('./components/NotificationList.vue'));
 Vue.component('notification', require('./components/Notification.vue'));
 Vue.component('pagination', require('./components/Pagination.vue'));
-Vue.component('item-option', require('./components/items/ItemOption.vue'));
-Vue.component('detail-form', require('./components/transactions/DetailForm.vue'));
 Vue.component('autocomplete', require('./components/AutoComplete.vue'));
 
 const app = new Vue({

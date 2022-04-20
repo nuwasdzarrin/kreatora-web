@@ -1,5 +1,5 @@
 <template>
-  <div style="height: 100vh; position: relative;">
+  <div class="support-wrapper">
     <div class="container bg-white" style="box-shadow: 0 2px 2px rgba(0, 0, 0, 0.15);">
       <div class="d-flex align-items-center py-3 text-14">
         <div @click="$router.push({ name: isLoggedIn ? 'DashboardCampaignReward':'CampaignReward', params: { slug: detail_campaign.title }})" style="cursor: pointer;">
@@ -22,14 +22,17 @@
       </div>
       <div class="card-support-content d-flex justify-content-between text-color-black mb-3">
         <div><b>Nilai Dukungan</b></div>
-        <div><b>Rp {{ (reward_selected.min_donation || 0) | formatCurrency }}</b></div>
+        <div v-if="reward_selected.min_donation > 0"><b>Rp {{ (reward_selected.min_donation || 0) | formatCurrency }}</b></div>
+        <div style="max-width: 120px;" v-else>
+          <my-currency-input ref="amountTmp" class="form-control support-tip-input" :class="is_empty_amount ? 'border-danger':''" v-model="amount_tmp" />
+        </div>
       </div>
       <div class="card-support-content d-flex justify-content-between">
         <div>
           <div class="text-color-black mb-1"><b>Tip (opsional)</b></div>
           <div>Yuk beri tip kepada kreator agar mendukung semakin lancarnya projek ini </div>
         </div>
-        <div class="d-flex align-items-center ml-2">
+        <div class="d-flex align-items-center ml-2" style="max-width: 120px;">
           <my-currency-input class="form-control support-tip-input" v-model="form_data.tip" />
         </div>
       </div>
@@ -40,29 +43,35 @@
       </div>
       <hr>
       <div class="my-3">
-        <div class="d-flex justify-content-between mt-4 mb-3" v-if="!isLoggedIn">
-          <div>
-            <div class="text-color-black"><b>Ups! Kamu belum login</b></div>
-            <div>Lengkapi data dibawah ini</div>
-          </div>
-          <div>
-            <button class="btn btn-primary">LOGIN</button>
-          </div>
+        <div v-if="isLoggedIn">
+          <div class="text-color-black mb-2 px-3" style="text-transform: uppercase;"><b>{{ form_data.name }}</b></div>
+          <div class="mb-1 px-3">{{ form_data.email }}</div>
         </div>
-        <div class="form-group">
-          <input type="text" class="form-control support-identity" :disabled="isLoggedIn" placeholder="Nama Lengkap" v-model="form_data.name">
-        </div>
-        <div class="form-group">
-          <input type="text" class="form-control support-identity" :disabled="isLoggedIn" placeholder="email" v-model="form_data.email">
+        <div v-else>
+          <div class="d-flex justify-content-between mt-4 mb-3">
+            <div>
+              <div class="text-color-black"><b>Ups! Kamu belum login</b></div>
+              <div>Lengkapi data dibawah ini</div>
+            </div>
+            <div>
+              <button class="btn btn-primary">LOGIN</button>
+            </div>
+          </div>
+          <div class="form-group">
+            <input type="text" class="form-control support-identity" placeholder="Nama Lengkap" v-model="form_data.name">
+          </div>
+          <div class="form-group">
+            <input type="text" class="form-control support-identity" placeholder="email" v-model="form_data.email">
+          </div>
         </div>
         <div class="form-group d-flex justify-content-end">
           <div style="cursor: pointer;" @click="uncheck('anonymous')"><b>Sebagai anonim</b></div>
           <input type="radio" style="margin: 7px 0 0 5px;" value="anonymous" v-model="form_data.is_anonymous" @click="uncheck('anonymous')">
         </div>
-      </div>
-      <div class="bg-white" style="padding: 15px;">
-        <button class="btn btn-primary btn-block" @click="storeSupport">Konfirmasi</button>
-      </div>
+      </div>      
+    </div>
+    <div class="wrapper-btn-confirmation bg-white">
+      <button class="btn btn-primary btn-block" @click="storeSupport">Konfirmasi</button>
     </div>
     
     <loading 
@@ -93,6 +102,8 @@ export default {
       detail_campaign: {},
       reward_selected: {},
       previouslySelected: 'anonymous',
+      amount_tmp: 0,
+      is_empty_amount: false,
       form_data: {
         campaign_id: null,
         reward_id: null,
@@ -108,7 +119,7 @@ export default {
       return this.$store.getters.isLoggedIn;
     },
     totalDonation() {
-      return this.form_data.tip + (Object.keys(this.reward_selected).length ? this.reward_selected.min_donation : 0)
+      return this.form_data.tip + ((Object.keys(this.reward_selected).length && this.reward_selected.min_donation > 0) ? this.reward_selected.min_donation : this.amount_tmp)
     }
   },
   methods: {
@@ -149,12 +160,19 @@ export default {
       this.previouslySelected = this.form_data.is_anonymous
     },
     storeSupport() {
-      this.$set(this, 'is_loading', true)
-      Apis.campaign.support({
+      let payload = {
         ...this.form_data,
         is_anonymous: !!this.form_data.is_anonymous,
-        amount: this.reward_selected.min_donation ? this.reward_selected.min_donation : 0
-      }).then(({data}) => {
+        amount: this.reward_selected.min_donation ? this.reward_selected.min_donation : this.amount_tmp
+      }
+      if (payload.amount <= 0 ) {
+        this.$set(this, 'is_empty_amount', true)
+        this.$refs.amountTmp.$el.focus();
+        return this.$toastr.e("Nilai dukungan wajib diisi");
+      }
+      this.$set(this, 'is_empty_amount', false)
+      this.$set(this, 'is_loading', true)
+      Apis.campaign.support(payload).then(({data}) => {
         this.$toastr.s("Dukungan telah tersimpan, silahkan lanjutkan pembayaran");
         this.$set(this, 'is_loading', false)
       }).catch((error) => {
@@ -171,6 +189,11 @@ export default {
 </script>
 
 <style scoped>
+.support-wrapper {
+  width: 100%;
+  height: 100vh; 
+  position: relative;
+}
 .support-header {
   font-style: normal;
   font-weight: 700;
@@ -202,6 +225,12 @@ export default {
   height: 55px;
   border: 1px solid #BDC1C3;
   border-radius: 12px;
+}
+.wrapper-btn-confirmation {
+  width: 100%;
+  position: absolute;
+  bottom: 10px;
+  padding: 15px;
 }
 .text-color-black {
   color: #001B29;

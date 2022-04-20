@@ -17,6 +17,7 @@
   --teal: #20c997;
   --cyan: #17a2b8;
   --white: #fff;
+  --gray-light: #ECF1F4;
   --gray: #6c757d;
   --gray-dark: #343a40;
   --primary: #008FD7;
@@ -6767,6 +6768,9 @@ a.close.disabled {
   vertical-align: text-top !important;
 }
 
+.bg-gray-light {
+  background-color: #ECF1F4!important;
+}
 .bg-primary {
   background-color: #008FD7 !important;
 }

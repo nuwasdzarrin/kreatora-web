@@ -1,9 +1,9 @@
 <template>
-  <div class="bg-white" style="height: 100vh;position: relative;">
+  <div class="wrapper-detail">
     <div v-if="isSection === 'description' || isSection === 'risk' || isSection === 'faq' || isSection === 'update'">
       <div class="container" style="box-shadow: 0 2px 2px rgba(0, 0, 0, 0.15);">
         <div class="d-flex justify-content-between align-items-center py-3 text-14">
-          <div @click="$router.push({ name: 'CampaignDetail', params: { slug: detail_campaign.title }})">
+          <div @click="$router.push({ name: isLoggedIn ? 'DashboardCampaignDetail' : 'CampaignDetail', params: { slug: detail_campaign.title }})">
             <i class="fas fa-arrow-left" style="color: #008FD7;font-size: 20px;"></i>
           </div>
           <div>
@@ -12,16 +12,16 @@
           </div>
         </div>
         <div class="d-flex justify-content-between align-items-center py-2 mb-3 text-14">
-          <div class="text-14" :class="{'text-color-black': isSection === 'description'}" @click="$router.push({ name: 'CampaignDetail', params: { slug: detail_campaign.title }, query: { section: 'description' }})">
+          <div class="text-14" :class="{'text-color-black': isSection === 'description'}" @click="$router.push({ name: isLoggedIn ? 'DashboardCampaignDetail' : 'CampaignDetail', params: { slug: detail_campaign.title }, query: { section: 'description' }})">
             <b>Deskripsi</b>
           </div>
-          <div class="text-14" :class="{'text-color-black': isSection === 'faq'}" @click="$router.push({ name: 'CampaignDetail', params: { slug: detail_campaign.title }, query: { section: 'faq' }})">
+          <div class="text-14" :class="{'text-color-black': isSection === 'faq'}" @click="$router.push({ name: isLoggedIn ? 'DashboardCampaignDetail' : 'CampaignDetail', params: { slug: detail_campaign.title }, query: { section: 'faq' }})">
             <b>FAQ</b>
           </div>
-          <div class="text-14" :class="{'text-color-black': isSection === 'risk'}" @click="$router.push({ name: 'CampaignDetail', params: { slug: detail_campaign.title }, query: { section: 'risk' }})">
+          <div class="text-14" :class="{'text-color-black': isSection === 'risk'}" @click="$router.push({ name: isLoggedIn ? 'DashboardCampaignDetail' : 'CampaignDetail', params: { slug: detail_campaign.title }, query: { section: 'risk' }})">
             <b>Risiko</b>
           </div>
-          <div class="text-14" :class="{'text-color-black': isSection === 'update'}" @click="$router.push({ name: 'CampaignDetail', params: { slug: detail_campaign.title }, query: { section: 'update' }})">
+          <div class="text-14" :class="{'text-color-black': isSection === 'update'}" @click="$router.push({ name: isLoggedIn ? 'DashboardCampaignDetail' : 'CampaignDetail', params: { slug: detail_campaign.title }, query: { section: 'update' }})">
             <b>Update</b>
           </div>
         </div>
@@ -54,7 +54,7 @@
         </div>
       </div>
     </div>
-    <div v-else>
+    <div class="detail-content" v-else>
       <div style="position: relative;">
         <img :src="(detail_campaign && detail_campaign.pictures) ? (api.storage + detail_campaign.pictures[0]) : api.no_image" alt="campaign-images" class="campaign-detail-img">
         <span class="back-button-img" @click="$router.push({ name: isLoggedIn ? 'DashboardHomePage':'HomePage'})"  style="cursor: pointer;">
@@ -62,10 +62,9 @@
         </span>
         <img :src="api.storage + 'kreatora-mark.png'" style="position: absolute; bottom: 10px; right: 10px;">
       </div>
-      <div class="container mt-4">
+      <div class="container py-4 bg-gray-light">
         <div class="d-flex justify-content-between align-items-center mb-3 text-14">
           <div class="campaign-detail-category">
-<!--            <i class="fa fa-gamepad"></i> -->
             {{lodash.upperFirst(detail_campaign.category_name || 'semua')}}
           </div>
           <div>
@@ -89,27 +88,23 @@
         <div class="progress my-3" style="height: 5px;">
           <div class="progress-bar bg-primary" role="progressbar" :style="'width: '+fundedPercent+'%'" :aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
         </div>
-        <div class="d-flex justify-content-between campaign-meta mb-5 text-12">
+        <div class="d-flex justify-content-between campaign-meta text-12">
           <div><strong class="text-color-primary text-14">Rp. {{detail_campaign.total_funded | formatCurrency}}</strong></div>
           <div class="text-14">dari: <strong>Rp. {{detail_campaign.goal | formatCurrency}}</strong></div>
         </div>
+      </div>
+      <div class="container pt-4 bg-white description-excerpt">
         <div class="d-flex justify-content-around align-items-center mb-4 text-14">
-          <div class="text-14 text-color-black" @click="$router.push({ name: 'CampaignDetail', params: { slug: detail_campaign.title }, query: { section: 'description' }})">
+          <div class="text-14 text-color-black" @click="$router.push({ name: isLoggedIn ? 'DashboardCampaignDetail' : 'CampaignDetail', params: { slug: detail_campaign.title }, query: { section: 'description' }})">
             <b>Deskripsi</b>
           </div>
-          <div class="text-14" @click="$router.push({ name: 'CampaignDetail', params: { slug: detail_campaign.title }, query: { section: 'faq' }})">
-            <b>FAQ</b>
-          </div>
-          <div class="text-14" @click="$router.push({ name: 'CampaignDetail', params: { slug: detail_campaign.title }, query: { section: 'risk' }})">
-            <b>Risiko</b>
-          </div>
-          <div class="text-14" @click="$router.push({ name: 'CampaignDetail', params: { slug: detail_campaign.title }, query: { section: 'update' }})">
-            <b>Update</b>
+          <div class="text-14" @click="$router.push({ name: isLoggedIn ? 'DashboardCampaignDetail' : 'CampaignDetail', params: { slug: detail_campaign.title }, query: { section: 'interaction' }})">
+            <b>Interaction</b>
           </div>
         </div>
         <div class="text-14">
           <div v-html="detail_campaign.short_desc"></div>
-          <a href="javascript:void(0)"  @click="$router.push({ name: 'CampaignDetail', params: { slug: detail_campaign.title }, query: { section: 'description' }})">
+          <a href="javascript:void(0)"  @click="$router.push({ name: isLoggedIn ? 'DashboardCampaignDetail' : 'CampaignDetail', params: { slug: detail_campaign.title }, query: { section: 'description' }})">
             baca lebih banyak...
           </a>
         </div>
@@ -204,6 +199,21 @@ export default {
 </script>
 
 <style scoped>
+.wrapper-detail {
+  display: flex;
+  flex-flow: column;
+  height: 100vh;
+  position: relative;
+}
+.detail-content {
+  display: flex;
+  flex-flow: column;
+  flex: 1 1 auto;
+}
+.description-excerpt {
+  border-radius: 20px 20px 0px 0px;
+  flex: 1 1 auto;
+}
 .user-avatar {
   width: 25px;
   height: 25px;
