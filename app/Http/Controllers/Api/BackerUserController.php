@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\BackerUser;
 use App\Campaign;
+use App\CampaignComment;
 use App\Payment;
 use App\User;
 use Carbon\Carbon;
@@ -175,7 +176,8 @@ class BackerUserController extends Controller
             'tip' => 'numeric|nullable',
             'is_anonymous' => 'boolean|nullable',
             'name' => (!$user ? 'required|':'') . 'string|' . ($user ? 'nullable':''),
-            'email' => (!$user ? 'required|':'') . 'email|' . ($user ? 'nullable':'')
+            'email' => (!$user ? 'required|':'') . 'email|' . ($user ? 'nullable':''),
+            'comment' => 'string|nullable'
         ]);
 
         try {
@@ -189,6 +191,14 @@ class BackerUserController extends Controller
                     $user->email = $request->email;
                     $user->save();
                 }
+            }
+
+            if ($request->comment) {
+                $campaign_comment = new CampaignComment;
+                $campaign_comment->user_id = $user->id;
+                $campaign_comment->campaign_id = $request->campaign_id;
+                $campaign_comment->content = $request->comment;
+                $campaign_comment->save();
             }
             
             $backer_user = new BackerUser;

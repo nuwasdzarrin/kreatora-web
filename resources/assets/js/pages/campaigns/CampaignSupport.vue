@@ -8,7 +8,7 @@
         <div class="support-header ml-5">Dukung Kreasi</div>
       </div>
     </div>
-    <div class="container mt-4 pb-4">
+    <div class="container mt-4">
       <div class="support-header mb-3">
         {{ reward_selected.title }}
       </div>
@@ -42,7 +42,7 @@
         <div><b>Rp {{ totalDonation | formatCurrency }}</b></div>
       </div>
       <hr>
-      <div class="my-3">
+      <div class="my-2">
         <div v-if="isLoggedIn">
           <div class="text-color-black mb-2 px-3" style="text-transform: uppercase;"><b>{{ form_data.name }}</b></div>
           <div class="mb-1 px-3">{{ form_data.email }}</div>
@@ -54,7 +54,7 @@
               <div>Lengkapi data dibawah ini</div>
             </div>
             <div>
-              <button class="btn btn-primary">LOGIN</button>
+              <button class="btn btn-primary" @click="$router.push({name: 'Login'})">LOGIN</button>
             </div>
           </div>
           <div class="form-group">
@@ -64,11 +64,18 @@
             <input type="text" class="form-control support-identity" placeholder="email" v-model="form_data.email">
           </div>
         </div>
-        <div class="form-group d-flex justify-content-end">
+        <div class="form-group d-flex justify-content-end mb-1">
           <div style="cursor: pointer;" @click="uncheck('anonymous')"><b>Sebagai anonim</b></div>
           <input type="radio" style="margin: 7px 0 0 5px;" value="anonymous" v-model="form_data.is_anonymous" @click="uncheck('anonymous')">
         </div>
-      </div>      
+      </div>
+      <div>
+        <div class="form-group">
+          <div class="text-color-black"><b>Sampaikan Pesan (optional)</b></div>
+          <div class="text-14 mb-2">Salurkan semangat pada kreator untuk mendukung kreasi ini sukses</div>
+          <textarea class="form-control support-identity" style="height: 120px;" v-model="form_data.comment" />
+        </div>
+      </div>    
     </div>
     <div class="wrapper-btn-confirmation bg-white">
       <button class="btn btn-primary btn-block" @click="storeSupport">Konfirmasi</button>
@@ -110,7 +117,8 @@ export default {
         tip: 0,
         name: '',
         email: '',
-        is_anonymous: false
+        is_anonymous: false,
+        comment: ''
       }
     }
   },
@@ -227,9 +235,9 @@ export default {
   border-radius: 12px;
 }
 .wrapper-btn-confirmation {
-  width: 100%;
+  /* width: 100%;
   position: absolute;
-  bottom: 10px;
+  bottom: 10px; */
   padding: 15px;
 }
 .text-color-black {

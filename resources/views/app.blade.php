@@ -11,7 +11,13 @@
 {{--    css sign--}}
     <link rel="stylesheet" href="{{ asset('assets_app/css/signin.css') }}">
 
-    <title>Kreatora App</title>
+    <title>Kreatora - Support kratifitas indonesia</title>
+    <meta content="" name="description">
+    <meta content="" name="keywords">
+
+    <!-- Favicons -->
+    <link href="/assets_app/images/logo/icon-logo-kreatora-small.png" rel="icon">
+    <link href="/assets_app/images/logo/icon-logo-kreatora-small.png" rel="apple-touch-icon">
 </head>
 <body class="hold-transition sidebar-mini">
     <div id="app">

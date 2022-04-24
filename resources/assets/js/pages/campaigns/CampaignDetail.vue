@@ -1,8 +1,8 @@
 <template>
-  <div class="wrapper-detail">
-    <div v-if="isSection === 'description' || isSection === 'risk' || isSection === 'faq' || isSection === 'update'">
+  <div class="wrapper-detail" :class="isSection ? 'bg-white':''">
+    <div v-if="isSection">
       <div class="container" style="box-shadow: 0 2px 2px rgba(0, 0, 0, 0.15);">
-        <div class="d-flex justify-content-between align-items-center py-3 text-14">
+        <!-- <div class="d-flex justify-content-between align-items-center py-3 text-14">
           <div @click="$router.push({ name: isLoggedIn ? 'DashboardCampaignDetail' : 'CampaignDetail', params: { slug: detail_campaign.title }})">
             <i class="fas fa-arrow-left" style="color: #008FD7;font-size: 20px;"></i>
           </div>
@@ -10,12 +10,19 @@
             <a href="#" class="mr-2"><i class="far fa-bookmark text-20"></i></a>
             <a href="#"><i class="fa fa-share-alt text-20"></i></a>
           </div>
-        </div>
-        <div class="d-flex justify-content-between align-items-center py-2 mb-3 text-14">
-          <div class="text-14" :class="{'text-color-black': isSection === 'description'}" @click="$router.push({ name: isLoggedIn ? 'DashboardCampaignDetail' : 'CampaignDetail', params: { slug: detail_campaign.title }, query: { section: 'description' }})">
+        </div> -->
+        <div class="d-flex align-items-center py-3 mb-3 text-14">
+          <div class="mr-3" @click="$router.push({ name: isLoggedIn ? 'DashboardCampaignDetail' : 'CampaignDetail', params: { slug: detail_campaign.title }})">
+            <i class="fas fa-arrow-left" style="color: #008FD7;font-size: 20px;"></i>
+          </div>
+          <div class="text-14 text-color-black" @click="$router.push({ name: isLoggedIn ? 'DashboardCampaignDetail' : 'CampaignDetail', params: { slug: detail_campaign.title }, query: { section: 'description' }})" v-if="isSection === 'description'">
             <b>Deskripsi</b>
           </div>
-          <div class="text-14" :class="{'text-color-black': isSection === 'faq'}" @click="$router.push({ name: isLoggedIn ? 'DashboardCampaignDetail' : 'CampaignDetail', params: { slug: detail_campaign.title }, query: { section: 'faq' }})">
+          <div class="text-14 text-color-black" style="position: relative;" @click="$router.push({ name: isLoggedIn ? 'DashboardCampaignDetail' : 'CampaignDetail', params: { slug: detail_campaign.title }, query: { section: 'interaction' }})" v-if="isSection === 'interaction'">
+            <b>Interaction</b>
+            <b class="campaign-comments-length">{{detail_campaign.campaign_comments && detail_campaign.campaign_comments.length}}</b>
+          </div>
+          <!-- <div class="text-14" :class="{'text-color-black': isSection === 'faq'}" @click="$router.push({ name: isLoggedIn ? 'DashboardCampaignDetail' : 'CampaignDetail', params: { slug: detail_campaign.title }, query: { section: 'faq' }})">
             <b>FAQ</b>
           </div>
           <div class="text-14" :class="{'text-color-black': isSection === 'risk'}" @click="$router.push({ name: isLoggedIn ? 'DashboardCampaignDetail' : 'CampaignDetail', params: { slug: detail_campaign.title }, query: { section: 'risk' }})">
@@ -23,12 +30,12 @@
           </div>
           <div class="text-14" :class="{'text-color-black': isSection === 'update'}" @click="$router.push({ name: isLoggedIn ? 'DashboardCampaignDetail' : 'CampaignDetail', params: { slug: detail_campaign.title }, query: { section: 'update' }})">
             <b>Update</b>
-          </div>
+          </div> -->
         </div>
       </div>
       <div class="container" style="height: 80vh; overflow-y: auto;">
-        <div v-html="dataSection" v-show="isSection === 'description' || isSection === 'risk'"/>
-        <div class="pt-3" v-show="isSection === 'faq'">
+        <div v-html="dataSection" v-if="isSection === 'description' || isSection === 'risk'"/>
+        <div class="pt-3" v-if="isSection === 'faq'">
           <div class="mb-4" v-for="(item, index) in detail_campaign.faqs" :key="index">
             <div class="faq-question" :class="{'no-bottom-radius': is_faq_open[index]}" @click="openFaq(index)">
               <div style="max-width: 90%">
@@ -41,7 +48,7 @@
             </div>
           </div>
         </div>
-        <div class="pt-3" v-show="isSection === 'update'">
+        <div class="pt-3" v-if="isSection === 'update'">
           <div class="update-box" v-for="(item, index) in detail_campaign.updates" :key="index">
             <div class="d-flex justify-content-between mb-3 text-12">
               <div><strong>Update #{{item.index}}</strong></div>
@@ -52,6 +59,7 @@
             <div class="text-right"><span class="mr-2" style="color: black">11</span><i class="far fa-comment-alt mr-4"></i><span class="mr-2" style="color: black">11</span><i class="far fa-heart"></i></div>
           </div>
         </div>
+        <comment-component :comments="detail_campaign.campaign_comments" v-if="isSection === 'interaction'" />
       </div>
     </div>
     <div class="detail-content" v-else>
@@ -95,11 +103,12 @@
       </div>
       <div class="container pt-4 bg-white description-excerpt">
         <div class="d-flex justify-content-around align-items-center mb-4 text-14">
-          <div class="text-14 text-color-black" @click="$router.push({ name: isLoggedIn ? 'DashboardCampaignDetail' : 'CampaignDetail', params: { slug: detail_campaign.title }, query: { section: 'description' }})">
+          <div class="text-14 text-color-black" style="cursor: pointer;" @click="$router.push({ name: isLoggedIn ? 'DashboardCampaignDetail' : 'CampaignDetail', params: { slug: detail_campaign.title }, query: { section: 'description' }})">
             <b>Deskripsi</b>
           </div>
-          <div class="text-14" @click="$router.push({ name: isLoggedIn ? 'DashboardCampaignDetail' : 'CampaignDetail', params: { slug: detail_campaign.title }, query: { section: 'interaction' }})">
+          <div class="text-14" style="position: relative; cursor: pointer;" @click="$router.push({ name: isLoggedIn ? 'DashboardCampaignDetail' : 'CampaignDetail', params: { slug: detail_campaign.title }, query: { section: 'interaction' }})">
             <b>Interaction</b>
+            <b class="campaign-comments-length">{{detail_campaign.campaign_comments && detail_campaign.campaign_comments.length}}</b>
           </div>
         </div>
         <div class="text-14">
@@ -109,12 +118,12 @@
           </a>
         </div>
       </div>
-    </div>
-    <div class="container d-flex bottom-wrapper">
-      <div class="d-flex align-items-center justify-content-center mr-2 share-button" @click="is_show_share = true">
-        <i class="fa fa-share-alt text-20"></i>
+      <div class="container d-flex bottom-wrapper">
+        <div class="d-flex align-items-center justify-content-center mr-2 share-button" @click="is_show_share = true">
+          <i class="fa fa-share-alt text-20"></i>
+        </div>
+        <button class="btn btn-primary btn-block" @click="$router.push({ name: isLoggedIn ? 'DashboardCampaignReward':'CampaignReward', params: { slug: detail_campaign.title }})"><b>Dukung</b></button>
       </div>
-      <button class="btn btn-primary btn-block" @click="$router.push({ name: isLoggedIn ? 'DashboardCampaignReward':'CampaignReward', params: { slug: detail_campaign.title }})"><b>Dukung</b></button>
     </div>
     <modal-share-button :active.sync="is_show_share" :originData="detail_campaign" />
     <loading 
@@ -131,11 +140,13 @@ import Apis from "../../apis"
 import _ from "lodash"
 import moment from "moment";
 import ModalShareButton from "../../components/modals/ModalShareButton";
+import CommentComponent from "../../components/comment/CommentComponent";
 
 export default {
   name: "CampaignDetail",
   components: {
-    ModalShareButton
+    ModalShareButton,
+    CommentComponent
   },
   data() {
     return {
@@ -157,6 +168,7 @@ export default {
       else if (this.$route.query.section === 'risk') return 'risk'
       else if (this.$route.query.section === 'faq') return 'faq'
       else if (this.$route.query.section === 'update') return 'update'
+      else if (this.$route.query.section === 'interaction') return 'interaction'
       else return null
     },
     dataSection() {
@@ -226,6 +238,12 @@ export default {
   padding: 6px 20px;
   border: 1px solid #5C5C70;
   border-radius: 100px;
+}
+.campaign-comments-length {
+  position: absolute; 
+  right: -7px; 
+  top: -4px; 
+  font-size: 11px;
 }
 .text-color-black {
   color: #001B29;

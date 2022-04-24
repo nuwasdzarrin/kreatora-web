@@ -10,8 +10,8 @@
   <meta content="" name="keywords">
 
   <!-- Favicons -->
-  <link href="/assets_homepage/img/icon_kreatora.png" rel="icon">
-  <link href="/assets_homepage/img/icon_kreatora.png" rel="apple-touch-icon">
+  <link href="/assets_app/images/logo/icon-logo-kreatora-small.png" rel="icon">
+  <link href="/assets_app/images/logo/icon-logo-kreatora-small.png" rel="apple-touch-icon">
 
   <!-- Google Fonts -->
   <link
