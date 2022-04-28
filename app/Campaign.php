@@ -52,7 +52,8 @@ class Campaign extends Model
         'images' => 'array',
     ];
 
-    protected $appends = ['category_name', 'creator_name','creator_avatar','backer_avatar','total_backer','total_funded', 'pictures'];
+    protected $appends = ['category_name', 'creator_name','creator_avatar','backer_avatar','total_backer',
+        'total_funded', 'pictures', 'is_allow_reply'];
 
     public function user()
     {
@@ -132,5 +133,12 @@ class Campaign extends Model
         return $this->backer_users->sum(function ($item) {
             return $item['amount'] + $item['tip'];
         });
+    }
+
+    public function getIsAllowReplyAttribute()
+    {
+        $user_id = auth()->user() ? auth()->user()->id : null;
+        $backer_users = $this->backer_users()->where('user_id', $user_id)->first();
+        return !!$backer_users;
     }
 }

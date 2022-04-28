@@ -98,6 +98,11 @@ const api = {
             return Axios.delete(Path.campaign_category.detail.replace('{id}', id))
         },
     },
+    comment: {
+        store: (data) => {
+            return Axios.post(Path.comment.base, data);
+        },
+    },
     notification: {
         index: (params) => {
             return Axios.get(Path.notification.base, {

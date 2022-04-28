@@ -11,7 +11,7 @@
                 </div>
                 <div>{{item.content}}</div>
                 <div class="d-flex mt-3">
-                    <a href="javascript:void(0)"><i class="fa fa-share fa-flip-horizontal mr-1"></i> Balas</a>
+                    <a href="javascript:void(0)" @click="replyTo(item)"><i class="fa fa-share fa-flip-horizontal mr-1"></i> Balas</a>
                     <div class="ml-4" style="font-weight: 400;" v-if="item.childs.length">{{ item.childs.length}} Balasan</div>
                 </div>
             </div>
@@ -54,7 +54,10 @@ export default {
         daysLeft(time) {
             let cal = moment().diff(moment(time), 'days')
             return cal > 0 ? cal : 0
-        }
+        },
+      replyTo(payload) {
+          this.$emit('onReply', payload)
+      }
     }
 }
 </script>

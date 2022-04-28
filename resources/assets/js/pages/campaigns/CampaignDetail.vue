@@ -33,7 +33,7 @@
           </div> -->
         </div>
       </div>
-      <div class="container" style="height: 80vh; overflow-y: auto;">
+      <div class="container" style="overflow-y: auto;" :style= "[is_reply ? {height: '75vh'} : {height: '90vh'}]">
         <div v-html="dataSection" v-if="isSection === 'description' || isSection === 'risk'"/>
         <div class="pt-3" v-if="isSection === 'faq'">
           <div class="mb-4" v-for="(item, index) in detail_campaign.faqs" :key="index">
@@ -59,7 +59,16 @@
             <div class="text-right"><span class="mr-2" style="color: black">11</span><i class="far fa-comment-alt mr-4"></i><span class="mr-2" style="color: black">11</span><i class="far fa-heart"></i></div>
           </div>
         </div>
-        <comment-component :comments="detail_campaign.campaign_comments" v-if="isSection === 'interaction'" />
+        <comment-component :comments="detail_campaign.campaign_comments" @onReply="replyOnClick" v-if="isSection === 'interaction'" />
+        <div class="container comment-bottom-wrapper" v-if="is_reply">
+          <div class="my-1">membalas <b>{{reply_to.user_name}}</b></div>
+          <div class="d-flex">
+            <input type="text" class="form-control comment-input" v-model="comment" />
+            <div class="d-flex align-items-center justify-content-center ml-2 comment-send-button" @click="sendComment">
+              <i class="fa fa-paper-plane text-20"></i>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
     <div class="detail-content" v-else>
@@ -126,7 +135,7 @@
       </div>
     </div>
     <modal-share-button :active.sync="is_show_share" :originData="detail_campaign" />
-    <loading 
+    <loading
       :active.sync="is_loading"
       :can-cancel="false"
       :is-full-page="true"
@@ -156,12 +165,18 @@ export default {
       is_show_share: false,
       slug: this.$route.params.slug,
       detail_campaign: {},
-      is_faq_open: []
+      is_faq_open: [],
+      is_reply: false,
+      reply_to: {},
+      comment: ''
     }
   },
   computed: {
     isLoggedIn() {
       return this.$store.getters.isLoggedIn;
+    },
+    profile() {
+      return this.$store.getters.authUser;
     },
     isSection() {
       if (this.$route.query.section === 'description') return 'description'
@@ -190,11 +205,25 @@ export default {
       Apis.campaign.slug(this.slug, {}).then(({data}) => {
         this.$set(this, 'is_loading', false)
         this.$set(this, 'detail_campaign', data)
-        let vm = this
-        this.detail_campaign.faqs.forEach(function (item, index) {
-          if (index===0) vm.is_faq_open.push(true)
-          else vm.is_faq_open.push(false)
-        })
+      }).catch((error) => {
+        this.$set(this, 'is_loading', false)
+        throw error
+      })
+    },
+    sendComment() {
+      if (!this.comment || !this.profile) return null
+      this.$set(this, 'is_loading', true)
+      Apis.comment.store({
+        parent_id: this.reply_to.id,
+        campaign_id: this.reply_to.campaign_id,
+        user_id: this.profile.id,
+        content: this.comment
+      }).then(({data}) => {
+        this.comment = ''
+        this.reply_to = {}
+        this.is_reply = false
+        this.$set(this, 'is_loading', false)
+        this.fetchDetailCampaign()
       }).catch((error) => {
         this.$set(this, 'is_loading', false)
         throw error
@@ -202,6 +231,14 @@ export default {
     },
     openFaq(index) {
       this.$set(this.is_faq_open, index, !this.is_faq_open[index])
+    },
+    replyOnClick(payload) {
+      if (!this.detail_campaign.is_allow_reply) {
+        this.is_reply = false
+        return alert("untuk bisa menambahkan komentar, anda harus login dan mensupport campaign ini")
+      }
+      this.reply_to = payload
+      this.is_reply = true
     }
   },
   mounted() {
@@ -240,9 +277,9 @@ export default {
   border-radius: 100px;
 }
 .campaign-comments-length {
-  position: absolute; 
-  right: -7px; 
-  top: -4px; 
+  position: absolute;
+  right: -7px;
+  top: -4px;
   font-size: 11px;
 }
 .text-color-black {
@@ -318,5 +355,30 @@ export default {
   border: 1px solid #008FD7;
   color: #008FD7;
   cursor: pointer;
+}
+.comment-bottom-wrapper {
+  width: 100%;
+  position: absolute;
+  bottom: 10px;
+  left: 0;
+  height: 80px;
+  border-top: 1px solid;
+}
+.comment-send-button {
+  box-sizing: border-box;
+  width: 60px;
+  height: 45px;
+  border-radius: 5px;
+  border: 1px solid #008FD7;
+  color: #008FD7;
+  cursor: pointer;
+}
+.comment-input {
+  border: 1px solid #5C5C70;
+  box-sizing: border-box;
+  border-radius: 12px;
+  min-width: 100px;
+  height: 45px;
+  padding: 5px;
 }
 </style>

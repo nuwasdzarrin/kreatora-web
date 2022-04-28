@@ -26,6 +26,9 @@ const path = {
         detail: '/api/campaign_categories/{id}',
         slug: '/api/campaign_categories/slug/{slug}',
     },
+    comment: {
+        base: '/api/campaign_comments'
+    },
     customer: {
         base: '/api/customers',
         detail: '/api/customers/{id}'

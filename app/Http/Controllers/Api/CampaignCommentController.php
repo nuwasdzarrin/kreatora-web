@@ -25,6 +25,7 @@ class CampaignCommentController extends Controller
         return [
             'store' => [
                 'parent_id' => 'exists:campaign_comments,id|nullable',
+                'user_id' => 'required|exists:users,id',
                 'campaign_id' => 'required|exists:campaigns,id',
                 'content' => 'required|string|max:255',
             ],

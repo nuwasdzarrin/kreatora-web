@@ -60,9 +60,14 @@ class CampaignController extends Controller
     *
     * @return void
     */
-    public function __construct()
+    public function __construct(Request $request)
     {
-        $this->middleware('auth:api')->except(['home','index','show','slug']);
+        $is_authorization = $request->header('Authorization');
+        if ($request->header('Authorization'))
+            $except = ['home','index','show'];
+        else
+            $except = ['home','index','show','slug'];
+        $this->middleware('auth:api')->except($except);
     }
 
     /**
@@ -249,7 +254,7 @@ class CampaignController extends Controller
 
     public function slug($slug=null)
     {
-        $data = Campaign::query()->where('title', $slug)->with(['faqs','updates','rewards','campaign_comments.childs'])->first();
+        $data = Campaign::query()->where('title', $slug)->with(['rewards','campaign_comments.childs'])->first();
         return response()->json($data, 200);
     }
 
