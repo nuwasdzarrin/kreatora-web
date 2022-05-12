@@ -42,4 +42,12 @@ class Payment extends Model
     //protected $connection = '';
 
     // TODO: Define other default value and relations
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+    
+    
+    
 }

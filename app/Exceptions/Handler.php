@@ -5,6 +5,7 @@ namespace App\Exceptions;
 use Exception;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 
+
 class Handler extends ExceptionHandler
 {
     /**
@@ -48,6 +49,16 @@ class Handler extends ExceptionHandler
      */
     public function render($request, Exception $exception)
     {
+        // if($exception instanceof \Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException) 
+        // return response()->json(['message' => 'Method Not Allowerd', 'data' => null], 405);
+
+        // if($exception instanceof \Symfony\Component\HttpKernel\Exception\NotFoundHttpException)
+        // return response()->json(['message' => 'Route not found', 'data'=> null], 404);
+
+        // if($exception instanceof \Illuminate\Validation\ValidationException)
+        // return response()->json(['message' => 'User not found', 'data'=> null], 401);
+      
+        //return response()->json(['message' => 'User not found', 'data'=> null], 401);
         return parent::render($request, $exception);
     }
 }

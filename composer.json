@@ -9,6 +9,8 @@
     "type": "project",
     "require": {
         "php": ">=7.0.0",
+        "ext-gd": "*",
+        "ext-json": "*",
         "atnic/laravel-generator": "^0.10.4",
         "fideloper/proxy": "~3.3",
         "guzzlehttp/guzzle": "^6.3",
@@ -17,10 +19,9 @@
         "laravel/framework": "5.5.*",
         "laravel/tinker": "~1.0",
         "lcobucci/jwt": "3.3.3",
+        "midtrans/midtrans-php": "^2.5",
         "tcg/voyager": "1.1.*",
-        "xendit/xendit-php": "^2.15",
-        "ext-gd": "*",
-        "ext-json": "*"
+        "xendit/xendit-php": "^2.15"
     },
     "require-dev": {
         "filp/whoops": "~2.0",

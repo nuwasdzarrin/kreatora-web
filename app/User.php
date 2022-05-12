@@ -62,6 +62,10 @@ class User extends \TCG\Voyager\Models\User
     {
         return $this->hasMany(BackerUser::class);
     }
+    public function payments()
+    {
+        return $this->hasMany(Payment::class);
+    }
 
     public function wallet()
     {
