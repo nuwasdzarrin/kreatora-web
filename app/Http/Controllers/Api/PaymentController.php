@@ -19,6 +19,11 @@ use Illuminate\Support\Arr;
  */
 class PaymentController extends Controller
 {
+    /**
+     * @var int
+     */
+    private $code;
+
     public function __construct()
     {
         MidConfig::$serverKey = 'Mid-server-gBIgM9uBSAGg7sNQGk4rygFE';
@@ -81,8 +86,6 @@ class PaymentController extends Controller
                 $backer_user->{$key} = $request->{$key};
             }
         }
-
-     
         $amount = $request->amount;
         $client = new Client();
         $params = array(
@@ -99,10 +102,8 @@ class PaymentController extends Controller
             return response()->json([
                 'message' => $this->message = array("Minimal donasi Rp. 10.000 ya!"),
                 'data' => $backer_user
-                ], );
-            ;
-        }else {
-            
+                ], 400);
+        } else {
             try {  
                 $res = $client->request('POST','https://app.midtrans.com/snap/v1/transactions', [
                     'headers' => [
@@ -112,39 +113,31 @@ class PaymentController extends Controller
                         'X-Override-Notification' => 'kreatora.id, kreatora.id',
                    ],
                    'json' => $params
-    
                 ]);
-                $mytime = Carbon::now();
-               
-            $this->code = 200;
-            $backer_user->save();
-            $data = json_decode($res->getBody()->getContents());
-            $email = $request->email;
-           
- 
-            DB::table('payments')->insert([
-                'order_id' => $params['transaction_details']['order_id'],
-                'email' => $email,
-                'amount' => $amount,
-                'payment_link' => $data->redirect_url,
-                'created_at' => $mytime,
-                'updated_at' => $mytime
-            ]);
-            return response()->json([
-                'message' => $this->message = array("Berhasil mendapatkan link pembayaran!"),
-                'payment' => $data,
-                'detail' => $params,
-                'data' => $backer_user
-                ], $this->code);
-            
-               
+                $myTime = Carbon::now();
+                $this->code = 200;
+                $backer_user->save();
+                $data = json_decode($res->getBody()->getContents());
+                $email = $request->email;
+
+                DB::table('payments')->insert([
+                    'order_id' => $params['transaction_details']['order_id'],
+                    'email' => $email,
+                    'amount' => $amount,
+                    'payment_link' => $data->redirect_url,
+                    'created_at' => $myTime,
+                    'updated_at' => $myTime
+                ]);
+                return response()->json([
+                    'message' => $this->message = array("Berhasil mendapatkan link pembayaran!"),
+                    'payment' => $data,
+                    'detail' => $params,
+                    'data' => $backer_user
+                    ], $this->code);
             } catch (Exception $e) {
                 return $e;
-               
             }
-            
         }
-        
     }
 
     public function status(Request $request) {

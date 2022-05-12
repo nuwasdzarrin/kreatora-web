@@ -15,6 +15,7 @@ class CreatePaymentsTable extends Migration
     {
         Schema::create('payments', function (Blueprint $table) {
             $table->increments('id');
+            $table->unsignedInteger('backer_user_id')->nullable();
             $table->unsignedInteger('order_id')->nullable();
             $table->unsignedInteger('status_code')->nullable();
             $table->string('status')->nullable();
@@ -23,6 +24,9 @@ class CreatePaymentsTable extends Migration
             $table->text('payment_link')->nullable();
             $table->timestamp('transaction_time')->nullable();
             $table->timestamps();
+
+            $table->foreign('backer_user_id')->references('id')
+                ->on('backer_users')->onUpdate('cascade')->onDelete('set null');
         });
     }
 

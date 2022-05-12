@@ -8,6 +8,7 @@ use App\CampaignComment;
 use App\Payment;
 use App\User;
 use Carbon\Carbon;
+use GuzzleHttp\Client;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -25,7 +26,7 @@ use Xendit\Xendit;
  */
 class BackerUserController extends Controller
 {
-    private $api_key;
+
     /**
      * Rules
      * @param  \Illuminate\Http\Request|null $request
@@ -180,6 +181,7 @@ class BackerUserController extends Controller
             'comment' => 'string|nullable'
         ]);
 
+        DB::beginTransaction();
         try {
             if (!$user) {
                 $is_email_exist = User::query()->where('email', $request->email)->first();
@@ -211,19 +213,58 @@ class BackerUserController extends Controller
             $backer_user->save();
 
             // Payment record
-            // ......
+            $client = new Client();
+            $amount = $request->amount + $request->tip;
+            $params = array(
+                'transaction_details' => array(
+                    'order_id' => rand().'#'.$backer_user->id,
+                    'gross_amount' => $amount,
+                )
+            );
+            $codeServer = base64_encode('Mid-server-gBIgM9uBSAGg7sNQGk4rygFE:');
+            // jika kurang dari Rp. 10.0000
+            if ($amount < 1000) {
+                return response()->json([
+                    'message' => $this->message = array("Minimal donasi Rp. 10.000 ya!"),
+                    'data' => $backer_user
+                ], 400);
+            } else {
+                try {
+                    $res = $client->request('POST','https://app.midtrans.com/snap/v1/transactions', [
+                        'headers' => [
+                            'Accept' => 'application/json',
+                            'Content-Type' => 'application/json',
+                            'Authorization' => 'Basic ' . $codeServer,
+                            'X-Override-Notification' => 'kreatora.id, kreatora.id',
+                        ],
+                        'json' => $params
+                    ]);
+                    $code = 200;
+                    $data = json_decode($res->getBody()->getContents());
+                    $email = $user->email;
 
+                    $payment = new Payment();
+                    $payment->backer_user_id = $backer_user->id;
+                    $payment->order_id = $params['transaction_details']['order_id'];
+                    $payment->email = $email;
+                    $payment->payment_link = $data->redirect_url;
+                    $payment->save();
 
+                } catch (\Exception $e) {
+                    throw new HttpException(500, $e->getMessage(), $e);
+                }
+            }
             DB::commit();
         } catch (\Exception $exception) {
             DB::rollBack();
             throw new HttpException(500, $exception->getMessage(), $exception);
         }
-
-        $res['backer_user'] = $backer_user;
         return response()->json([
-            'data' => $res
-        ])->setStatusCode(200);
+            'message' => $this->message = array("Berhasil mendapatkan link pembayaran!"),
+            'payment' => $data,
+            'detail' => $params,
+            'data' => $backer_user
+        ], $code);
     }
 
     public function me()
