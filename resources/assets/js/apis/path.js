@@ -14,8 +14,8 @@ const path = {
         resend_code: '/api/email_code',
     },
     backer: {
-        base: '/api/backer/me',
-        detail: '/api/backer/me/{id}',
+        base: '/api/my_backer',
+        detail: '/api/my_backer/{id}',
     },
     campaign: {
         home: '/api/campaigns/home',
