@@ -67,6 +67,18 @@ const api = {
             return Axios.post(Path.campaign.support, data);
         },
     },
+    my_backer: {
+        index: (params) => {
+            return Axios.get(Path.backer.base, {
+                params: params
+            });
+        },
+        show: (id, params) => {
+            return Axios.get(Path.backer.detail.replace('{id}', id), {
+                params: params
+            });
+        },
+    },
     campaign_category: {
         home: (params) => {
             return Axios.get(Path.campaign_category.home, {

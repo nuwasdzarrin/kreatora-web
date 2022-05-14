@@ -202,7 +202,7 @@ class BackerUserController extends Controller
                 $campaign_comment->content = $request->comment;
                 $campaign_comment->save();
             }
-            
+
             $backer_user = new BackerUser;
             $backer_user->user_id = $user->id;
             $backer_user->campaign_id = $request->campaign_id;
@@ -217,11 +217,11 @@ class BackerUserController extends Controller
             $amount = $request->amount + $request->tip;
             $params = array(
                 'transaction_details' => array(
-                    'order_id' => rand().'#'.$backer_user->id,
+                    'order_id' => rand(),
                     'gross_amount' => $amount,
                 )
             );
-            $codeServer = base64_encode('Mid-server-gBIgM9uBSAGg7sNQGk4rygFE:');
+            $codeServer = base64_encode(config('midtrans.server_key'));
             // jika kurang dari Rp. 10.0000
             if ($amount < 1000) {
                 return response()->json([
@@ -230,7 +230,9 @@ class BackerUserController extends Controller
                 ], 400);
             } else {
                 try {
-                    $res = $client->request('POST','https://app.midtrans.com/snap/v1/transactions', [
+                    $url_production = 'https://app.midtrans.com';
+                    $url_sandbox = 'https://app.sandbox.midtrans.com';
+                    $res = $client->request('POST',$url_sandbox.'/snap/v1/transactions', [
                         'headers' => [
                             'Accept' => 'application/json',
                             'Content-Type' => 'application/json',
@@ -268,6 +270,32 @@ class BackerUserController extends Controller
     }
 
     public function me()
+    {
+        $data = BackerUser::query()->where('user_id', auth()->user()->id)->with(['campaign', 'payment'])
+            ->orderByDesc('id')->paginate(15);
+        $data = $data->map(function ($item, $key) {
+            return [
+                "id" => $item->id,
+                "amount" => $item->amount,
+                "tip" => $item->tip,
+                "is_anonymous" => $item->is_anonymous,
+                "created_at" => $item->created_at,
+                "campaign" => [
+                    "title" => $item->campaign->title,
+                    "pictures" => $item->campaign->pictures
+                ],
+                "payment" => [
+                    "order_id" => $item->payment ? $item->payment->order_id : null,
+                    "status" => $item->payment ? $item->payment->status : null,
+                    "payment_link" => $item->payment ? $item->payment->payment_link : null,
+                    "transaction_time" => $item->payment ? $item->payment->transaction_time : null,
+                ]
+            ];
+        });
+        return response()->json($data);
+    }
+
+    public function meDetail()
     {
         $data = Campaign::query()->whereHas('backer_users', function (Builder $query){
             return $query->where('user_id', auth()->user()->id);

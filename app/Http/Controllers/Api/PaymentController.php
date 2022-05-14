@@ -26,10 +26,10 @@ class PaymentController extends Controller
 
     public function __construct()
     {
-        MidConfig::$serverKey = 'Mid-server-gBIgM9uBSAGg7sNQGk4rygFE';
-        MidConfig::$isProduction = false;
-        MidConfig::$isSanitized = true;
-        MidConfig::$is3ds = true;
+//        MidConfig::$serverKey = 'Mid-server-gBIgM9uBSAGg7sNQGk4rygFE';
+//        MidConfig::$isProduction = false;
+//        MidConfig::$isSanitized = true;
+//        MidConfig::$is3ds = true;
 
         //$this->middleware('auth:api')->except(['createPayment', 'status']);
     }
@@ -50,7 +50,7 @@ class PaymentController extends Controller
                 'transaction_status' => 'required',
             ],
 
-            
+
         ];
     }
 
@@ -68,13 +68,13 @@ class PaymentController extends Controller
 
     public function createPayment(Request $request)
     {
-        
+
         $request->validate(self::rules($request)['store']);
 
         $backer_user = new BackerUser;
         $backer_user->user_id = auth()->user();
        // dd($backer_user);
-    
+
         foreach (self::rules($request)['store'] as $key => $value) {
             if (Str::contains($value, [ 'file', 'image', 'mimetypes', 'mimes' ])) {
                 if ($request->hasFile($key)) {
@@ -94,20 +94,22 @@ class PaymentController extends Controller
                     'gross_amount' => $amount,
             )
         );
-        $codeServer = base64_encode('Mid-server-gBIgM9uBSAGg7sNQGk4rygFE:');
+        $codeServer = base64_encode(config('midtrans.server_key'));
         $order_id = $params['transaction_details']['order_id'];
         // jika kurang dari Rp. 10.0000
         if ($amount < 1000) {
-       
+
             return response()->json([
                 'message' => $this->message = array("Minimal donasi Rp. 10.000 ya!"),
                 'data' => $backer_user
                 ], 400);
         } else {
-            try {  
-                $res = $client->request('POST','https://app.midtrans.com/snap/v1/transactions', [
+            try {
+                $url_production = 'https://app.midtrans.com';
+                $url_sandbox = 'https://app.sandbox.midtrans.com';
+                $res = $client->request('POST',$url_sandbox.'/snap/v1/transactions', [
                     'headers' => [
-                        'Accept' => 'application/json', 
+                        'Accept' => 'application/json',
                         'Content-Type' => 'application/json',
                         'Authorization' => 'Basic ' . $codeServer,
                         'X-Override-Notification' => 'kreatora.id, kreatora.id',
@@ -150,7 +152,7 @@ class PaymentController extends Controller
         $client = new Client();
         $res = $client->request('GET','https://api.midtrans.com/v2/'.$id.'/status', [
             'headers' => [
-                'Accept' => 'application/json', 
+                'Accept' => 'application/json',
                 'Content-Type' => 'application/json',
                 'Authorization' => 'Basic ' . $codeServer
            ],
@@ -168,12 +170,12 @@ class PaymentController extends Controller
             ], $this->code);
         }else {
             DB::table('payments')
-            ->where('order_id', $id)  
+            ->where('order_id', $id)
             ->limit(1)
             ->update(array(
                 'status' => $data->transaction_status,
                 'transaction_time' => $data->transaction_time,
-            )); 
+            ));
             return response()->json([
                 'data' => $data,
             ], $this->code);
@@ -188,7 +190,7 @@ class PaymentController extends Controller
         $order_id = $request->order_id;
         $status_code = $request->status_code;
         $status = $request->transaction_status;
-        
+
         $this->code = 200;
         if ($order_id == null) {
             return response()->json([
@@ -196,12 +198,12 @@ class PaymentController extends Controller
             ], $this->code);
         }else {
             DB::table('payments')
-            ->where('order_id', $order_id)  
+            ->where('order_id', $order_id)
             ->limit(1)
             ->update(array(
                 'status_code' => $status_code,
                 'status' => $status
-            )); 
+            ));
             return response()->json([
                 'message' => array('Transaksi Berhasil!'),
             ], $this->code);

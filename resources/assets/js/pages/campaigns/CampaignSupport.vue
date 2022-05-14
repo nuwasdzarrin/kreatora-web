@@ -1,13 +1,8 @@
 <template>
   <div class="support-wrapper">
-    <div class="container bg-white" style="box-shadow: 0 2px 2px rgba(0, 0, 0, 0.15);">
-      <div class="d-flex align-items-center py-3 text-14">
-        <div @click="$router.push({ name: isLoggedIn ? 'DashboardCampaignReward':'CampaignReward', params: { slug: detail_campaign.title }})" style="cursor: pointer;">
-          <i class="fas fa-arrow-left" style="color: #008FD7;font-size: 20px;"></i>
-        </div>
-        <div class="support-header ml-5">Dukung Kreasi</div>
-      </div>
-    </div>
+    <TopNavbarBlock title="Dukung Kreasi" :routes="{auth: `Dashboard${back_button}`, not_auth: back_button}"
+                    :params="detail_campaign"
+    />
     <div class="container mt-4">
       <div class="support-header mb-3">
         {{ reward_selected.title }}
@@ -16,15 +11,24 @@
       <div class="text-color-black mb-2"><b>{{ lodash.startCase(detail_campaign.title) }}</b></div>
       <div class="mb-1">Dukungan akan dikirimkan ke Kreator :</div>
       <div class="d-flex align-items-center mb-3">
-        <img :src="(detail_campaign && detail_campaign.creator_avatar) ? api.storage + detail_campaign.creator_avatar : api.no_image" alt="avatar-creator" class="user-avatar mr-1">
+        <img
+            :src="(detail_campaign && detail_campaign.creator_avatar) ? api.storage + detail_campaign.creator_avatar : api.no_image"
+            alt="avatar-creator"
+            class="user-avatar mr-1"
+        >
         <strong class="text-color-black">{{lodash.startCase(detail_campaign.creator_name)}}</strong>
         <i class="fas fa-certificate ml-1" style="color: #008FD7;"></i>
       </div>
       <div class="card-support-content d-flex justify-content-between text-color-black mb-3">
         <div><b>Nilai Dukungan</b></div>
-        <div v-if="reward_selected.min_donation > 0"><b>Rp {{ (reward_selected.min_donation || 0) | formatCurrency }}</b></div>
+        <div v-if="reward_selected.min_donation > 0">
+          <b>Rp {{ (reward_selected.min_donation || 0) | formatCurrency }}</b>
+        </div>
         <div style="max-width: 120px;" v-else>
-          <my-currency-input ref="amountTmp" class="form-control support-tip-input" :class="is_empty_amount ? 'border-danger':''" v-model="amount_tmp" />
+          <my-currency-input ref="amountTmp" class="form-control support-tip-input"
+                             :class="is_empty_amount ? 'border-danger':''"
+                             v-model="amount_tmp"
+          />
         </div>
       </div>
       <div class="card-support-content d-flex justify-content-between">
@@ -75,13 +79,13 @@
           <div class="text-14 mb-2">Salurkan semangat pada kreator untuk mendukung kreasi ini sukses</div>
           <textarea class="form-control support-identity" style="height: 120px;" v-model="form_data.comment" />
         </div>
-      </div>    
+      </div>
     </div>
     <div class="wrapper-btn-confirmation bg-white">
       <button class="btn btn-primary btn-block" @click="storeSupport">Konfirmasi</button>
     </div>
-    
-    <loading 
+
+    <loading
       :active.sync="is_loading"
       :can-cancel="false"
       :is-full-page="true"
@@ -94,16 +98,19 @@
 import Apis from "../../apis"
 import MyCurrencyInput from "../../components/core/MyCurrencyInput"
 import lodash from "lodash"
+import TopNavbarBlock from "../../components/navbars/TopNavbarBlock";
 
 export default {
   name: "CampaignSupport",
   components: {
+    TopNavbarBlock,
     MyCurrencyInput
   },
   data() {
     return {
       lodash: lodash,
       api: Apis,
+      back_button: 'CampaignReward',
       is_loading: false,
       slug: this.$route.params.slug,
       detail_campaign: {},
@@ -148,7 +155,7 @@ export default {
         let reward_id_selected = (this.$route.query && this.$route.query.reward) || 0
         if (data.rewards.length) {
           let rewardSelected = lodash.filter( data.rewards, function(reward) {
-            return reward_id_selected == reward.id
+            return reward_id_selected === reward.id
           })
           if (!rewardSelected.length) return this.$router.push({ name: 'CampaignReward', params: { slug: data.title }})
           this.$set(this, 'reward_selected', rewardSelected[0])
@@ -199,7 +206,7 @@ export default {
 <style scoped>
 .support-wrapper {
   width: 100%;
-  height: 100vh; 
+  height: 100vh;
   position: relative;
 }
 .support-header {

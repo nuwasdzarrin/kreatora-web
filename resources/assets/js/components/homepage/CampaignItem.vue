@@ -1,5 +1,11 @@
 <template>
-  <div :class="parent === 'CampaignVerticalList'?'vertical-campaign-item-card':'campaign-item-card'" @click="$router.push({ name: isLoggedIn ? 'DashboardCampaignDetail' : 'CampaignDetail', params: { slug: item.title }})" v-if="item">
+  <div
+      :class="parent === 'CampaignVerticalList'?'vertical-campaign-item-card':'campaign-item-card'"
+      @click="$router.push({
+        name: isLoggedIn ? 'DashboardCampaignDetail' : 'CampaignDetail',
+        params: { slug: item.title }
+      })" v-if="item"
+  >
     <img :src="api.storage + item.pictures[0]" alt="img-campaign" :class="parent === 'CampaignVerticalList'?'vertical-campaign-item-img':'campaign-item-img'">
     <div class="p-4">
       <h6><strong>{{item.title}}</strong></h6>
@@ -38,16 +44,6 @@ export default {
     fundedPercent() {
       let result = Math.round((this.item.total_funded / this.item.goal) * 100);
       return (result > 100) ? 100 : result;
-    },
-    daysLeft() {
-      let result = 0;
-      if (this.item.end) {
-        let diff = moment(this.item.end).diff(moment(), 'days');
-        if (diff > 0) {
-          result = diff;
-        }
-      }
-      return result;
     },
     isLoggedIn() {
       return this.$store.getters.isLoggedIn;

@@ -1,9 +1,6 @@
 import VueRouter from 'vue-router';
 import Home from '../layouts/Home.vue';
 import HomeWithoutAuth from "../layouts/HomeWithoutAuth";
-import User from '../pages/User';
-import UserCreate from '../pages/users/Create';
-import UserEdit from '../pages/users/Edit';
 import Login from '../pages/auths/Login.vue';
 import Register from "../pages/auths/Register";
 import Verification from "../pages/auths/Verification";
@@ -12,6 +9,8 @@ import HomePage from "../pages/HomePage";
 import CampaignDetail from "../pages/campaigns/CampaignDetail";
 import CampaignReward from "../pages/campaigns/CampaignReward";
 import CampaignSupport from "../pages/campaigns/CampaignSupport";
+import MyBacker from "../pages/my_backers/MyBacker";
+import MyBackerDetail from "../pages/my_backers/MyBackerDetail";
 import Account from "../pages/Account";
 
 let routes = [
@@ -25,24 +24,6 @@ let routes = [
                 path: '/',
                 component: HomePage,
                 name: 'HomePage',
-                meta: {requiresAuth: false},
-            },
-            {
-                path: '/campaign/login',
-                name: "Login",
-                component: Login,
-                meta: {requiresAuth: false},
-            },
-            {
-                path: '/campaign/register',
-                name: "Register",
-                component: Register,
-                meta: {requiresAuth: false},
-            },
-            {
-                path: '/campaign/verification',
-                name: "Verification",
-                component: Verification,
                 meta: {requiresAuth: false},
             },
             {
@@ -61,6 +42,36 @@ let routes = [
                 path: '/campaign/:slug/support',
                 component: CampaignSupport,
                 name: 'CampaignSupport',
+                meta: {requiresAuth: false},
+            },
+            {
+                path: '/my_backer',
+                component: MyBacker,
+                name: 'MyBacker',
+                meta: {requiresAuth: false},
+            },
+            {
+                path: '/my_backer/:slug',
+                component: MyBackerDetail,
+                name: 'MyBackerDetail',
+                meta: {requiresAuth: false},
+            },
+            {
+                path: '/campaign/login',
+                name: "Login",
+                component: Login,
+                meta: {requiresAuth: false},
+            },
+            {
+                path: '/campaign/register',
+                name: "Register",
+                component: Register,
+                meta: {requiresAuth: false},
+            },
+            {
+                path: '/campaign/verification',
+                name: "Verification",
+                component: Verification,
                 meta: {requiresAuth: false},
             },
         ]
@@ -96,23 +107,14 @@ let routes = [
                 name: 'DashboardAccount',
             },
             {
-                path: 'user',
-                component: User,
-                name: 'user',
-                meta: {requiresAuth: true},
+                path: '/dashboard/my_backer',
+                component: MyBacker,
+                name: 'DashboardMyBacker',
             },
             {
-                path: 'user/create',
-                component: UserCreate,
-                name: 'user-create',
-                meta: {requiresAuth: true},
-            },
-            {
-                path: 'user/:id',
-                component: UserEdit,
-                name: 'user-edit',
-                meta: {requiresAuth: true},
-                props: true,
+                path: '/dashboard/my_backer/:slug',
+                component: MyBackerDetail,
+                name: 'DashboardMyBackerDetail',
             },
         ],
     },

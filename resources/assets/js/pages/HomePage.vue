@@ -23,7 +23,7 @@
 <!--        <div class="spacer"></div> -->
 <!--        <BottomNavbar />-->
     </div>
-    <loading 
+    <loading
       :active.sync="is_loading"
       :can-cancel="false"
       :is-full-page="true"
@@ -35,7 +35,6 @@
 <script>
 import NotLoginComponent from "../components/alerts/NotLoginComponent";
 import CampaignHorizontalList from "../components/homepage/CampaignHorizontalList";
-import HomeWalletComponent from "../components/wallets/HomeWalletComponent";
 import Apis from "../apis";
 import CampaignVerticalList from "../components/homepage/CampaignVerticalList";
 import CampaignCategory from "../components/homepage/CampaignCategory";
@@ -44,7 +43,6 @@ export default {
   name: "HomePage",
   components: {
     CampaignVerticalList,
-    HomeWalletComponent,
     CampaignHorizontalList,
     CampaignCategory,
     NotLoginComponent
@@ -180,7 +178,7 @@ export default {
 
 <style scoped>
 .homepage-content {
-  display: flex; 
+  display: flex;
   flex-direction: column;
   height: calc(100vh - 50px);
   flex: 1;

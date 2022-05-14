@@ -13,6 +13,10 @@ const path = {
         email_verification: '/api/email_verification',
         resend_code: '/api/email_code',
     },
+    backer: {
+        base: '/api/backer/me',
+        detail: '/api/backer/me/{id}',
+    },
     campaign: {
         home: '/api/campaigns/home',
         base: '/api/campaigns',
