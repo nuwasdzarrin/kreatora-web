@@ -39,8 +39,8 @@ Route::apiResource('updates', 'Api\UpdateController', [ 'as' => 'api' ]);
 Route::apiResource('campaign_comments', 'Api\CampaignCommentController', [ 'as' => 'api' ]);
 
 Route::post('support', 'Api\BackerUserController@support')->name('support.create');
-Route::get('backer/me', 'Api\BackerUserController@me')->name('backer.me');
-Route::get('backer/me/{order_id}', 'Api\BackerUserController@meDetail')->name('backer.me.detail');
+Route::get('backer/me', 'Api\BackerUserController@myBacker')->name('backer.my_backer');
+Route::get('backer/me/{order_id}', 'Api\BackerUserController@myBackerDetail')->name('backer.my_backer_detail');
 Route::apiResource('backer_users', 'Api\BackerUserController', [ 'as' => 'api' ]);
 
 Route::post('payment/createPayment', 'Api\PaymentController@createPayment')->name('payment.createPayment');

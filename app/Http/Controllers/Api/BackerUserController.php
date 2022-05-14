@@ -207,7 +207,7 @@ class BackerUserController extends Controller
             $backer_user->user_id = $user->id;
             $backer_user->campaign_id = $request->campaign_id;
             if ($request->reward_id) $backer_user->reward_id = $request->reward_id;
-            $backer_user->amount = $request->amount;
+            $backer_user->amount = $request->amount; // amount from reward if available
             if ($request->tip) $backer_user->tip = $request->tip;
             $backer_user->is_anonymous = $request->is_anonymous;
             $backer_user->save();
@@ -269,7 +269,7 @@ class BackerUserController extends Controller
         ], $code);
     }
 
-    public function me()
+    public function myBacker()
     {
         $data = BackerUser::query()->where('user_id', auth()->user()->id)->with(['campaign', 'payment'])
             ->orderByDesc('id')->paginate(15);
@@ -295,11 +295,8 @@ class BackerUserController extends Controller
         return response()->json($data);
     }
 
-    public function meDetail()
+    public function myBackerDetail($order_id)
     {
-        $data = Campaign::query()->whereHas('backer_users', function (Builder $query){
-            return $query->where('user_id', auth()->user()->id);
-        })->orderByDesc('id')->paginate(15);
-        return response()->json($data);
+        //...
     }
 }
