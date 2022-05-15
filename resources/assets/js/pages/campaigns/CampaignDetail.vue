@@ -134,7 +134,7 @@
         <button class="btn btn-primary btn-block" @click="$router.push({ name: isLoggedIn ? 'DashboardCampaignReward':'CampaignReward', params: { slug: detail_campaign.title }})"><b>Dukung</b></button>
       </div>
     </div>
-    <modal-share-button :active.sync="is_show_share" :originData="detail_campaign" />
+    <ModalShareButton :active.sync="is_show_share" :originData="detail_campaign" />
     <loading
       :active.sync="is_loading"
       :can-cancel="false"

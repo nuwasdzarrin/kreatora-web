@@ -15,9 +15,17 @@
     <ul class="navbar-nav ml-auto">
       <!--   <notification-list />-->
       <li class="nav-item">
-        <img :src="(profile && profile.avatar) ? api.storage + profile.avatar : api.no_image" alt="avatar" class="nav-link header-account" style="padding: 0;" v-if="isLoggedIn" @click="logout">
-        <a href="#" class="nav-link text-primary text-center header-account bg-white" v-else>
-          <i class="far fa-user" style="font-size: 20px;" title="Keluar"></i>
+        <img :src="(profile && profile.avatar) ? api.storage + profile.avatar : api.no_image"
+             alt="avatar" class="nav-link header-account" style="padding: 0;"
+             @click="$router.push({name: 'DashboardAccount'})"
+             v-if="isLoggedIn"
+        >
+        <a href="javascript:void(0)"
+           class="nav-link text-primary text-center header-account bg-white"
+           @click="$router.push({name: 'Login'})"
+           v-else
+        >
+          <i class="far fa-user" style="font-size: 20px;" title="Akun"></i>
         </a>
       </li>
 
@@ -43,12 +51,6 @@ export default {
     onSearch() {
       this.$emit('update:search', this.q)
     },
-    logout() {
-      this.$store.dispatch('logout').then(() => {
-        this.$router.push({name: 'HomePage'})
-      });
-    },
-
     listen(){
       // window.Echo = new Echo({
       //     broadcaster: 'pusher',
@@ -65,21 +67,18 @@ export default {
 
 
       if(localStorage.getItem("token")) {
-          let decoded = jwt_decode(localStorage.getItem("token"));
-          window.Echo.private(`App.User.`+decoded.sub)
-          .notification((notification) => {
-              console.log(notification);
-              this.$store.dispatch('addNotif',notification).then(() => {});
-          });
-
+        let decoded = jwt_decode(localStorage.getItem("token"));
+        window.Echo.private(`App.User.`+decoded.sub)
+        .notification((notification) => {
+            console.log(notification);
+            this.$store.dispatch('addNotif',notification).then(() => {});
+        });
       }
     }
   },
-
   created(){
     this.listen();
   },
-
   computed: {
     isLoggedIn() {
       return this.$store.getters.isLoggedIn;
@@ -88,7 +87,6 @@ export default {
       return this.$store.getters.authUser;
     }
   }
-
 }
 </script>
 <style lang="css" scoped>

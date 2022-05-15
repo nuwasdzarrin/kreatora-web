@@ -45,7 +45,7 @@ export default {
     data () {
         return {
             sharing: {
-                url: document.URL,
+                url: window.location.origin,
                 title: '',
                 description: '',
                 quote: 'The hot reload is so fast it\'s near instant. - Evan You',
@@ -59,7 +59,7 @@ export default {
                 { network: 'telegram', name: 'Telegram', icon: 'fab fah fa-lg fa-telegram-plane', color: '#0088cc' },
                 { network: 'twitter', name: 'Twitter', icon: 'fab fah fa-lg fa-twitter', color: '#1da1f2' },
                 { network: 'whatsapp', name: 'Whatsapp', icon: 'fab fah fa-lg fa-whatsapp', color: '#25d366' },
-                
+
                 // { network: 'baidu', name: 'Baidu', icon: 'fas fah fa-lg fa-paw', color: '#2529d8' },
                 // { network: 'buffer', name: 'Buffer', icon: 'fab fah fa-lg fa-buffer', color: '#323b43' },
                 // { network: 'email', name: 'Email', icon: 'far fah fa-lg fa-envelope', color: '#333333' },
@@ -95,6 +95,7 @@ export default {
         'originData': function(n) {
             this.sharing.title = n.title;
             this.sharing.description = n.short_desc;
+            this.sharing.url = n.shareable_link;
         }
     },
     methods: {

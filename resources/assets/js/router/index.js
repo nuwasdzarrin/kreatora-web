@@ -11,7 +11,7 @@ import CampaignReward from "../pages/campaigns/CampaignReward";
 import CampaignSupport from "../pages/campaigns/CampaignSupport";
 import MyBacker from "../pages/my_backers/MyBacker";
 import MyBackerDetail from "../pages/my_backers/MyBackerDetail";
-import Account from "../pages/Account";
+import Account from "../pages/users/Account";
 
 let routes = [
     {
@@ -116,6 +116,11 @@ let routes = [
                 component: MyBackerDetail,
                 name: 'DashboardMyBackerDetail',
             },
+            {
+                path: '/dashboard/account',
+                component: Account,
+                name: 'DashboardAccount',
+            },
         ],
     },
 ];
@@ -130,7 +135,7 @@ router.beforeEach((to, from, next) => {
     if (to.matched.some(record => record.meta.requiresAuth)) {
         if (!Store.getters.isLoggedIn) {
             next({
-                path: '/login',
+                name: 'HomePage',
             });
         } else {
             next();
@@ -138,7 +143,7 @@ router.beforeEach((to, from, next) => {
     } else {
         if (Store.getters.isLoggedIn) {
             next({
-                path: '/dashboard',
+                name: 'DashboardHomePage',
             });
         }else{
             next();

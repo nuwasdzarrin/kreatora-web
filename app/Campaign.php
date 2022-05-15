@@ -4,6 +4,7 @@ namespace App;
 
 use App\Traits\ResolveRouteBindingWithFilter;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\URL;
 use Smartisan\Filters\Traits\Filterable;
 use Illuminate\Database\Eloquent\Model;
 
@@ -53,7 +54,7 @@ class Campaign extends Model
     ];
 
     protected $appends = ['category_name', 'creator_name','creator_avatar','backer_avatar','total_backer',
-        'total_funded', 'pictures', 'is_allow_reply'];
+        'total_funded', 'pictures', 'is_allow_reply', 'shareable_link'];
 
     public function user()
     {
@@ -140,5 +141,10 @@ class Campaign extends Model
         $user_id = auth()->user() ? auth()->user()->id : null;
         $backer_users = $this->backer_users()->where('user_id', $user_id)->first();
         return !!$backer_users;
+    }
+
+    public function getShareableLinkAttribute()
+    {
+        return URL::to('/campaign/'.rawurlencode($this->title));
     }
 }

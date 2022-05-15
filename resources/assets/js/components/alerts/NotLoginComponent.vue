@@ -5,19 +5,14 @@
     <div>Login dan dapatkan kartu backer pertamamu! </div>
   </div>
   <div class="d-flex align-items-center">
-    <button class="btn btn-primary" @click="onClickLogin">MASUK</button>
+    <button class="btn btn-primary" @click="$router.push({name: 'Login'})">MASUK</button>
   </div>
 </div>
 </template>
 
 <script>
 export default {
-  name: "NotLoginComponent",
-  methods: {
-    onClickLogin() {
-      return this.$router.push({name: 'Login'});
-    }
-  }
+  name: "NotLoginComponent"
 }
 </script>
 
