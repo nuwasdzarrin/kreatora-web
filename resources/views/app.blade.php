@@ -11,7 +11,7 @@
 {{--    css sign--}}
     <link rel="stylesheet" href="{{ asset('assets_app/css/signin.css') }}">
 
-    <title>Kreatora - Support kratifitas indonesia</title>
+    <title>Kreatora - Support kreatifitas indonesia</title>
     <meta content="" name="description">
     <meta content="" name="keywords">
 

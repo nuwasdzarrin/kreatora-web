@@ -190,6 +190,8 @@ export default {
       Apis.campaign.support(payload).then(({data}) => {
         this.$toastr.s("Dukungan telah tersimpan, silahkan lanjutkan pembayaran");
         this.$set(this, 'is_loading', false)
+        //load midtrans ui
+        snap.pay(data.payment.token)
       }).catch((error) => {
         this.$set(this, 'is_loading', false)
         throw error
@@ -199,6 +201,13 @@ export default {
   mounted() {
     this.fetchDetailCampaign()
     this.fetchProfile()
+
+    let production = {path: 'https://app.midtrans.com/snap/snap.js', client_key: 'Mid-client-EHtWk5mmvcuktJzc'};
+    let sandbox = {path: 'https://app.sandbox.midtrans.com/snap/snap.js', client_key: 'SB-Mid-client-Ww7JEtCsPKpTmERy'};
+    let midtransSnapScript = document.createElement('script')
+    midtransSnapScript.setAttribute('src', sandbox.path)
+    midtransSnapScript.setAttribute('data-client-key', sandbox.client_key)
+    document.head.appendChild(midtransSnapScript)
   }
 }
 </script>
