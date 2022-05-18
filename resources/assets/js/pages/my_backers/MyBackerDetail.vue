@@ -1,7 +1,37 @@
 <template>
   <div>
     <div>
-      <TopNavbarBlock title="Dukung" :routes="{auth: `Dashboard${back_button}`, not_auth: back_button}" />
+      <TopNavbarBlock title="Detail Dukung" :routes="{auth: `Dashboard${back_button}`, not_auth: back_button}" />
+      <div class="container">
+        <div class="title-detail mt-3 mb-4">Status Dukungan</div>
+        <div class="my-2">Campaign yang didukung</div>
+        <div class="row mb-4">
+          <div class="col-4">
+            <img :src="(detail_campaign && detail_campaign.pictures) ? (api.storage + detail_campaign.pictures[0]) : api.no_image" alt="campaign-images" class="backer-img">
+          </div>
+          <div class="col-8">
+            <div class="title-campaign mb-1">Game Dadu Mengasah Otak</div>
+            <div class="kreator-campaign">Simon Samin <i class="fas fa-certificate ml-1" style="color: #008FD7;"></i></div>
+          </div>
+        </div>
+        <table class="mb-4">
+          <tr>
+            <td>Metode Pembayaran</td>
+            <td>: BCA Virtual Account</td>
+          </tr>
+          <tr>
+            <td>ID Donasi</td>
+            <td>: #123456</td>
+          </tr>
+          <tr>
+            <td>Status</td>
+            <td>: <span class="badge badge-pill badge-success">Success</span></td>
+          </tr>
+        </table>
+        <div class="d-flex justify-content-center mt-5">
+          <button class="btn btn-primary">Cek Status Pembayaran</button>
+        </div>
+      </div>
     </div>
     <loading
         :active.sync="is_loading"
@@ -28,7 +58,7 @@ export default {
       lodash: _,
       api: Apis,
       is_loading: false,
-      back_button: 'MyCampaign',
+      back_button: 'MyBacker',
       detail_campaign: {}
     }
   },
@@ -66,137 +96,28 @@ export default {
 </script>
 
 <style scoped>
-.wrapper-detail {
-  display: flex;
-  flex-flow: column;
-  height: 100vh;
-  position: relative;
+.title-detail {
+  text-align: center;
+  font-weight: 700;
+  font-size: 24px;
+  line-height: 120%;
+  color: #000
 }
-.detail-content {
-  display: flex;
-  flex-flow: column;
-  flex: 1 1 auto;
+.title-campaign {
+  font-weight: 700;
+  font-size: 16px;
+  line-height: 140%;
+  color: #23232E;
 }
-.description-excerpt {
-  border-radius: 20px 20px 0px 0px;
-  flex: 1 1 auto;
-}
-.user-avatar {
-  width: 25px;
-  height: 25px;
-  border-radius: 50%;
-}
-.avatar-margin-right {
-  margin-right: -10px;
-}
-.campaign-detail-category {
-  padding: 6px 20px;
-  border: 1px solid #5C5C70;
-  border-radius: 100px;
-}
-.campaign-comments-length {
-  position: absolute;
-  right: -7px;
-  top: -4px;
-  font-size: 11px;
-}
-.text-color-black {
-  color: #001B29;
-}
-.text-color-primary {
+.kreator-campaign {
+  font-weight: 700;
+  font-size: 10px;
+  line-height: 14px;
   color: #008FD7;
-;
 }
-.text-12 {
-  font-size: 12px;
-}
-.text-14 {
-  font-size: 14px;
-}
-.text-20 {
-  font-size: 20px;
-}
-.back-button-img {
-  height: 35px;
-  width: 35px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: #FFFFFF;
-  box-shadow: 4px 4px 15px rgba(0, 0, 0, 0.12);
-  border-radius: 8px;
-  position: absolute;
-  left: 15px;
-  top: 15px;
-  color: #008FD7;
-  font-size: 20px;
-}
-.faq-question {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 10px 15px;
-  box-shadow: 4px 4px 15px rgba(0, 0, 0, 0.12);
-  border-radius: 12px;
-  background: #ECF1F4;
-}
-.no-bottom-radius {
-  border-bottom-left-radius: 0;
-  border-bottom-right-radius: 0;
-}
-.faq-answer {
-  padding: 10px 15px;
-  background: #D6E1E8;
-  border-bottom-left-radius: 12px;
-  border-bottom-right-radius: 12px;
-}
-.update-box {
-  padding: 20px 10px;
-  box-shadow: 4px 4px 15px rgba(0, 0, 0, 0.12);
-  border-radius: 12px;
-}
-.campaign-detail-img {
-  width: 100%;
-  height: 215px;
-  object-fit: cover;
-}
-.bottom-wrapper {
-  position: absolute;
-  bottom: 15px;
-  height: 50px;
-}
-.share-button {
-  box-sizing: border-box;
-  width: 60px;
-  height: 50px;
-  border-radius: 5px;
-  border: 1px solid #008FD7;
-  color: #008FD7;
-  cursor: pointer;
-}
-.comment-bottom-wrapper {
-  width: 100%;
-  position: absolute;
-  bottom: 10px;
-  left: 0;
-  height: 80px;
-  border-top: 1px solid;
-}
-.comment-send-button {
-  box-sizing: border-box;
-  width: 60px;
-  height: 45px;
-  border-radius: 5px;
-  border: 1px solid #008FD7;
-  color: #008FD7;
-  cursor: pointer;
-}
-.comment-input {
-  border: 1px solid #5C5C70;
-  box-sizing: border-box;
-  border-radius: 12px;
-  min-width: 100px;
-  height: 45px;
-  padding: 5px;
+.backer-img {
+  width: 130px;
+  height: 75px;
+  object-fit: contain;
 }
 </style>
