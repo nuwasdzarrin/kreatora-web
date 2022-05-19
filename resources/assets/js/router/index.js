@@ -112,7 +112,7 @@ let routes = [
                 name: 'DashboardMyBacker',
             },
             {
-                path: '/dashboard/my_backer/:slug',
+                path: '/dashboard/my_backer/detail',
                 component: MyBackerDetail,
                 name: 'DashboardMyBackerDetail',
             },

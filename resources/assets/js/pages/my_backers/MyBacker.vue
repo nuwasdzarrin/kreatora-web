@@ -1,17 +1,23 @@
 <template>
-  <div>
+  <div class="wrapper-backer">
     <TopNavbarBlock title="Dukungan Saya" :routes="{auth: `Dashboard${back_button}`, not_auth: back_button}" />
     <div class="container py-3">
-      <div class="card my-3" v-for="(item) in campaigns">
-        <div class="card-body" @click="$router.push({
+      <div class="my-1" v-for="(item) in campaigns">
+        <div class="py-2" @click="$router.push({
             name: isLoggedIn ? `Dashboard${detail_page}` : detail_page,
-            params: { slug: item.payment.order_id }
+            query: { order_id: item.payment.order_id }
           })"
         >
-          <h6>{{item.campaign.title}}</h6>
-          <div>{{item.created_at.date | dateDDMMYYYY}} <b>Rp {{ item.amount+item.tip | formatCurrency }}</b></div>
-          <div><span class="badge badge-pill badge-success">Success</span></div>
+          <div class="d-flex align-items-center justify-content-between">
+            <div>
+              <div class="title-backer my-2">{{item.campaign.title}}</div>
+              <div class="label-backer my-2">{{item.created_at.date | dateDDMMYYYY}}&nbsp;&nbsp; - &nbsp;&nbsp;{{item.created_at.date | timeHHmm}} </div>
+              <div class="label-backer my-2">Dukung&nbsp;&nbsp; -&nbsp;&nbsp; <span class="text-primary" style="font-weight: 700;">Success</span></div>
+            </div>
+            <div class="text-primary"><b>Rp {{ item.amount+item.tip | formatCurrency }}</b></div>
+          </div>
         </div>
+        <hr style="opacity: 0.4; border-top: 2px solid #001B29;"/>
       </div>
     </div>
     <loading
@@ -62,5 +68,18 @@ export default {
 </script>
 
 <style scoped>
-
+.wrapper-backer {
+  background-color: white;
+  height: 100vh;
+}
+.title-backer {
+  font-weight: 700;
+  line-height: 140%;
+  color: #001B29;
+}
+.label-backer {
+  font-weight: 400;
+  line-height: 14px;
+  color: #5C5C70;
+}
 </style>

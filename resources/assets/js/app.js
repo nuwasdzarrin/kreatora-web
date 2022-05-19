@@ -31,6 +31,9 @@ Vue.filter('formatCurrency', function (value) {
 Vue.filter('dateDDMMYYYY', function (date) {
     return moment(date).format('DD MMM YYYY')
 })
+Vue.filter('timeHHmm', function (date) {
+    return moment(date).format('HH:mm')
+})
 /**
  * Next, we will create a fresh Vue application instance and attach it to
  * the page. Then, you may begin adding components to this application

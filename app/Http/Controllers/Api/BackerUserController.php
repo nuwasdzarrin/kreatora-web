@@ -59,7 +59,7 @@ class BackerUserController extends Controller
     public function __construct()
     {
         $this->api_key = config('payment.xendit.api_key');
-        $this->middleware('auth:api')->except(['support']);
+        $this->middleware('auth:api')->except(['support','myBackerDetail']);
     }
 
     /**
@@ -297,6 +297,27 @@ class BackerUserController extends Controller
 
     public function myBackerDetail($order_id)
     {
-        //...
+        $data = BackerUser::query()->whereHas('Payment', function ($q) use ($order_id) {
+            return $q->where('order_id', $order_id);
+        })->with(['campaign', 'payment'])->first();
+        $data = [
+            "id" => $data->id,
+            "amount" => $data->amount,
+            "tip" => $data->tip,
+            "is_anonymous" => $data->is_anonymous,
+            "created_at" => $data->created_at,
+            "campaign" => [
+                "title" => $data->campaign->title,
+                "pictures" => $data->campaign->pictures,
+                "creator_name" => $data->campaign->creator_name
+            ],
+            "payment" => [
+                "order_id" => $data->payment ? $data->payment->order_id : null,
+                "status" => $data->payment ? $data->payment->status : null,
+                "payment_link" => $data->payment ? $data->payment->payment_link : null,
+                "transaction_time" => $data->payment ? $data->payment->transaction_time : null,
+            ]
+        ];
+        return response()->json($data);
     }
 }
