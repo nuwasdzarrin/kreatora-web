@@ -47,7 +47,7 @@
 <!--        </div>-->
       </div>
     </div>
-    <loading 
+    <loading
       :active.sync="isPending"
       :can-cancel="false"
       :is-full-page="true"
@@ -96,8 +96,7 @@ export default {
         }
         else {
           this.$toastr.s("login success");
-          window.location.href = '/dashboard';
-          // this.$router.push({ name: 'HomePage'});
+          this.$router.push({ name: 'HomePage'});
         }
       });
     }

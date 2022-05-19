@@ -1,6 +1,6 @@
 <template>
   <div class="support-wrapper">
-    <TopNavbarBlock title="Dukung Kreasi" :routes="{auth: `Dashboard${back_button}`, not_auth: back_button}"
+    <TopNavbarBlock title="Dukung Kreasi" :routes="back_button"
                     :params="detail_campaign"
     />
     <div class="container mt-4">

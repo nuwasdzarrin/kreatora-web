@@ -1,7 +1,7 @@
 <template>
   <div class="container bg-white" style="box-shadow: 0 2px 2px rgba(0, 0, 0, 0.15);">
     <div class="d-flex align-items-center py-3 text-14">
-      <div @click="$router.push({ name: isLoggedIn ? routes.auth : routes.not_auth, params: params ? { slug: params.title } : {}})"
+      <div @click="$router.push({ name: routes, params: params ? { slug: params.title } : {}})"
            style="cursor: pointer;"
       >
         <i class="fas fa-arrow-left" style="color: #008FD7;font-size: 20px;"></i>
@@ -23,13 +23,8 @@ export default {
       }
     },
     routes: {
-      type: Object,
-      default: function () {
-        return {
-          auth: '',
-          not_auth: '',
-        }
-      }
+      type: String,
+      default: 'HomePage'
     }
   },
   computed: {

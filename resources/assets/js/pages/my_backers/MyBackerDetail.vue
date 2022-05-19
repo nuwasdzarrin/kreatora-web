@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="wrapper-detail">
-      <TopNavbarBlock title="Detail Dukung" :routes="{auth: `Dashboard${back_button}`, not_auth: back_button}" />
+      <TopNavbarBlock title="Detail Dukung" :routes="backButton" />
       <div class="container mt-3">
         <div class="title-detail mt-3 mb-4">Status Dukungan</div>
         <div class="my-2">Campaign yang didukung</div>
@@ -58,9 +58,17 @@ export default {
       lodash: _,
       api: Apis,
       is_loading: false,
-      back_button: 'MyBacker',
       order_id: this.$route.query.order_id,
       detail: {}
+    }
+  },
+  computed: {
+    isLoggedIn() {
+      return this.$store.getters.isLoggedIn;
+    },
+    backButton() {
+      if (this.isLoggedIn) return 'DashboardMyBacker'
+      return 'HomePage'
     }
   },
   methods: {

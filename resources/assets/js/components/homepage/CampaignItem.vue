@@ -2,7 +2,7 @@
   <div
       :class="parent === 'CampaignVerticalList'?'vertical-campaign-item-card':'campaign-item-card'"
       @click="$router.push({
-        name: isLoggedIn ? 'DashboardCampaignDetail' : 'CampaignDetail',
+        name: 'CampaignDetail',
         params: { slug: item.title }
       })" v-if="item"
   >
@@ -44,9 +44,6 @@ export default {
     fundedPercent() {
       let result = Math.round((this.item.total_funded / this.item.goal) * 100);
       return (result > 100) ? 100 : result;
-    },
-    isLoggedIn() {
-      return this.$store.getters.isLoggedIn;
     },
     daysLeft() {
       let cal = moment(this.item.end).diff(moment(), 'days')

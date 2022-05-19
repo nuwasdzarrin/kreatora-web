@@ -1,10 +1,10 @@
 <template>
   <div class="wrapper-backer">
-    <TopNavbarBlock title="Dukungan Saya" :routes="{auth: `Dashboard${back_button}`, not_auth: back_button}" />
+    <TopNavbarBlock title="Dukungan Saya" :routes="back_button" />
     <div class="container py-3">
       <div class="my-1" v-for="(item) in campaigns">
         <div class="py-2" @click="$router.push({
-            name: isLoggedIn ? `Dashboard${detail_page}` : detail_page,
+            name: detail_page,
             query: { order_id: item.payment.order_id }
           })"
         >
