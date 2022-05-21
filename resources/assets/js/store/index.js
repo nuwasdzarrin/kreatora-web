@@ -55,7 +55,8 @@ const index = new Vuex.Store({
             return new Promise(resolve => {
                 Api.auth.login({
                     email: payload.email,
-                    password: payload.password
+                    password: payload.password,
+                    fcm_token: Cookie.get('fcm_token')
                 }).then(function (response) {
                     Cookie.set('token', response.data.token, { expires: '6h' });
                     Cookie.set('user', JSON.stringify(response.data.data), { expires: '6h' });

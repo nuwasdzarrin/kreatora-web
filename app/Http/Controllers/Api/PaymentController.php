@@ -31,7 +31,7 @@ class PaymentController extends Controller
 //        MidConfig::$isSanitized = true;
 //        MidConfig::$is3ds = true;
 
-        //$this->middleware('auth:api')->except(['createPayment', 'status']);
+        $this->middleware('auth:api')->except(['handler','status']);
     }
     public static function rules(Request $request = null, BackerUser $backer_user = null)
     {
@@ -146,40 +146,41 @@ class PaymentController extends Controller
         $request->validate([
             'order_id' => 'required|string'
         ]);
-        // $request->validate(self::rules($request)['show']);
-        $id = $request->order_id;
-        $codeServer = base64_encode('Mid-server-gBIgM9uBSAGg7sNQGk4rygFE:');
+        $order_id = $request->order_id;
+        $codeServer = base64_encode(config('midtrans.server_key'));
+        $is_production = config('midtrans.is_production');
+        $url_production = 'https://api.midtrans.com';
+        $url_sandbox = 'https://api.sandbox.midtrans.com';
         $client = new Client();
-        $res = $client->request('GET','https://api.midtrans.com/v2/'.$id.'/status', [
+        $res = $client->request('GET',$is_production ? $url_production : $url_sandbox.'/v2/'.$order_id.'/status', [
             'headers' => [
                 'Accept' => 'application/json',
                 'Content-Type' => 'application/json',
                 'Authorization' => 'Basic ' . $codeServer
            ],
            'params' => [
-               'order_id' => $id
+               'order_id' => $order_id
            ]
-
         ]);
 
         $this->code = 200;
         $data = json_decode($res->getBody()->getContents());
+        $status = $data->transaction_status;
         if ($data->status_code == "404") {
             return response()->json([
                 'message' => array('Maaf transaksi tidak valid! Silahkan coba lagi!'),
             ], $this->code);
-        }else {
+        } else {
             DB::table('payments')
-            ->where('order_id', $id)
+            ->where('order_id', $order_id)
             ->limit(1)
             ->update(array(
-                'status' => $data->transaction_status,
+                'status' => $status,
                 'transaction_time' => $data->transaction_time,
             ));
             return response()->json([
                 'data' => $data,
             ], $this->code);
-
         }
     }
 
@@ -196,7 +197,7 @@ class PaymentController extends Controller
             return response()->json([
                 'message' => array('Maaf transaksi tidak valid! Silahkan coba lagi!'),
             ], $this->code);
-        }else {
+        } else {
             DB::table('payments')
             ->where('order_id', $order_id)
             ->limit(1)
@@ -204,20 +205,38 @@ class PaymentController extends Controller
                 'status_code' => $status_code,
                 'status' => $status
             ));
+
+            if ($status == 'settlement' || $status == 'pending') {
+                $backer_user = BackerUser::query()->whereHas('Payment', function ($q) use ($order_id) {
+                    return $q->where('order_id', $order_id);
+                })->with(['user'])->first();
+                $user = $backer_user->user;
+                $recipients = [$user->fcm_token];
+                $title ='Hai kawan kreatora';
+                if ($status == 'settlement') {
+                    $body = 'Dukunganmu dengan id ' . $order_id . ' telah berubah status menjadi Sukses. Terima kasih dukungannya';
+                }
+                else {
+                    $body = 'Dukunganmu dengan id ' . $order_id . ' masih berstatus pending. Silahkan lakukan pembayaran sesuai dengan tagihan yang tertera';
+                }
+                if (count($recipients)) {
+                    $res_fcm = fcm()->to($recipients)
+                        ->timeToLive(0)
+                        ->priority('high')
+                        ->data([
+                            'title' => $title,
+                            'body' => $body,
+                            'order_id' => $order_id
+                        ])
+                        ->send();
+                }
+            }
+
             return response()->json([
                 'message' => array('Transaksi Berhasil!'),
             ], $this->code);
-
         }
-
-
-
-
-
     }
-
-
-
 }
 
 

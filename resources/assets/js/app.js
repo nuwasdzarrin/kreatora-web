@@ -13,6 +13,8 @@ import store from './store';
 import 'vue-loading-overlay/dist/vue-loading.css';
 import VueToastr from "vue-toastr";
 import VueSocialSharing from 'vue-social-sharing'
+import firebase from "firebase/app";
+import "firebase/messaging";
 
 window.Vue = require('vue');
 Vue.use(VueRouter);
@@ -25,6 +27,39 @@ window._ = require('lodash');
 window.moment = require('moment');
 window.events = new Vue();
 Vue.prototype.window = window;
+
+firebase.initializeApp({
+    apiKey: "AIzaSyAi03PUUjCVEiOqYWBKeCfnC2dtC77oELA",
+    authDomain: "kreatora-mobile.firebaseapp.com",
+    projectId: "kreatora-mobile",
+    storageBucket: "kreatora-mobile.appspot.com",
+    messagingSenderId: "671989481166",
+    appId: "1:671989481166:web:f16d956b7fbd452b62da9f"
+});
+
+// if ('serviceWorker' in navigator) {
+//     window.addEventListener('load', function () {
+//         navigator.serviceWorker
+//             .register("firebase-messaging-sw.js")
+//             .then((registration) => {
+//                 const messaging = firebase.messaging();
+//                 messaging.useServiceWorker(registration);
+//             })
+//             .catch((err) => {
+//                 console.log(err);
+//             });
+//     });
+// }
+navigator.serviceWorker
+    .register("firebase-messaging-sw.js")
+    .then((registration) => {
+        const messaging = firebase.messaging();
+        messaging.useServiceWorker(registration);
+    })
+    .catch((err) => {
+        console.log(err);
+    });
+
 Vue.filter('formatCurrency', function (value) {
     return Number(value).toLocaleString('id-ID');
 });
@@ -45,7 +80,6 @@ Vue.component('loading', require('vue-loading-overlay'));
 
 Vue.component('my-vue-select', require('./components/MyVueSelect'));
 Vue.component('my-date-picker', require('./components/MyDatePicker'));
-Vue.component('my-company-select', require('./components/MyCompanySelect'));
 
 Vue.component('layout', require('./layouts/Layout.vue'));
 Vue.component('home', require('./layouts/Home.vue'));

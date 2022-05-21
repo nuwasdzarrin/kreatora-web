@@ -12,6 +12,7 @@ const path = {
         google: '/api/auth/loginGoogle',
         email_verification: '/api/email_verification',
         resend_code: '/api/email_code',
+        refresh_fcm_token: '/api/refresh_fcm_token',
     },
     backer: {
         base: '/api/my_backer',

@@ -230,9 +230,10 @@ class BackerUserController extends Controller
                 ], 400);
             } else {
                 try {
+                    $is_production = config('midtrans.is_production');
                     $url_production = 'https://app.midtrans.com';
                     $url_sandbox = 'https://app.sandbox.midtrans.com';
-                    $res = $client->request('POST',$url_sandbox.'/snap/v1/transactions', [
+                    $res = $client->request('POST',$is_production ? $url_production : $url_sandbox.'/snap/v1/transactions', [
                         'headers' => [
                             'Accept' => 'application/json',
                             'Content-Type' => 'application/json',

@@ -38,6 +38,9 @@ import CampaignHorizontalList from "../components/homepage/CampaignHorizontalLis
 import Apis from "../apis";
 import CampaignVerticalList from "../components/homepage/CampaignVerticalList";
 import CampaignCategory from "../components/homepage/CampaignCategory";
+import firebase from "firebase";
+import "firebase/messaging";
+import Cookie from "vue-cookie";
 
 export default {
   name: "HomePage",
@@ -126,16 +129,35 @@ export default {
         }
       });
     },
-    onClickBack() {
-      this.$router.push({ name: this.isLoggedIn ? 'DashboardHomePage':'HomePage'}).then(()=>{
-        this.fetchHomeCampaign();
-      })
-      .catch(err => {
-        if (err.name !== 'NavigationDuplicated' &&!err.message.includes('Avoided redundant navigation to current location')) {
-          console.log(err);
-        }
-      });
-    }
+    // onClickBack() {
+    //   this.$router.push({ name: this.isLoggedIn ? 'DashboardHomePage':'HomePage'}).then(()=>{
+    //     this.fetchHomeCampaign();
+    //   })
+    //   .catch(err => {
+    //     if (err.name !== 'NavigationDuplicated' &&!err.message.includes('Avoided redundant navigation to current location')) {
+    //       console.log(err);
+    //     }
+    //   });
+    // },
+    receiveMessage() {
+      try {
+        firebase.messaging().onMessage((payload) => {
+          this.$toastr.Add({
+            title: payload.data.title,
+            msg: payload.data.body,
+            clickClose: false,
+            timeout: 10000,
+            type: "info",
+            style: { backgroundColor: "#008FD7"},
+            onClicked: ()=>{
+              this.$router.push({name: 'MyBackerDetail', query: {order_id: payload.data.order_id}})
+            },
+          });
+        });
+      } catch (e) {
+        console.log(e);
+      }
+    },
   },
   computed: {
     urlType() {
@@ -172,6 +194,31 @@ export default {
         this.fetchCampaign(true);
       }
     });
+
+    try {
+      firebase
+          .messaging()
+          .requestPermission()
+          .then(() => {
+            console.log("Notification permission granted");
+            firebase
+                .messaging()
+                .getToken()
+                .then((token) => {
+                  window.console.log("token ", token);
+                  Cookie.set('fcm_token', token, { expires: '1h' })
+                  if (this.isLoggedIn) {
+                    Apis.auth.refresh_fcm_token({fcm_token: token})
+                  }
+                  this.receiveMessage();
+                });
+          })
+          .catch((err) => {
+            console.log("Unable to get token ", err);
+          });
+    } catch (e) {
+      console.log(e);
+    }
   }
 }
 </script>

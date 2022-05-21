@@ -12,9 +12,14 @@
             <div>
               <div class="title-backer my-2">{{item.campaign.title}}</div>
               <div class="label-backer my-2">{{item.created_at.date | dateDDMMYYYY}}&nbsp;&nbsp; - &nbsp;&nbsp;{{item.created_at.date | timeHHmm}} </div>
-              <div class="label-backer my-2">Dukung&nbsp;&nbsp; -&nbsp;&nbsp; <span class="text-primary" style="font-weight: 700;">Success</span></div>
+              <div class="label-backer my-2">
+                Dukung&nbsp;&nbsp; -&nbsp;&nbsp;
+                <span class="label-status" :class="statusProcess(item.payment.status)">
+                  {{item.payment.status}}
+                </span>
+              </div>
             </div>
-            <div class="text-primary"><b>Rp {{ item.amount+item.tip | formatCurrency }}</b></div>
+            <div :class="statusProcess(item.payment.status)"><b>Rp {{ item.amount+item.tip | formatCurrency }}</b></div>
           </div>
         </div>
         <hr style="opacity: 0.4; border-top: 2px solid #001B29;"/>
@@ -60,6 +65,11 @@ export default {
         throw error
       })
     },
+    statusProcess(status) {
+      if (status == 'settlement') return 'text-primary'
+      else if (status == 'pending') return 'text-success'
+      else return 'text-danger'
+    }
   },
   mounted() {
     this.fetchMyBacker()
@@ -81,5 +91,9 @@ export default {
   font-weight: 400;
   line-height: 14px;
   color: #5C5C70;
+}
+.label-status {
+  font-weight: 700;
+  text-transform: capitalize;
 }
 </style>

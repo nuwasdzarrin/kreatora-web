@@ -15,7 +15,6 @@ import Account from "../pages/users/Account";
 let routes = [
     {
         path: '/campaign',
-        name: 'HomeWithoutAuth',
         component: Home,
         meta: {requiresAuth: false},
         children: [
@@ -71,6 +70,7 @@ let routes = [
     },
     {
         path: '/dashboard',
+        name: 'Home',
         component: Home,
         meta: {requiresAuth: true},
         children: [

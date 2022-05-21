@@ -32,6 +32,9 @@ const api = {
         email_verification: (data) => {
             return Axios.post(Path.auth.email_verification, data);
         },
+        refresh_fcm_token: (data) => {
+            return Axios.post(Path.auth.refresh_fcm_token, data);
+        },
     },
     campaign: {
         home: (params) => {
