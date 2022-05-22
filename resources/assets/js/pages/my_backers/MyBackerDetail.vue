@@ -25,11 +25,21 @@
           </tr>
           <tr>
             <td>Status</td>
-            <td>: <span class="badge badge-pill badge-success">{{ detail.payment ? detail.payment.status || 'Pending' : 'Menunggu' }}</span></td>
+            <td>: <span class="badge badge-pill" :class="statusProcess(detail.payment.status)">{{ detail.payment ? detail.payment.status || 'Pending' : 'Menunggu' }}</span></td>
           </tr>
         </table>
         <div class="d-flex justify-content-center mt-5">
-          <button class="btn btn-primary">Cek Status Pembayaran</button>
+          <button class="btn btn-primary" @click="$router.push({
+            name: 'HomePage',
+          })" v-if="detail.payment.status == 'settlement'">Cek Campaign Lainnya</button>
+          <button class="btn btn-danger" @click="$router.push({
+            name: 'CampaignDetail',
+            params: { slug: detail.campaign ? detail.campaign.title : '' }
+          })" v-else-if="detail.payment.status == 'expire'">Ulangi Donasi</button>
+          <div class="text-center" v-else>
+            <button class="btn btn-success" @click="onLoadSnapMidtrans">Cek Status Pembayaran</button><br/><br/>
+            <a href="javascript:void(0)" class="payment-method" @click="onLoadSnapMidtrans">Cara Pembayaran</a>
+          </div>
         </div>
       </div>
     </div>
@@ -47,6 +57,7 @@ import Apis from "../../apis"
 import _ from "lodash"
 import moment from "moment";
 import TopNavbarBlock from "../../components/navbars/TopNavbarBlock";
+import config from "../../config";
 
 export default {
   name: "MyBackerDetail",
@@ -81,10 +92,26 @@ export default {
         this.$set(this, 'is_loading', false)
         throw error
       })
+    },
+    onLoadSnapMidtrans() {
+      if (this.detail.payment && this.detail.payment.token)
+        snap.pay(this.detail.payment.token)
+    },
+    statusProcess(status) {
+      if (status == 'settlement') return 'badge-primary'
+      else if (status == 'expire') return 'badge-danger'
+      else return 'badge-success'
     }
   },
   mounted() {
     this.fetchMyBackerDetail()
+
+    let production = {path: 'https://app.midtrans.com/snap/snap.js', client_key: 'Mid-client-EHtWk5mmvcuktJzc'};
+    let sandbox = {path: 'https://app.sandbox.midtrans.com/snap/snap.js', client_key: 'SB-Mid-client-Ww7JEtCsPKpTmERy'};
+    let midtransSnapScript = document.createElement('script')
+    midtransSnapScript.setAttribute('src', config.is_production ? production.path : sandbox.path)
+    midtransSnapScript.setAttribute('data-client-key', config.is_production ? production.client_key : sandbox.client_key)
+    document.head.appendChild(midtransSnapScript)
   }
 }
 </script>
@@ -117,5 +144,13 @@ export default {
   width: 130px;
   height: 75px;
   object-fit: contain;
+}
+.payment-method {
+  font-weight: 700;
+  font-size: 14px;
+  line-height: 140%;
+  text-decoration-line: underline;
+  text-transform: capitalize;
+  color: #5C5C70;
 }
 </style>

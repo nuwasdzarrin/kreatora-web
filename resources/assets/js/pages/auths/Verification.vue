@@ -68,7 +68,7 @@ export default {
     doVerification() {
       if (!this.code) return null;
       this.$set(this,'is_loading',true);
-      Api.auth.email_verification({code: this.code}).then((res)=>{
+      Api.auth.email_verification({code: this.code, email: this.verificationEmail}).then((res)=>{
         this.$set(this, 'is_loading', false)
         this.$toastr.s(res.data.message + '. Silahkan login kembali');
         this.$router.push({ name: 'Login'});

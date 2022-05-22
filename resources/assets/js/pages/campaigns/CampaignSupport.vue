@@ -96,6 +96,7 @@
 
 <script>
 import Apis from "../../apis"
+import config from "../../config";
 import MyCurrencyInput from "../../components/core/MyCurrencyInput"
 import lodash from "lodash"
 import TopNavbarBlock from "../../components/navbars/TopNavbarBlock";
@@ -205,8 +206,8 @@ export default {
     let production = {path: 'https://app.midtrans.com/snap/snap.js', client_key: 'Mid-client-EHtWk5mmvcuktJzc'};
     let sandbox = {path: 'https://app.sandbox.midtrans.com/snap/snap.js', client_key: 'SB-Mid-client-Ww7JEtCsPKpTmERy'};
     let midtransSnapScript = document.createElement('script')
-    midtransSnapScript.setAttribute('src', sandbox.path)
-    midtransSnapScript.setAttribute('data-client-key', sandbox.client_key)
+    midtransSnapScript.setAttribute('src', config.is_production ? production.path : sandbox.path)
+    midtransSnapScript.setAttribute('data-client-key', config.is_production ? production.client_key : sandbox.client_key)
     document.head.appendChild(midtransSnapScript)
   }
 }
