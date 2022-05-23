@@ -303,10 +303,11 @@ class BackerUserController extends Controller
     {
         //request data from midtrans
         $codeServer = base64_encode(config('midtrans.server_key'));
+        $is_production = config('midtrans.is_production');
         $url_production = 'https://api.midtrans.com/v2/';
         $url_sandbox = 'https://api.sandbox.midtrans.com/v2/';
         $client = new Client();
-        $res = $client->request('GET',$url_sandbox.$order_id.'/status', [
+        $res = $client->request('GET',$is_production ? $url_production : $url_sandbox.$order_id.'/status', [
             'headers' => [
                 'Accept' => 'application/json',
                 'Content-Type' => 'application/json',
@@ -318,10 +319,10 @@ class BackerUserController extends Controller
 
         ]);
         $detail = json_decode($res->getBody()->getContents());
-
         //check if order id valid or nah
         if ($detail->status_code == 404) {
             return response()->json([
+                'data' => new \stdClass(),
                 'message' => array('Mohon maaf, ID Order yang anda masukan salah!'),
             ]);
         }else {
@@ -342,34 +343,33 @@ class BackerUserController extends Controller
             return $q->where('order_id', $order_id);
         })->with(['campaign', 'payment'])->first();
 
-        $data = [
-            "id" => $data->id,
-            "amount" => $data->amount,
-            "tip" => $data->tip,
-            "is_anonymous" => $data->is_anonymous,
-            "created_at" => $data->created_at,
-            "campaign" => [
-                "title" => $data->campaign->title,
-                "pictures" => $data->campaign->pictures,
-                "creator_name" => $data->campaign->creator_name
-            ],
-            "payment" => [
-                "order_id" => $data->payment ? $data->payment->order_id : null,
-                "transaction_id" => $data->payment ? $data->payment->transaction_id : null,
-                "status_code" => $data->payment ? $data->payment->status_code : null,
-                "metode" => $data->payment ? $data->payment->metode : null,
-                "status" => $data->payment ? $data->payment->status : null,
-                "payment_link" => $data->payment ? $data->payment->payment_link : null,
-                "transaction_time" => $data->payment ? $data->payment->transaction_time : null,
-            ]
-        ];
-
-        if ($data == null) {
+        if (!$data) {
             return response()->json([
+                'data' => new \stdClass(),
                 'message' => array('Mohon maaf, ID Order yang anda masukan salah!'),
             ]);
-
-        }else {
+        } else {
+            $data = [
+                "id" => $data->id,
+                "amount" => $data->amount,
+                "tip" => $data->tip,
+                "is_anonymous" => $data->is_anonymous,
+                "created_at" => $data->created_at,
+                "campaign" => [
+                    "title" => $data->campaign->title,
+                    "pictures" => $data->campaign->pictures,
+                    "creator_name" => $data->campaign->creator_name
+                ],
+                "payment" => [
+                    "order_id" => $data->payment ? $data->payment->order_id : null,
+                    "transaction_id" => $data->payment ? $data->payment->transaction_id : null,
+                    "status_code" => $data->payment ? $data->payment->status_code : null,
+                    "metode" => $data->payment ? $data->payment->metode : null,
+                    "status" => $data->payment ? $data->payment->status : null,
+                    "payment_link" => $data->payment ? $data->payment->payment_link : null,
+                    "transaction_time" => $data->payment ? $data->payment->transaction_time : null,
+                ]
+            ];
             return response()->json([
                 'message' => array('Berhasil mendapatkan detail transaksi.'),
                 'data' => $data
