@@ -249,6 +249,7 @@ class BackerUserController extends Controller
                     $payment = new Payment();
                     $payment->backer_user_id = $backer_user->id;
                     $payment->order_id = $params['transaction_details']['order_id'];
+                    $payment->transaction_id = $data->token;
                     $payment->email = $email;
                     $payment->payment_link = $data->redirect_url;
                     $payment->save();
@@ -319,6 +320,7 @@ class BackerUserController extends Controller
 
         ]);
         $detail = json_decode($res->getBody()->getContents());
+
         //check if order id valid or nah
         if ($detail->status_code == 404) {
             return response()->json([
@@ -330,7 +332,6 @@ class BackerUserController extends Controller
             Payment::where('order_id', $order_id)
             ->limit(1)
             ->update(array(
-                'transaction_id' => $detail->transaction_id,
                 'status_code' => $detail->status_code,
                 'metode' => $detail->payment_type,
                 'status' => $detail->transaction_status,
