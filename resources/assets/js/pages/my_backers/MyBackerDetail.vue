@@ -39,7 +39,7 @@
             params: { slug: detail.campaign ? detail.campaign.title : '' }
           })" v-else-if="detail && detail.payment.status == 'expire'">Ulangi Donasi</button>
           <div class="text-center" v-else>
-            <button class="btn btn-success" @click="onLoadSnapMidtrans">Cek Status Pembayaran</button><br/><br/>
+            <button class="btn btn-success" @click="fetchMyBackerDetail">Cek Status Pembayaran</button><br/><br/>
             <a href="javascript:void(0)" class="payment-method" @click="onLoadSnapMidtrans">Cara Pembayaran</a>
           </div>
         </div>
