@@ -204,7 +204,7 @@ class BackerUserController extends Controller
             }
 
             $backer_user = new BackerUser;
-            $backer_user->user_id = $user->id;
+            $user_id = $backer_user->user_id = $user->id;
             $backer_user->campaign_id = $request->campaign_id;
             if ($request->reward_id) $backer_user->reward_id = $request->reward_id;
             $backer_user->amount = $request->amount; // amount from reward if available
@@ -217,13 +217,13 @@ class BackerUserController extends Controller
             $amount = $request->amount + $request->tip;
             $params = array(
                 'transaction_details' => array(
-                    'order_id' => rand(),
+                    'order_id' => rand(10000,99999).$user_id,
                     'gross_amount' => $amount,
                 )
             );
             $codeServer = base64_encode(config('midtrans.server_key'));
             // jika kurang dari Rp. 10.0000
-            if ($amount < 1000) {
+            if ($amount < 10000) {
                 return response()->json([
                     'message' => $this->message = array("Minimal donasi Rp. 10.000 ya!"),
                     'data' => $backer_user
@@ -287,6 +287,9 @@ class BackerUserController extends Controller
                 ],
                 "payment" => [
                     "order_id" => $item->payment ? $item->payment->order_id : null,
+                    "transaction_id" => $item->payment ? $item->payment->transaction_id : null,
+                    "status_code" => $item->payment ? $item->payment->status_code : null,
+                    "metode" => $item->payment ? $item->payment->metode : null,
                     "status" => $item->payment ? $item->payment->status : null,
                     "payment_link" => $item->payment ? $item->payment->payment_link : null,
                     "transaction_time" => $item->payment ? $item->payment->transaction_time : null,
@@ -298,9 +301,47 @@ class BackerUserController extends Controller
 
     public function myBackerDetail($order_id)
     {
+        //request data from midtrans
+        $codeServer = base64_encode(config('midtrans.server_key'));
+        $url_production = 'https://api.midtrans.com/v2/';
+        $url_sandbox = 'https://api.sandbox.midtrans.com/v2/';
+        $client = new Client();
+        $res = $client->request('GET',$url_sandbox.$order_id.'/status', [
+            'headers' => [
+                'Accept' => 'application/json',
+                'Content-Type' => 'application/json',
+                'Authorization' => 'Basic ' . $codeServer
+           ],
+           'params' => [
+               'order_id' => $order_id
+           ]
+
+        ]);
+        $detail = json_decode($res->getBody()->getContents());
+
+        //check if order id valid or nah
+        if ($detail->status_code == 404) {
+            return response()->json([
+                'message' => array('Mohon maaf, ID Order yang anda masukan salah!'),
+            ]);
+        }else {
+            //update status
+            Payment::where('order_id', $order_id)
+            ->limit(1)
+            ->update(array(
+                'transaction_id' => $detail->transaction_id,
+                'status_code' => $detail->status_code,
+                'metode' => $detail->payment_type,
+                'status' => $detail->transaction_status,
+                'transaction_time' => $detail->transaction_time,
+        ));
+        }
+
+       //get data from payment table
         $data = BackerUser::query()->whereHas('Payment', function ($q) use ($order_id) {
             return $q->where('order_id', $order_id);
         })->with(['campaign', 'payment'])->first();
+
         $data = [
             "id" => $data->id,
             "amount" => $data->amount,
@@ -314,11 +355,25 @@ class BackerUserController extends Controller
             ],
             "payment" => [
                 "order_id" => $data->payment ? $data->payment->order_id : null,
+                "transaction_id" => $data->payment ? $data->payment->transaction_id : null,
+                "status_code" => $data->payment ? $data->payment->status_code : null,
+                "metode" => $data->payment ? $data->payment->metode : null,
                 "status" => $data->payment ? $data->payment->status : null,
                 "payment_link" => $data->payment ? $data->payment->payment_link : null,
                 "transaction_time" => $data->payment ? $data->payment->transaction_time : null,
             ]
         ];
-        return response()->json($data);
+
+        if ($data == null) {
+            return response()->json([
+                'message' => array('Mohon maaf, ID Order yang anda masukan salah!'),
+            ]);
+
+        }else {
+            return response()->json([
+                'message' => array('Berhasil mendapatkan detail transaksi.'),
+                'data' => $data
+            ]);
+        }
     }
 }
