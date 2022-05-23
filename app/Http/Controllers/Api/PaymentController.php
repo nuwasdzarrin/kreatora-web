@@ -73,8 +73,7 @@ class PaymentController extends Controller
 
         $backer_user = new BackerUser;
         $backer_user->user_id = auth()->user();
-       // dd($backer_user);
-
+        
         foreach (self::rules($request)['store'] as $key => $value) {
             if (Str::contains($value, [ 'file', 'image', 'mimetypes', 'mimes' ])) {
                 if ($request->hasFile($key)) {
@@ -146,11 +145,13 @@ class PaymentController extends Controller
         $request->validate([
             'order_id' => 'required|string'
         ]);
-        // $request->validate(self::rules($request)['show']);
         $id = $request->order_id;
-        $codeServer = base64_encode('Mid-server-gBIgM9uBSAGg7sNQGk4rygFE:');
+       //$codeServer = base64_encode(config('midtrans.server_key'));
+        $codeServer = base64_encode('SB-Mid-server-EQcEwgyjU51i4k3YOH8UDfFg:');
+        $url_production = 'https://api.midtrans.com/v2/';
+        $url_sandbox = 'https://api.sandbox.midtrans.com/v2/';
         $client = new Client();
-        $res = $client->request('GET','https://api.midtrans.com/v2/'.$id.'/status', [
+        $res = $client->request('GET',$url_sandbox.$id.'/status', [
             'headers' => [
                 'Accept' => 'application/json',
                 'Content-Type' => 'application/json',
@@ -161,7 +162,6 @@ class PaymentController extends Controller
            ]
 
         ]);
-
         $this->code = 200;
         $data = json_decode($res->getBody()->getContents());
         if ($data->status_code == "404") {
@@ -180,6 +180,7 @@ class PaymentController extends Controller
                 'data' => $data,
             ], $this->code);
 
+                  
         }
     }
 
