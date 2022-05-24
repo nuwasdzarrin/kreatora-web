@@ -47,6 +47,11 @@ class Payment extends Model
     {
         return $this->belongsTo(User::class);
     }
+
+    public function backer_users()
+    {
+        return $this->hasMany(BackerUser::class);
+    }
     
     
     

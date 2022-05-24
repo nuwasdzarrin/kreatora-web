@@ -17,9 +17,11 @@ class CreatePaymentsTable extends Migration
             $table->increments('id');
             $table->unsignedInteger('backer_user_id')->nullable();
             $table->unsignedInteger('order_id')->nullable();
+            $table->string('transaction_id')->nullable();
             $table->unsignedInteger('status_code')->nullable();
-            $table->string('status')->nullable();
             $table->string('email')->nullable();
+            $table->string('metode')->nullable();
+            $table->string('status')->nullable();
             $table->double('amount')->nullable();
             $table->text('payment_link')->nullable();
             $table->timestamp('transaction_time')->nullable();

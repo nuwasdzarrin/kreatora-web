@@ -17,27 +17,29 @@
         <table class="mb-4">
           <tr>
             <td>Metode Pembayaran</td>
-            <td>: BCA Virtual Account</td>
+            <td>: {{detail.payment ? detail.payment.metode : ''}}</td>
           </tr>
           <tr>
             <td>ID Donasi</td>
             <td>: #{{detail.payment ? detail.payment.order_id : ''}}</td>
           </tr>
-          <tr>
+          <tr v-if="detail">
             <td>Status</td>
-            <td>: <span class="badge badge-pill" :class="statusProcess(detail.payment.status)">{{ detail.payment ? detail.payment.status || 'Pending' : 'Menunggu' }}</span></td>
+            <td>: <span class="badge badge-pill" :class="statusProcess(detail && detail.payment && detail.payment.status)" style="text-transform: capitalize">
+              {{ (detail && detail.payment) ? (detail.payment.status != 'settlement' ? detail.payment.status:'berhasil') : 'pending' }}
+            </span></td>
           </tr>
         </table>
-        <div class="d-flex justify-content-center mt-5">
+        <div class="d-flex justify-content-center mt-5" v-if="detail">
           <button class="btn btn-primary" @click="$router.push({
             name: 'HomePage',
-          })" v-if="detail.payment.status == 'settlement'">Cek Campaign Lainnya</button>
+          })" v-if="detail && detail.payment.status == 'settlement'">Cek Campaign Lainnya</button>
           <button class="btn btn-danger" @click="$router.push({
             name: 'CampaignDetail',
             params: { slug: detail.campaign ? detail.campaign.title : '' }
-          })" v-else-if="detail.payment.status == 'expire'">Ulangi Donasi</button>
+          })" v-else-if="detail && detail.payment.status == 'expire'">Ulangi Donasi</button>
           <div class="text-center" v-else>
-            <button class="btn btn-success" @click="onLoadSnapMidtrans">Cek Status Pembayaran</button><br/><br/>
+            <button class="btn btn-success" @click="fetchMyBackerDetail">Cek Status Pembayaran</button><br/><br/>
             <a href="javascript:void(0)" class="payment-method" @click="onLoadSnapMidtrans">Cara Pembayaran</a>
           </div>
         </div>
@@ -70,7 +72,11 @@ export default {
       api: Apis,
       is_loading: false,
       order_id: this.$route.query.order_id,
-      detail: {}
+      detail: {
+        payment: {
+          status: ''
+        }
+      }
     }
   },
   computed: {
@@ -87,15 +93,19 @@ export default {
       this.$set(this, 'is_loading', true)
       Apis.my_backer.show(this.order_id).then(({data}) => {
         this.$set(this, 'is_loading', false)
-        this.$set(this, 'detail', data)
+        if (Object.keys(data.data).length) return this.$set(this, 'detail', data.data)
+        else {
+          this.$toastr.e(data.message)
+          return this.$router.push({name: 'HomePage'})
+        }
       }).catch((error) => {
         this.$set(this, 'is_loading', false)
         throw error
       })
     },
     onLoadSnapMidtrans() {
-      if (this.detail.payment && this.detail.payment.token)
-        snap.pay(this.detail.payment.token)
+      if (this.detail.payment && this.detail.payment.transaction_id)
+        snap.pay(this.detail.payment.transaction_id)
     },
     statusProcess(status) {
       if (status == 'settlement') return 'badge-primary'

@@ -73,7 +73,6 @@ class PaymentController extends Controller
 
         $backer_user = new BackerUser;
         $backer_user->user_id = auth()->user();
-       // dd($backer_user);
 
         foreach (self::rules($request)['store'] as $key => $value) {
             if (Str::contains($value, [ 'file', 'image', 'mimetypes', 'mimes' ])) {
@@ -162,7 +161,6 @@ class PaymentController extends Controller
                'order_id' => $order_id
            ]
         ]);
-
         $this->code = 200;
         $data = json_decode($res->getBody()->getContents());
         $status = $data->transaction_status;

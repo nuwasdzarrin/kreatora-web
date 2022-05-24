@@ -64,7 +64,7 @@ class Campaign extends Model
     public function backer_users()
     {
         return $this->hasMany(BackerUser::class)->whereHas('payment', function ($q) {
-            return $q->where('status', 'settlement');
+            return $q->whereNotNull('status')->where('status', 'settlement');
         });
     }
 
