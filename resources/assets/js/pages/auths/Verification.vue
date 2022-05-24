@@ -51,7 +51,7 @@ export default {
   },
   data() {
     return {
-      is_countdown: true,
+      is_countdown: false,
       is_loading: false,
       code: '',
     }

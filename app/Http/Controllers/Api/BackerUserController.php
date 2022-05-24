@@ -298,7 +298,7 @@ class BackerUserController extends Controller
 
     public function myBackerDetail($order_id)
     {
-        $data = BackerUser::query()->whereHas('Payment', function ($q) use ($order_id) {
+        $data = BackerUser::query()->whereHas('payment', function ($q) use ($order_id) {
             return $q->where('order_id', $order_id);
         })->with(['campaign', 'payment'])->first();
         $data = [
