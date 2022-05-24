@@ -207,19 +207,20 @@ class BackerUserController extends Controller
             if ($request->reward_id) {
                 $reward = Reward::query()->findOrFail($request->reward_id);
             }
+            $amount = $reward && $reward->min_donation ? $reward->min_donation : $request->amount;
 
             $backer_user = new BackerUser;
             $backer_user->user_id = $user->id;
             $backer_user->campaign_id = $request->campaign_id;
             if ($request->reward_id) $backer_user->reward_id = $request->reward_id;
-            $backer_user->amount = $reward ? $reward->min_donation : $request->amount; // amount from reward if available
+            $backer_user->amount = $amount; // amount from reward if available
             if ($request->tip) $backer_user->tip = $request->tip;
             $backer_user->is_anonymous = $request->is_anonymous;
             $backer_user->save();
 
             // Payment record
             $client = new Client();
-            $amount = $request->amount + $request->tip;
+            $amount = $amount + $request->tip;
             $params = array(
                 'transaction_details' => array(
                     'order_id' => rand(10000,99999).$user->id,
