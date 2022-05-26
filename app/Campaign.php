@@ -88,7 +88,11 @@ class Campaign extends Model
 
     public function campaign_comments()
     {
-        return $this->hasMany(CampaignComment::class)->whereNull('parent_id');
+        return $this->hasMany(CampaignComment::class)
+            ->whereNull('parent_id')
+            ->whereHas('payment', function ($q) {
+                return $q->whereNotNull('status')->where('status', 'settlement');
+            });
     }
 
     public function campaign_category()

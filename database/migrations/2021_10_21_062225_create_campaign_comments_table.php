@@ -18,6 +18,7 @@ class CreateCampaignCommentsTable extends Migration
             $table->unsignedInteger('parent_id')->nullable();
             $table->unsignedInteger('campaign_id')->nullable();
             $table->unsignedInteger('user_id')->nullable();
+            $table->unsignedInteger('payment_id')->nullable();
             $table->string('content');
             $table->timestamps();
 
@@ -27,6 +28,8 @@ class CreateCampaignCommentsTable extends Migration
                 ->on('campaigns')->onUpdate('cascade')->onDelete('set null');
             $table->foreign('user_id')->references('id')
                 ->on('users')->onUpdate('cascade')->onDelete('set null');
+            $table->foreign('payment_id')->references('id')
+                ->on('payments')->onUpdate('cascade')->onDelete('set null');
         });
     }
 

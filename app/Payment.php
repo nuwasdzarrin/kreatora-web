@@ -48,11 +48,15 @@ class Payment extends Model
         return $this->belongsTo(User::class);
     }
 
-    public function backer_users()
+    public function backer_user()
     {
-        return $this->hasMany(BackerUser::class);
+        return $this->belongsTo(BackerUser::class);
     }
-    
+
+    public function campaign_comment()
+    {
+        return $this->hasOne(CampaignComment::class);
+    }
     
     
 }

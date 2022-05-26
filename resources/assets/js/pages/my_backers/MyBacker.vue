@@ -15,7 +15,7 @@
               <div class="label-backer my-2">
                 Dukung&nbsp;&nbsp; -&nbsp;&nbsp;
                 <span class="label-status" :class="statusProcess(item.payment.status)">
-                  {{item.payment.status || 'pending' }}
+                  {{ (item.payment && item.payment.status) ? (item.payment.status != 'settlement' ? item.payment.status:'berhasil') : 'pending' }}
                 </span>
               </div>
             </div>

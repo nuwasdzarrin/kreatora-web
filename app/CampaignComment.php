@@ -57,6 +57,11 @@ class CampaignComment extends Model
         return $this->belongsTo(User::class);
     }
 
+    public function payment()
+    {
+        return $this->belongsTo(Payment::class);
+    }
+
     public function getUserAvatarAttribute()
     {
         return $this->user ? $this->user->avatar : '';

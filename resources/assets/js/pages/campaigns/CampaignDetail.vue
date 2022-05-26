@@ -101,7 +101,7 @@
             <img :src="api.storage + item" alt="avatar-creator" class="user-avatar avatar-margin-right" v-for="(item, index) in detail_campaign.backer_avatar" :key="index">
           </div>
         </div>
-        <h5 class="text-color-black"><strong>{{lodash.startCase(detail_campaign.title)}}</strong></h5>
+        <h5 class="text-color-black"><strong>{{detail_campaign.title}}</strong></h5>
         <div class="progress my-3" style="height: 5px;">
           <div class="progress-bar bg-primary" role="progressbar" :style="'width: '+fundedPercent+'%'" :aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
         </div>
@@ -131,7 +131,8 @@
         <div class="d-flex align-items-center justify-content-center mr-2 share-button" @click="is_show_share = true">
           <i class="fa fa-share-alt text-20"></i>
         </div>
-        <button class="btn btn-primary btn-block" @click="$router.push({ name: 'CampaignReward', params: { slug: detail_campaign.title }})"><b>Dukung</b></button>
+        <button class="btn btn-primary btn-block" @click="$router.push({ name: 'CampaignReward', params: { slug: detail_campaign.title }})" v-if="daysLeft"><b>Dukung</b></button>
+        <button class="btn btn-secondary btn-block" @click="onMaxtime" v-else><b>Dukung</b></button>
       </div>
     </div>
     <ModalShareButton :active.sync="is_show_share" :originData="detail_campaign" />
@@ -208,7 +209,7 @@ export default {
       })
     },
     sendComment() {
-      if (!this.comment || !this.profile) return null
+      if (!this.comment || !Object.keys(this.profile).length) return null
       this.$set(this, 'is_loading', true)
       Apis.comment.store({
         parent_id: this.reply_to.id,
@@ -225,6 +226,9 @@ export default {
         this.$set(this, 'is_loading', false)
         throw error
       })
+    },
+    onMaxtime() {
+      return alert('Campaign ini telah mencapai batas waktu maksimal donasi')
     },
     openFaq(index) {
       this.$set(this.is_faq_open, index, !this.is_faq_open[index])

@@ -52,7 +52,9 @@ class Reward extends Model
     }
     public function backer_users()
     {
-        return $this->hasMany(BackerUser::class);
+        return $this->hasMany(BackerUser::class)->whereHas('payment', function ($q) {
+            return $q->whereNotNull('status')->where('status', 'settlement');
+        });
     }
     public function getTotalBackerAttribute()
     {

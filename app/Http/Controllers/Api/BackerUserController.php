@@ -196,27 +196,11 @@ class BackerUserController extends Controller
                 }
             }
 
-            if ($request->comment) {
-                $campaign_comment = new CampaignComment;
-                $campaign_comment->user_id = $user->id;
-                $campaign_comment->campaign_id = $request->campaign_id;
-                $campaign_comment->content = $request->comment;
-                $campaign_comment->save();
-            }
             $reward = null;
             if ($request->reward_id) {
                 $reward = Reward::query()->findOrFail($request->reward_id);
             }
             $amount = $reward && $reward->min_donation ? $reward->min_donation : $request->amount;
-
-            $backer_user = new BackerUser;
-            $backer_user->user_id = $user->id;
-            $backer_user->campaign_id = $request->campaign_id;
-            if ($request->reward_id) $backer_user->reward_id = $request->reward_id;
-            $backer_user->amount = $amount; // amount from reward if available
-            if ($request->tip) $backer_user->tip = $request->tip;
-            $backer_user->is_anonymous = $request->is_anonymous;
-            $backer_user->save();
 
             // Payment record
             $client = new Client();
@@ -232,7 +216,7 @@ class BackerUserController extends Controller
             if ($amount < 10000) {
                 return response()->json([
                     'message' => $this->message = array("Minimal donasi Rp. 10.000 ya!"),
-                    'data' => $backer_user
+                    'data' => new \stdClass()
                 ], 400);
             } else {
                 try {
@@ -252,6 +236,15 @@ class BackerUserController extends Controller
                     $data = json_decode($res->getBody()->getContents());
                     $email = $user->email;
 
+                    $backer_user = new BackerUser;
+                    $backer_user->user_id = $user->id;
+                    $backer_user->campaign_id = $request->campaign_id;
+                    if ($request->reward_id) $backer_user->reward_id = $request->reward_id;
+                    $backer_user->amount = $amount; // amount from reward if available
+                    if ($request->tip) $backer_user->tip = $request->tip;
+                    $backer_user->is_anonymous = $request->is_anonymous;
+                    $backer_user->save();
+
                     $payment = new Payment();
                     $payment->backer_user_id = $backer_user->id;
                     $payment->order_id = $params['transaction_details']['order_id'];
@@ -259,6 +252,15 @@ class BackerUserController extends Controller
                     $payment->email = $email;
                     $payment->payment_link = $data->redirect_url;
                     $payment->save();
+
+                    if ($request->comment) {
+                        $campaign_comment = new CampaignComment;
+                        $campaign_comment->user_id = $user->id;
+                        $campaign_comment->campaign_id = $request->campaign_id;
+                        $campaign_comment->payment_id = $payment->id;
+                        $campaign_comment->content = $request->comment;
+                        $campaign_comment->save();
+                    }
 
                 } catch (\Exception $e) {
                     throw new HttpException(500, $e->getMessage(), $e);

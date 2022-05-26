@@ -176,6 +176,7 @@ export default {
       this.previouslySelected = this.form_data.is_anonymous
     },
     storeSupport() {
+      let is_error = false
       let payload = {
         ...this.form_data,
         is_anonymous: !!this.form_data.is_anonymous,
@@ -186,6 +187,24 @@ export default {
         this.$refs.amountTmp.$el.focus();
         return this.$toastr.e("Nilai dukungan wajib diisi");
       }
+      if (!payload.name) {
+        this.$toastr.e("Form Nama wajib di isi")
+        is_error = true
+      }
+      if (!payload.email) {
+        this.$toastr.e("Form Email wajib di isi")
+        is_error = true
+      } else {
+        if (!payload.email.match(/^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/)) {
+          this.$toastr.e("Format penulisan email tidak benar")
+          is_error = true
+        }
+      }
+      if (!payload.name) {
+        this.$toastr.e("Form Komentar wajib di isi")
+        is_error = true
+      }
+      if (is_error) return null
       this.$set(this, 'is_empty_amount', false)
       this.$set(this, 'is_loading', true)
       Apis.campaign.support(payload).then(({data}) => {
@@ -195,6 +214,11 @@ export default {
         snap.pay(data.payment.token)
       }).catch((error) => {
         this.$set(this, 'is_loading', false)
+        if (error.response.status === 400 && error.response.data.message.length) {
+          error.response.data.message.forEach((i) => {
+            this.$toastr.e(i);
+          })
+        }
         throw error
       })
     }
