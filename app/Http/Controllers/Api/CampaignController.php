@@ -146,6 +146,8 @@ class CampaignController extends Controller
                 }
             }
         }
+        $slug = $this->createSlug($request->title);
+        $campaign->slug = $slug;
         $campaign->save();
 
         return (new Resource($campaign))->response()->setStatusCode(201);
@@ -252,9 +254,35 @@ class CampaignController extends Controller
         return response()->json($data, 200);
     }
 
+
+    public function createSlug($title)
+    {
+        $title = $title.rand(10000,99999);
+        $slug = Str::slug($title);
+        $allSlugs = $this->getRelatedSlugs($slug);
+   
+        if (! $allSlugs->contains('slug', $slug)){
+            return $slug;
+        }
+   
+        for ($i = 1; $i <= 10; $i++) {
+            $newSlug = $slug.'-'.$i;
+                if (! $allSlugs->contains('slug', $newSlug)) {
+                 return $newSlug;
+                }
+        }
+        throw new \Exception('Can not create a unique slug');
+    }
+
+    public function getRelatedSlugs($slug)
+    {
+    return  Campaign::select('slug')->where('slug', 'like',  $slug.'%')
+        ->get();
+    }
+
     public function slug($slug=null)
     {
-        $data = Campaign::query()->where('title', $slug)->with(['rewards','campaign_comments.childs'])->first();
+        $data = Campaign::query()->where('slug', $slug)->with(['rewards','campaign_comments.childs'])->first();
         return response()->json($data, 200);
     }
 

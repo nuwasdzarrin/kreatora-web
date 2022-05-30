@@ -151,6 +151,6 @@ class Campaign extends Model
 
     public function getShareableLinkAttribute()
     {
-        return URL::to('/campaign/'.rawurlencode($this->title));
+        return URL::to('/campaign/'.rawurlencode($this->slug));
     }
 }

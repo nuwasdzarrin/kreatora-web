@@ -211,12 +211,20 @@ class BackerUserController extends Controller
                     'gross_amount' => $amount,
                 )
             );
+
+            //get expired campaign 
+            $campaign = Campaign::query()->where('id', $request->campaign_id)
+            ->orderByDesc('id')->paginate(15);
+            $endDate = $campaign[0]['end'];
+            $now = Carbon::now();
+
+            
             $codeServer = base64_encode(config('midtrans.server_key'));
             // jika kurang dari Rp. 10.0000
-            if ($amount < 10000) {
+            if ($now >= $endDate || $amount < 10000 ) {
                 return response()->json([
                     'message' => $this->message = array("Minimal donasi Rp. 10.000 ya!"),
-                    'data' => new \stdClass()
+                    'data' => []
                 ], 400);
             } else {
                 try {
