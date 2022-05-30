@@ -1,3 +1,3 @@
 export default {
-  "is_production": false
+  "is_production": true
 }
