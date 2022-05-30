@@ -18,7 +18,7 @@ class CreateCampaignsTable extends Migration
             $table->unsignedInteger('user_id')->nullable();
             $table->unsignedInteger('campaign_category_id')->nullable();
             $table->string('title');
-            $table->string('slug');
+            $table->string('slug')->nullable();
             $table->string('short_desc')->nullable();
             $table->longText('long_desc')->nullable();
             $table->longText('risk')->nullable();

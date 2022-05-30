@@ -212,19 +212,21 @@ class BackerUserController extends Controller
                 )
             );
 
-            //get expired campaign 
-            $campaign = Campaign::query()->where('id', $request->campaign_id)
-            ->orderByDesc('id')->paginate(15);
-            $endDate = $campaign[0]['end'];
-            $now = Carbon::now();
+            //get expired campaign
+            $campaign = Campaign::query()->where('id', $request->campaign_id)->first();
+            $endDate = $campaign ? Carbon::parse($campaign->end) : null;
 
-            
             $codeServer = base64_encode(config('midtrans.server_key'));
             // jika kurang dari Rp. 10.0000
-            if ($now >= $endDate || $amount < 10000 ) {
+            if ( $amount < 10000 ) {
                 return response()->json([
                     'message' => $this->message = array("Minimal donasi Rp. 10.000 ya!"),
-                    'data' => []
+                    'data' => new \stdClass()
+                ], 400);
+            } else if ((!$endDate) || $endDate->isYesterday()) {
+                return response()->json([
+                    'message' => $this->message = array("Campaign Expired"),
+                    'data' => new \stdClass()
                 ], 400);
             } else {
                 try {
