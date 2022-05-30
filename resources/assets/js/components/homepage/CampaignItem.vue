@@ -3,7 +3,7 @@
       :class="parent === 'CampaignVerticalList'?'vertical-campaign-item-card':'campaign-item-card'"
       @click="$router.push({
         name: 'CampaignDetail',
-        params: { slug: item.title }
+        params: { slug: item.slug }
       })" v-if="item"
   >
     <img :src="api.storage + item.pictures[0]" alt="img-campaign" :class="parent === 'CampaignVerticalList'?'vertical-campaign-item-img':'campaign-item-img'">
