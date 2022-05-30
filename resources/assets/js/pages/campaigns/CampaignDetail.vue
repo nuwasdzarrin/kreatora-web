@@ -3,7 +3,7 @@
     <div v-if="isSection">
       <div class="container" style="box-shadow: 0 2px 2px rgba(0, 0, 0, 0.15);">
         <!-- <div class="d-flex justify-content-between align-items-center py-3 text-14">
-          <div @click="$router.push({ name: 'CampaignDetail', params: { slug: detail_campaign.title }})">
+          <div @click="$router.push({ name: 'CampaignDetail', params: { slug: detail_campaign.slug }})">
             <i class="fas fa-arrow-left" style="color: #008FD7;font-size: 20px;"></i>
           </div>
           <div>
@@ -12,23 +12,23 @@
           </div>
         </div> -->
         <div class="d-flex align-items-center py-3 mb-3 text-14">
-          <div class="mr-3" @click="$router.push({ name: 'CampaignDetail', params: { slug: detail_campaign.title }})">
+          <div class="mr-3" @click="$router.push({ name: 'CampaignDetail', params: { slug: detail_campaign.slug }})">
             <i class="fas fa-arrow-left" style="color: #008FD7;font-size: 20px;"></i>
           </div>
-          <div class="text-14 text-color-black" @click="$router.push({ name: 'CampaignDetail', params: { slug: detail_campaign.title }, query: { section: 'description' }})" v-if="isSection === 'description'">
+          <div class="text-14 text-color-black" @click="$router.push({ name: 'CampaignDetail', params: { slug: detail_campaign.slug }, query: { section: 'description' }})" v-if="isSection === 'description'">
             <b>Deskripsi</b>
           </div>
-          <div class="text-14 text-color-black" style="position: relative;" @click="$router.push({ name: 'CampaignDetail', params: { slug: detail_campaign.title }, query: { section: 'interaction' }})" v-if="isSection === 'interaction'">
+          <div class="text-14 text-color-black" style="position: relative;" @click="$router.push({ name: 'CampaignDetail', params: { slug: detail_campaign.slug }, query: { section: 'interaction' }})" v-if="isSection === 'interaction'">
             <b>Interaction</b>
             <b class="campaign-comments-length">{{detail_campaign.campaign_comments && detail_campaign.campaign_comments.length}}</b>
           </div>
-          <!-- <div class="text-14" :class="{'text-color-black': isSection === 'faq'}" @click="$router.push({ name: 'CampaignDetail', params: { slug: detail_campaign.title }, query: { section: 'faq' }})">
+          <!-- <div class="text-14" :class="{'text-color-black': isSection === 'faq'}" @click="$router.push({ name: 'CampaignDetail', params: { slug: detail_campaign.slug }, query: { section: 'faq' }})">
             <b>FAQ</b>
           </div>
-          <div class="text-14" :class="{'text-color-black': isSection === 'risk'}" @click="$router.push({ name: 'CampaignDetail', params: { slug: detail_campaign.title }, query: { section: 'risk' }})">
+          <div class="text-14" :class="{'text-color-black': isSection === 'risk'}" @click="$router.push({ name: 'CampaignDetail', params: { slug: detail_campaign.slug }, query: { section: 'risk' }})">
             <b>Risiko</b>
           </div>
-          <div class="text-14" :class="{'text-color-black': isSection === 'update'}" @click="$router.push({ name: 'CampaignDetail', params: { slug: detail_campaign.title }, query: { section: 'update' }})">
+          <div class="text-14" :class="{'text-color-black': isSection === 'update'}" @click="$router.push({ name: 'CampaignDetail', params: { slug: detail_campaign.slug }, query: { section: 'update' }})">
             <b>Update</b>
           </div> -->
         </div>
@@ -112,17 +112,17 @@
       </div>
       <div class="container pt-4 bg-white description-excerpt">
         <div class="d-flex justify-content-around align-items-center mb-4 text-14">
-          <div class="text-14 text-color-black" style="cursor: pointer;" @click="$router.push({ name: 'CampaignDetail', params: { slug: detail_campaign.title }, query: { section: 'description' }})">
+          <div class="text-14 text-color-black" style="cursor: pointer;" @click="$router.push({ name: 'CampaignDetail', params: { slug: detail_campaign.slug }, query: { section: 'description' }})">
             <b>Deskripsi</b>
           </div>
-          <div class="text-14" style="position: relative; cursor: pointer;" @click="$router.push({ name: 'CampaignDetail', params: { slug: detail_campaign.title }, query: { section: 'interaction' }})">
+          <div class="text-14" style="position: relative; cursor: pointer;" @click="$router.push({ name: 'CampaignDetail', params: { slug: detail_campaign.slug }, query: { section: 'interaction' }})">
             <b>Interaction</b>
             <b class="campaign-comments-length">{{detail_campaign.campaign_comments && detail_campaign.campaign_comments.length}}</b>
           </div>
         </div>
         <div class="text-14">
           <div v-html="detail_campaign.short_desc"></div>
-          <a href="javascript:void(0)"  @click="$router.push({ name: 'CampaignDetail', params: { slug: detail_campaign.title }, query: { section: 'description' }})">
+          <a href="javascript:void(0)"  @click="$router.push({ name: 'CampaignDetail', params: { slug: detail_campaign.slug }, query: { section: 'description' }})">
             baca lebih banyak...
           </a>
         </div>
@@ -131,7 +131,7 @@
         <div class="d-flex align-items-center justify-content-center mr-2 share-button" @click="is_show_share = true">
           <i class="fa fa-share-alt text-20"></i>
         </div>
-        <button class="btn btn-primary btn-block" @click="$router.push({ name: 'CampaignReward', params: { slug: detail_campaign.title }})" v-if="daysLeft"><b>Dukung</b></button>
+        <button class="btn btn-primary btn-block" @click="$router.push({ name: 'CampaignReward', params: { slug: detail_campaign.slug }})" v-if="daysLeft"><b>Dukung</b></button>
         <button class="btn btn-secondary btn-block" @click="onMaxtime" v-else><b>Dukung</b></button>
       </div>
     </div>
