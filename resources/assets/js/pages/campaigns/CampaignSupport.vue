@@ -158,11 +158,11 @@ export default {
           let rewardSelected = lodash.filter( data.rewards, function(reward) {
             return reward_id_selected === reward.id
           })
-          if (!rewardSelected.length) return this.$router.push({ name: 'CampaignReward', params: { slug: data.title }})
+          if (!rewardSelected.length) return this.$router.push({ name: 'CampaignReward', params: { slug: data.slug }})
           this.$set(this, 'reward_selected', rewardSelected[0])
           this.$set(this.form_data, 'campaign_id', data.id)
           this.$set(this.form_data, 'reward_id', parseInt(reward_id_selected))
-        } else return this.$router.push({ name: 'CampaignDetail', params: { slug: data.title }})
+        } else return this.$router.push({ name: 'CampaignDetail', params: { slug: data.slug }})
         this.$set(this, 'is_loading', false)
       }).catch((error) => {
         this.$set(this, 'is_loading', false)
