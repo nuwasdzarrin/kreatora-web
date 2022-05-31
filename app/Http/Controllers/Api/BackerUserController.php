@@ -326,7 +326,7 @@ class BackerUserController extends Controller
         $url_production = 'https://api.midtrans.com/v2/';
         $url_sandbox = 'https://api.sandbox.midtrans.com/v2/';
         $client = new Client();
-        $res = $client->request('GET',$is_production ? $url_production : $url_sandbox.$order_id.'/status', [
+        $res = $client->request('GET',($is_production ? $url_production : $url_sandbox).$order_id.'/status', [
             'headers' => [
                 'Accept' => 'application/json',
                 'Content-Type' => 'application/json',
