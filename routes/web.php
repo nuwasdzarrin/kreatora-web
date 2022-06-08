@@ -66,3 +66,7 @@ Route::get('/dashboard/{any?}', function () {
 Route::get('/campaign/{any?}', function () {
     return view('app');
 })->where('any','.*');
+
+
+Route::get('google/redirect', 'Api\GoogleController@redirect');
+Route::get('google/callback', 'Api\GoogleController@handleCallback');

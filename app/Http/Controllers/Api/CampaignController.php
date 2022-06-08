@@ -257,7 +257,7 @@ class CampaignController extends Controller
 
     public function createSlug($title)
     {
-        $title = $title.rand(10000,99999);
+        $title = $title.'-'.rand(10000,99999);
         $slug = Str::slug($title);
         $allSlugs = $this->getRelatedSlugs($slug);
    
