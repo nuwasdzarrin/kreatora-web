@@ -25,7 +25,14 @@
           <button class="btn btn-lg btn-primary btn-block" type="button" @click="doLogin">Masuk</button>
           <p class="mt-5">Atau lebih cepat ...</p>
           <div class="d-flex justify-content-center">
-            <div class="auth-social mr-2"><i class="fab fa-google text-danger" style="font-size: 22px;"></i></div>
+            <GoogleLogin
+                class="auth-social mr-2"
+                :params="googleParams"
+                :onSuccess="googleOnSuccess"
+                :onFailure="googleOnFailure"
+            >
+              <i class="fab fa-google text-danger" style="font-size: 22px;"></i>
+            </GoogleLogin>
             <div class="auth-social ml-2"><i class="fab fa-facebook-f" style="color: #0024D7; font-size: 22px;"></i></div>
           </div>
 <!--          <button class="btn btn-outline-danger btn-block"><i class="fab fa-google"></i> MASUK DENGAN GOOGLE</button>-->
@@ -58,7 +65,13 @@
 
 <script>
 import Cookie from "vue-cookie";
+import config from "../../config";
+import Apis from "../../apis";
+import GoogleLogin from "vue-google-login";
 export default {
+  components: {
+    GoogleLogin
+  },
   data() {
     return {
       isLogin: true,
@@ -73,6 +86,9 @@ export default {
         email: '',
         password: '',
         confirm_password:''
+      },
+      googleParams: {
+        client_id: config.google_client_id,
       }
     }
   },
@@ -99,7 +115,22 @@ export default {
           this.$router.push({ name: 'HomePage'});
         }
       });
-    }
+    },
+    googleOnSuccess(googleUser) {
+      let token = null;
+      const googleAuth = googleUser.getAuthResponse(true);
+      token = googleAuth.access_token;
+      console.log("google token: ", token)
+      if (token !== null) {
+        Apis.auth.google({
+          token: token,
+          // fcm_token: Cookie.get('fcm_token')
+        })
+      }
+    },
+    googleOnFailure(fail) {
+      console.log("google fail: ", fail)
+    },
   },
   computed: {
     isPending(){
@@ -160,6 +191,7 @@ export default {
   align-items: center;
   justify-content: center;
   border-radius: 50%;
+  border: unset;
   background-color: white;
   box-shadow: 1px 1px 1px rgba(0, 0, 0, 0.15), -1px -1px 0 #F8F8F8;
   cursor: pointer;

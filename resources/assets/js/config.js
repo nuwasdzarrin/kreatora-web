@@ -1,3 +1,4 @@
 export default {
-  "is_production": false
+  "is_production": false,
+  "google_client_id": '282529135459-chl14gfv7ukssrv9ppj51660pv14g0iv.apps.googleusercontent.com'
 }
