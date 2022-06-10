@@ -15,6 +15,8 @@ import VueToastr from "vue-toastr";
 import VueSocialSharing from 'vue-social-sharing'
 import firebase from "firebase/app";
 import "firebase/messaging";
+import GAuth from 'vue-google-oauth2'
+
 
 window.Vue = require('vue');
 Vue.use(VueRouter);
@@ -22,6 +24,14 @@ Vue.use(VueToastr, {
     /* OverWrite Plugin Options if you need */
 });
 Vue.use(VueSocialSharing);
+Vue.use(GAuth, {
+    // clientId: '282529135459-chl14gfv7ukssrv9ppj51660pv14g0iv.apps.googleusercontent.com', //clientId Email Kreatora
+    clientId: '768834812579-007e5802er7gj3c93p8qa9568h8bj3na.apps.googleusercontent.com', //random from github
+    // clientId: '236754723775-trc9ko84t3ai4fnsl71n268b04gsbmod.apps.googleusercontent.com', //random from blueray
+    scope: 'profile email',
+    prompt: 'select_account',
+    fetch_basic_profile: false
+})
 window.Vue = require('vue');
 window._ = require('lodash');
 window.moment = require('moment');
