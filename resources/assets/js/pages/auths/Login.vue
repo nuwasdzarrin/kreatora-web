@@ -25,14 +25,15 @@
           <button class="btn btn-lg btn-primary btn-block" type="button" @click="doLogin">Masuk</button>
           <p class="mt-5">Atau lebih cepat ...</p>
           <div class="d-flex justify-content-center">
-            <GoogleLogin
-                class="auth-social mr-2"
-                :params="googleParams"
-                :onSuccess="googleOnSuccess"
-                :onFailure="googleOnFailure"
-            >
-              <i class="fab fa-google text-danger" style="font-size: 22px;"></i>
-            </GoogleLogin>
+<!--            <GoogleLogin-->
+<!--                class="auth-social mr-2"-->
+<!--                :params="googleParams"-->
+<!--                :onSuccess="googleOnSuccess"-->
+<!--                :onFailure="googleOnFailure"-->
+<!--            >-->
+<!--              <i class="fab fa-google text-danger" style="font-size: 22px;"></i>-->
+<!--            </GoogleLogin>-->
+            <div class="auth-social ml-2" @click="authProvider('google')"><i class="fab fa-google text-danger" style="font-size: 22px;"></i></div>
             <div class="auth-social ml-2"><i class="fab fa-facebook-f" style="color: #0024D7; font-size: 22px;"></i></div>
           </div>
 <!--          <button class="btn btn-outline-danger btn-block"><i class="fab fa-google"></i> MASUK DENGAN GOOGLE</button>-->
@@ -67,10 +68,10 @@
 import Cookie from "vue-cookie";
 import config from "../../config";
 import Apis from "../../apis";
-import GoogleLogin from "vue-google-login";
+// import GoogleLogin from "vue-google-login";
 export default {
   components: {
-    GoogleLogin
+    // GoogleLogin
   },
   data() {
     return {
@@ -116,21 +117,46 @@ export default {
         }
       });
     },
-    googleOnSuccess(googleUser) {
-      let token = null;
-      const googleAuth = googleUser.getAuthResponse(true);
-      token = googleAuth.access_token;
-      console.log("google token: ", token)
-      if (token !== null) {
-        Apis.auth.google({
-          token: token,
-          // fcm_token: Cookie.get('fcm_token')
-        })
-      }
+    authProvider(provider) {
+      let self = this;
+      this.$auth.authenticate(provider).then(response => {
+        console.log("response provider: ", provider, response)
+        self.SocialLogin(provider,response)
+        // Apis.auth.google({
+        //   token: response.code,
+        //   fcm_token: Cookie.get('fcm_token')
+        // }).then((res) => {
+        //   console.log("response backend: ", res)
+        // })
+      }).catch(err => {
+        console.log("err: ", err)
+      })
     },
-    googleOnFailure(fail) {
-      console.log("google fail: ", fail)
-    },
+    SocialLogin(provider,response){
+
+      this.$http.post('/api/google/'+provider,response).then(response => {
+
+        console.log("res ke dua: ",response.data)
+
+      }).catch(err => {
+        console.log({err:err})
+      })
+    }
+    // googleOnSuccess(googleUser) {
+    //   let token = null;
+    //   const googleAuth = googleUser.getAuthResponse(true);
+    //   token = googleAuth.access_token;
+    //   console.log("google token: ", token)
+    //   if (token !== null) {
+    //     Apis.auth.google({
+    //       token: token,
+    //       // fcm_token: Cookie.get('fcm_token')
+    //     })
+    //   }
+    // },
+    // googleOnFailure(fail) {
+    //   console.log("google fail: ", fail)
+    // },
   },
   computed: {
     isPending(){

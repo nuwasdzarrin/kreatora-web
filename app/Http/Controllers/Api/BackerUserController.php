@@ -216,7 +216,7 @@ class BackerUserController extends Controller
             $campaign = Campaign::query()->where('id', $request->campaign_id)->first();
             $endDate = $campaign ? Carbon::parse($campaign->end) : null;
 
-            $codeServer = base64_encode(config('midtrans.server_key'));
+            $codeServer = base64_encode(config('midtrans.server_key').":");
             // jika kurang dari Rp. 10.0000
             if ( $amount < 10000 ) {
                 return response()->json([
@@ -233,7 +233,7 @@ class BackerUserController extends Controller
                     $is_production = config('midtrans.is_production');
                     $url_production = 'https://app.midtrans.com';
                     $url_sandbox = 'https://app.sandbox.midtrans.com';
-                    $res = $client->request('POST',$is_production ? $url_production : $url_sandbox.'/snap/v1/transactions', [
+                    $res = $client->request('POST',($is_production ? $url_production : $url_sandbox).'/snap/v1/transactions', [
                         'headers' => [
                             'Accept' => 'application/json',
                             'Content-Type' => 'application/json',
@@ -326,7 +326,7 @@ class BackerUserController extends Controller
         $url_production = 'https://api.midtrans.com/v2/';
         $url_sandbox = 'https://api.sandbox.midtrans.com/v2/';
         $client = new Client();
-        $res = $client->request('GET',$is_production ? $url_production : $url_sandbox.$order_id.'/status', [
+        $res = $client->request('GET',($is_production ? $url_production : $url_sandbox).$order_id.'/status', [
             'headers' => [
                 'Accept' => 'application/json',
                 'Content-Type' => 'application/json',

@@ -5,8 +5,6 @@ namespace App\Http\Controllers\Api;
 use App\User;
 use App\Http\Controllers\Controller;
 use Laravel\Socialite\Facades\Socialite;
-use Illuminate\Support\Facades\Auth;
-use Laravel\Socialite\Two\AbstractProvider;
 use Illuminate\Http\Request;
 
 
@@ -28,7 +26,6 @@ class GoogleController extends Controller
     {
         try {
             $user_google    = Socialite::driver('google')->stateless()->user();
-            dd($user_google);
             $user           = User::where('email', $user_google->getEmail())->first();
 
             if($user != null){
