@@ -31,7 +31,7 @@
           />
         </div>
       </div>
-      <div class="card-support-content d-flex justify-content-between">
+      <div class="card-support-content d-flex justify-content-between" v-if="reward_selected.min_donation > 0">
         <div>
           <div class="text-color-black mb-1"><b>Tip (opsional)</b></div>
           <div>Yuk beri tip kepada kreator agar mendukung semakin lancarnya projek ini </div>
