@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
+use GuzzleHttp\Client;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use TCG\Voyager\Models\Role;
 
@@ -399,7 +400,5 @@ class AuthController extends Controller
             ], $this->code);
         }
         
-       
-        // return response()->json($user, $this->code);
     }
 }
