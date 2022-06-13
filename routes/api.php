@@ -25,9 +25,6 @@ Route::post('change_password', 'Api\AuthController@change_password')->name('api.
 Route::post('refresh_fcm_token', 'Api\AuthController@refresh_fcm_token')->name('api.refresh_fcm_token');
 Route::get('logout', 'Api\AuthController@logout')->name('api.logout');
 Route::get('profile', 'Api\AuthController@profile')->name('api.profile');
-Route::post('google', 'Api\GoogleController@callback')->name('api.google');
-
-
 
 Route::apiResource('users', 'Api\UserController', [ 'as' => 'api' ]);
 Route::apiResource('campaign_categories', 'Api\CampaignCategoryController', [ 'as' => 'api' ]);

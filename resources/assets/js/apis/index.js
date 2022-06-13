@@ -23,8 +23,8 @@ const api = {
         facebook: () => {
             return Axios.get(Path.auth.facebook)
         },
-        google: (user) => {
-            return Axios.post(Path.auth.google, user, {params: {}})
+        google: (data) => {
+            return Axios.post(Path.auth.google, data)
         },
         resend_code: (data) => {
             return Axios.post(Path.auth.resend_code, data);

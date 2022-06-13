@@ -17,7 +17,7 @@
         "kavist/rajaongkir": "^1.1",
         "kawankoding/laravel-fcm": "^0.2.0",
         "laravel/framework": "5.5.*",
-        "laravel/socialite": "3.4.0",
+        "laravel/socialite": "^3.2.0",
         "laravel/tinker": "~1.0",
         "lcobucci/jwt": "3.3.3",
         "midtrans/midtrans-php": "^2.5",

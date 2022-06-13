@@ -40,5 +40,4 @@ return [
         'client_secret' => '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',
         'redirect' => 'http://127.0.0.1:8000/google/callback',
     ],
-
 ];

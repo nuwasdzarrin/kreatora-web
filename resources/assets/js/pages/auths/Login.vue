@@ -25,11 +25,9 @@
           <button class="btn btn-lg btn-primary btn-block" type="button" @click="doLogin">Masuk</button>
           <p class="mt-5">Atau lebih cepat ...</p>
           <div class="d-flex justify-content-center">
-            <div class="auth-social mr-2"><i class="fab fa-google text-danger" style="font-size: 22px;"></i></div>
+            <div class="auth-social ml-2" @click="googleSignIn"><i class="fab fa-google text-danger" style="font-size: 22px;"></i></div>
             <div class="auth-social ml-2"><i class="fab fa-facebook-f" style="color: #0024D7; font-size: 22px;"></i></div>
           </div>
-<!--          <button class="btn btn-outline-danger btn-block"><i class="fab fa-google"></i> MASUK DENGAN GOOGLE</button>-->
-<!--          <button class="btn btn-outline-primary btn-block"><i class="fab fa-facebook"></i> MASUK DENGAN FACEBOOK</button>-->
         </div>
 <!--        <div v-else class="form-signin">-->
 <!--          <p>Nice! Sekarang silakan masukkan-->
@@ -58,6 +56,8 @@
 
 <script>
 import Cookie from "vue-cookie";
+import config from "../../config";
+import Apis from "../../apis";
 export default {
   data() {
     return {
@@ -73,6 +73,9 @@ export default {
         email: '',
         password: '',
         confirm_password:''
+      },
+      googleParams: {
+        client_id: config.google_client_id,
       }
     }
   },
@@ -99,7 +102,24 @@ export default {
           this.$router.push({ name: 'HomePage'});
         }
       });
-    }
+    },
+    async googleSignIn() {
+      try {
+        const googleUser = await this.$gAuth.signIn();
+        if (!googleUser) {
+          return null;
+        }
+        console.log("isAuthorized: ", this.$gAuth.isAuthorized);
+        console.log("googleUser: ", googleUser);
+        console.log("getId: ", googleUser.getId());
+        console.log("getBasicProfile: ", googleUser.getBasicProfile());
+        console.log("getAuthResponse: ", googleUser.getAuthResponse());
+        console.log("Access Token: ", googleUser.getAuthResponse().access_token);
+      } catch (error) {
+        console.error(error);
+        return null;
+      }
+    },
   },
   computed: {
     isPending(){
@@ -160,6 +180,7 @@ export default {
   align-items: center;
   justify-content: center;
   border-radius: 50%;
+  border: unset;
   background-color: white;
   box-shadow: 1px 1px 1px rgba(0, 0, 0, 0.15), -1px -1px 0 #F8F8F8;
   cursor: pointer;
