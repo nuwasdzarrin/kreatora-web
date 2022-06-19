@@ -9,7 +9,7 @@ const path = {
         logout: '/api/logout',
         register: '/api/register',
         facebook: '/auth/',
-        google: '/api/google',
+        google: '/api/auth/google',
         email_verification: '/api/email_verification',
         resend_code: '/api/email_code',
         refresh_fcm_token: '/api/refresh_fcm_token',

@@ -74,6 +74,29 @@ const index = new Vuex.Store({
                 });
             });
         },
+        loginGoogle({ commit }, payload) {
+            commit('LOGIN');
+            return new Promise(resolve => {
+                Api.auth.google({
+                    access_token: payload.access_token,
+                    fcm_token: Cookie.get('fcm_token')
+                }).then(function (response) {
+                    Cookie.set('token', response.data.token, { expires: '6h' });
+                    Cookie.set('user', JSON.stringify(response.data.data), { expires: '6h' });
+                    commit('LOGIN_SUCCESS', response.data.data);
+                    resolve(response.data);
+                }).catch(function (error) {
+                    let errorMsg = "";
+                    if(error.response.status === 401){
+                        errorMsg = error.response.data.message;
+                    }else{
+                        errorMsg = "Terjadi Kesalahan pada server.";
+                    }
+                    commit('LOGIN_FAILED', errorMsg);
+                    resolve(error.response);
+                });
+            });
+        },
         logout({ commit }) {
             Cookie.delete('token');
             Cookie.delete('myProfile');

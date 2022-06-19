@@ -23,6 +23,7 @@ class AddPhoneToUsersTable extends Migration
             $table->string('bank_account')->nullable()->after('gender');
             $table->string('ktp')->nullable()->after('bank_account');
             $table->string('fcm_token')->nullable()->after('ktp');
+            $table->string('google_id')->nullable()->after('fcm_token');
             $table->softDeletes();
         });
     }

@@ -1,6 +1,6 @@
 <template>
   <div class="account-wrapper">
-    <NoTopNavbar />
+    <TopNavbarBlock title="Akun"/>
     <div class="container">
       <div class="mt-5">
         <div class="d-flex justify-content-between mb-3">
@@ -61,9 +61,11 @@
 
 <script>
 import Apis from "../../apis";
+import TopNavbarBlock from "../../components/navbars/TopNavbarBlock";
 
 export default {
   name: "Account",
+  components: {TopNavbarBlock},
   data() {
     return {
       api: Apis,

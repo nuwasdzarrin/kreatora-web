@@ -4,19 +4,12 @@ namespace App\Http\Controllers\Api;
 
 use App\User;
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Auth;
-use Laravel\Socialite\Facades\Socialite;
 use Illuminate\Http\Request;
 use GuzzleHttp\Client;
 
 
 class GoogleController extends Controller
 {
-    public function __construct()
-    {
-        $this->middleware('auth:api')->except(['redirect', 'callback', 'handleCallback', 'auth']);
-    }
-
     public function auth(Request $request){
         $client = new Client();
         $token = $request->access_token;
@@ -24,11 +17,11 @@ class GoogleController extends Controller
             'headers' => [
                 'Accept' => 'application/json',
                 'Content-Type' => 'application/json',
-                
+
            ],
            'params' => [
                'access_token' => $request->access_token,
-             
+
            ]
         ]);
         $response = json_decode($res->getBody()->getContents());
@@ -62,7 +55,7 @@ class GoogleController extends Controller
 
                 $msg = array('Selamat! kamu telah berhasil login!');
                 $data['token'] = $user->createToken('nApp')->accessToken;
-               
+
                 $data['message'] = $msg;
                 $data['data'] = $user;
                 $data['redirect_to'] = 'homepage';

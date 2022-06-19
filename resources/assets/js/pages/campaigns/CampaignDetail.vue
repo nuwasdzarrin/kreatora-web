@@ -93,7 +93,7 @@
             oleh:
             <img :src="(detail_campaign && detail_campaign.creator_avatar) ? api.storage + detail_campaign.creator_avatar : api.no_image" alt="avatar-creator" class="user-avatar ml-1">
             <strong class="text-color-black">{{lodash.startCase(detail_campaign.creator_name)}}</strong>
-            <i class="fas fa-certificate ml-1" style="color: #008FD7;"></i>
+            <img src="/assets_app/icons/icon-verified.png" style="width: 15px; height: auto;" />
           </div>
           <div class="text-14">
             backers:

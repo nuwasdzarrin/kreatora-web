@@ -16,8 +16,8 @@
             alt="avatar-creator"
             class="user-avatar mr-1"
         >
-        <strong class="text-color-black">{{lodash.startCase(detail_campaign.creator_name)}}</strong>
-        <i class="fas fa-certificate ml-1" style="color: #008FD7;"></i>
+        <strong class="text-color-black mr-1">{{lodash.startCase(detail_campaign.creator_name)}}</strong>
+        <img src="/assets_app/icons/icon-verified.png" style="width: 15px; height: auto;" />
       </div>
       <div class="card-support-content d-flex justify-content-between text-color-black mb-3">
         <div><b>Nilai Dukungan</b></div>

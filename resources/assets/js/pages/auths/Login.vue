@@ -109,12 +109,25 @@ export default {
         if (!googleUser) {
           return null;
         }
-        console.log("isAuthorized: ", this.$gAuth.isAuthorized);
-        console.log("googleUser: ", googleUser);
-        console.log("getId: ", googleUser.getId());
-        console.log("getBasicProfile: ", googleUser.getBasicProfile());
-        console.log("getAuthResponse: ", googleUser.getAuthResponse());
-        console.log("Access Token: ", googleUser.getAuthResponse().access_token);
+        await this.$store.dispatch("loginGoogle", {
+          access_token: googleUser.getAuthResponse().access_token,
+        }).then((res) => {
+          if (res.status === 401) {
+            res.data.message.forEach(element => {
+              this.$toastr.e(element);
+            })
+          }
+          else {
+            this.$toastr.s("login success");
+            this.$router.push({ name: 'HomePage'});
+          }
+        });
+        // console.log("isAuthorized: ", this.$gAuth.isAuthorized);
+        // console.log("googleUser: ", googleUser);
+        // console.log("getId: ", googleUser.getId());
+        // console.log("getBasicProfile: ", googleUser.getBasicProfile());
+        // console.log("getAuthResponse: ", googleUser.getAuthResponse());
+        // console.log("Access Token: ", googleUser.getAuthResponse().access_token);
       } catch (error) {
         console.error(error);
         return null;
