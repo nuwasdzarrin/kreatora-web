@@ -3,9 +3,9 @@
         <div v-for="(item, index) in comments" :key="index">
             <div>
                 <div class="d-flex align-item-center py-3">
-                    <img :src="(item && item.user_avatar) ? (api.storage + item.user_avatar) : api.no_image" class="comment-avatar mr-2" alt="">
+                    <img :src="(item && item.user_avatar && item.is_anonymous !== 1) ? (api.storage + item.user_avatar) : api.no_image" class="comment-avatar mr-2" alt="">
                     <div>
-                        <h6 style="font-weight: 600;">{{item.user_name || 'Anonim'}}</h6>
+                        <h6 style="font-weight: 600;">{{item.is_anonymous === 1 ? convertToAnonymous(item.user_name) : item.user_name}}</h6>
                         <div>{{ daysLeft(item.created_at) }} days ago</div>
                     </div>
                 </div>
@@ -51,12 +51,20 @@ export default {
         }
     },
     methods: {
-        daysLeft(time) {
-            let cal = moment().diff(moment(time), 'days')
-            return cal > 0 ? cal : 0
-        },
+      convertToAnonymous(payload) {
+        let result = '';
+        for (let i=0;i<payload.length;i++) {
+          if ((i===0) || (i===payload.length-1)) result += payload[i]
+          else result += '*'
+        }
+        return result
+      },
+      daysLeft(time) {
+        let cal = moment().diff(moment(time), 'days')
+        return cal > 0 ? cal : 0
+      },
       replyTo(payload) {
-          this.$emit('onReply', payload)
+        this.$emit('onReply', payload)
       }
     }
 }

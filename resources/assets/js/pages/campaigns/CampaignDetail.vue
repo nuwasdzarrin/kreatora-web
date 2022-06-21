@@ -35,30 +35,30 @@
       </div>
       <div class="container" style="overflow-y: auto;" :style= "[is_reply ? {height: '75vh'} : {height: '90vh'}]">
         <div v-html="dataSection" v-if="isSection === 'description' || isSection === 'risk'"/>
-        <div class="pt-3" v-if="isSection === 'faq'">
-          <div class="mb-4" v-for="(item, index) in detail_campaign.faqs" :key="index">
-            <div class="faq-question" :class="{'no-bottom-radius': is_faq_open[index]}" @click="openFaq(index)">
-              <div style="max-width: 90%">
-                {{ item.question }}
-              </div>
-              <div><i class="fas fa-chevron-right" :class="{'fa-rotate-90': is_faq_open[index]}"></i></div>
-            </div>
-            <div class="faq-answer" v-show="is_faq_open[index]">
-              {{ item.answer }}
-            </div>
-          </div>
-        </div>
-        <div class="pt-3" v-if="isSection === 'update'">
-          <div class="update-box" v-for="(item, index) in detail_campaign.updates" :key="index">
-            <div class="d-flex justify-content-between mb-3 text-12">
-              <div><strong>Update #{{item.index}}</strong></div>
-              <div style="color: #5C5C70">{{item.updated_at | dateDDMMYYYY}}</div>
-            </div>
-            <h5><strong>{{item.title}}</strong></h5>
-            <p class="text-14" v-html="item.description">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Facilisi massa tortor vel justo vivamus aliquet. Sed massa lectus sed neque, maecenas enim porttitor ......</p>
-            <div class="text-right"><span class="mr-2" style="color: black">11</span><i class="far fa-comment-alt mr-4"></i><span class="mr-2" style="color: black">11</span><i class="far fa-heart"></i></div>
-          </div>
-        </div>
+<!--        <div class="pt-3" v-if="isSection === 'faq'">-->
+<!--          <div class="mb-4" v-for="(item, index) in detail_campaign.faqs" :key="index">-->
+<!--            <div class="faq-question" :class="{'no-bottom-radius': is_faq_open[index]}" @click="openFaq(index)">-->
+<!--              <div style="max-width: 90%">-->
+<!--                {{ item.question }}-->
+<!--              </div>-->
+<!--              <div><i class="fas fa-chevron-right" :class="{'fa-rotate-90': is_faq_open[index]}"></i></div>-->
+<!--            </div>-->
+<!--            <div class="faq-answer" v-show="is_faq_open[index]">-->
+<!--              {{ item.answer }}-->
+<!--            </div>-->
+<!--          </div>-->
+<!--        </div>-->
+<!--        <div class="pt-3" v-if="isSection === 'update'">-->
+<!--          <div class="update-box" v-for="(item, index) in detail_campaign.updates" :key="index">-->
+<!--            <div class="d-flex justify-content-between mb-3 text-12">-->
+<!--              <div><strong>Update #{{item.index}}</strong></div>-->
+<!--              <div style="color: #5C5C70">{{item.updated_at | dateDDMMYYYY}}</div>-->
+<!--            </div>-->
+<!--            <h5><strong>{{item.title}}</strong></h5>-->
+<!--            <p class="text-14" v-html="item.description">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Facilisi massa tortor vel justo vivamus aliquet. Sed massa lectus sed neque, maecenas enim porttitor ......</p>-->
+<!--            <div class="text-right"><span class="mr-2" style="color: black">11</span><i class="far fa-comment-alt mr-4"></i><span class="mr-2" style="color: black">11</span><i class="far fa-heart"></i></div>-->
+<!--          </div>-->
+<!--        </div>-->
         <CommentComponent :comments="detail_campaign.campaign_comments" @onReply="replyOnClick" v-if="isSection === 'interaction'" />
         <div class="container comment-bottom-wrapper" v-if="is_reply">
           <div class="my-1">membalas <b>{{reply_to.user_name}}</b></div>

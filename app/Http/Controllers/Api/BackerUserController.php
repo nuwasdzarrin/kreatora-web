@@ -339,12 +339,12 @@ class BackerUserController extends Controller
         ]);
         $detail = json_decode($res->getBody()->getContents());
         //check if order id valid or nah
-        if ($detail->status_code == 404) {
-            return response()->json([
-                'data' => new \stdClass(),
-                'message' => array('Mohon maaf, ID Order yang anda masukan salah!'),
-            ]);
-        }else {
+        if ($detail->status_code != 404) {
+//            return response()->json([
+//                'data' => new \stdClass(),
+//                'message' => array('Mohon maaf, ID Order yang anda masukan salah!'),
+//            ]);
+//        } else {
             //update status
             Payment::where('order_id', $order_id)
             ->limit(1)
@@ -353,7 +353,7 @@ class BackerUserController extends Controller
                 'metode' => $detail->payment_type,
                 'status' => $detail->transaction_status,
                 'transaction_time' => $detail->transaction_time,
-        ));
+            ));
         }
 
        //get data from payment table
@@ -376,7 +376,8 @@ class BackerUserController extends Controller
                 "campaign" => [
                     "title" => $data->campaign->title,
                     "pictures" => $data->campaign->pictures,
-                    "creator_name" => $data->campaign->creator_name
+                    "creator_name" => $data->campaign->creator_name,
+                    "slug" => $data->campaign->slug,
                 ],
                 "payment" => [
                     "order_id" => $data->payment ? $data->payment->order_id : null,

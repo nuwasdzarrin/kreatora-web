@@ -43,9 +43,9 @@ class CampaignComment extends Model
 
     protected $guarded = [];
 
-    protected $hidden = ['user'];
+    protected $hidden = ['user', 'payment'];
 
-    protected $appends = ['user_avatar', 'user_name'];
+    protected $appends = ['user_avatar', 'user_name', 'is_anonymous'];
 
     public function childs()
     {
@@ -70,5 +70,9 @@ class CampaignComment extends Model
     public function getUserNameAttribute()
     {
         return $this->user ? $this->user->name : '';
+    }
+
+    public function getIsAnonymousAttribute() {
+        return $this->payment->backer_user->is_anonymous;
     }
 }
