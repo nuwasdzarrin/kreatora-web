@@ -11,7 +11,10 @@
           </div>
           <div class="col-8">
             <div class="title-campaign mb-1">{{detail.campaign ? detail.campaign.title : ''}}</div>
-            <div class="kreator-campaign">{{detail.campaign ? detail.campaign.creator_name : ''}} <i class="fas fa-certificate ml-1" style="color: #008FD7;"></i></div>
+            <div class="kreator-campaign">
+              {{detail.campaign ? detail.campaign.creator_name : ''}}
+              <img src="/assets_app/icons/icon-verified.png" style="width: 15px; height: auto;" />
+            </div>
           </div>
         </div>
         <table class="mb-4">
@@ -26,22 +29,22 @@
           <tr v-if="detail">
             <td>Status</td>
             <td>: <span class="badge badge-pill" :class="statusProcess(detail && detail.payment && detail.payment.status)" style="text-transform: capitalize">
-              {{ (detail && detail.payment) ? (detail.payment.status != 'settlement' ? detail.payment.status:'berhasil') : 'pending' }}
+              {{ (detail.payment && detail.payment.status) ? (detail.payment.status === 'settlement' ? 'berhasil':detail.payment.status) : 'expired' }}
             </span></td>
           </tr>
         </table>
         <div class="d-flex justify-content-center mt-5" v-if="detail">
           <button class="btn btn-primary" @click="$router.push({
             name: 'HomePage',
-          })" v-if="detail && detail.payment.status == 'settlement'">Cek Campaign Lainnya</button>
-          <button class="btn btn-danger" @click="$router.push({
-            name: 'CampaignDetail',
-            params: { slug: detail.campaign ? detail.campaign.title : '' }
-          })" v-else-if="detail && detail.payment.status == 'expire'">Ulangi Donasi</button>
-          <div class="text-center" v-else>
+          })" v-if="detail && detail.payment.status === 'settlement'">Cek Campaign Lainnya</button>
+          <div class="text-center" v-else-if="detail && detail.payment.status === 'pending'">
             <button class="btn btn-success" @click="fetchMyBackerDetail">Cek Status Pembayaran</button><br/><br/>
             <a href="javascript:void(0)" class="payment-method" @click="onLoadSnapMidtrans">Cara Pembayaran</a>
           </div>
+          <button class="btn btn-danger" @click="$router.push({
+            name: 'CampaignDetail',
+            params: { slug: detail.campaign ? detail.campaign.slug : '' }
+          })" v-else>Ulangi Donasi</button>
         </div>
       </div>
     </div>
@@ -108,9 +111,9 @@ export default {
         snap.pay(this.detail.payment.transaction_id)
     },
     statusProcess(status) {
-      if (status == 'settlement') return 'badge-primary'
-      else if (status == 'expire') return 'badge-danger'
-      else return 'badge-success'
+      if (status === 'settlement') return 'badge-primary'
+      else if (status === 'pending') return 'badge-success'
+      else return 'badge-danger'
     }
   },
   mounted() {

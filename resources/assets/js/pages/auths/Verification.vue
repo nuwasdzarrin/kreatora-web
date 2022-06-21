@@ -19,11 +19,10 @@
             />
           </div>
           <p class="my-4">
-            <a href="javascript:void(0)" @click="resendCode" :class="{'verification-resend-disable': is_countdown}">Kirim ulang kode ?</a>
+            <a href="javascript:void(0)" @click="resendCode" :class="{'verification-resend-disable': is_countdown}">{{ is_countdown ? 'Kirim ulang kode dalam ' : 'Kirim ulang kode ?' }} </a>
             <countdown :time="60 * 1000" :transform="transformSlotProps" v-slot="{ minutes, seconds }" @end="is_countdown= false" v-if="is_countdown">
               {{ minutes }}:{{ seconds }}
             </countdown>
-            <span v-else>01:00</span>
           </p>
           <button class="btn btn-lg btn-primary btn-block" :class="{'disabled verification-button-disabled': !code}" type="button" @click="doVerification">Verifikasi</button>
         </div>
@@ -57,6 +56,7 @@ export default {
     }
   },
   mounted() {
+    this.resendCode()
   },
   methods: {
     handleOnChange(value) {

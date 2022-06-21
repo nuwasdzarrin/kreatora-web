@@ -1,7 +1,7 @@
 <template>
   <nav class="navbar navbar-expand navbar-light bg-primary">
     <!-- Left navbar links -->
-    <a class="navbar-brand mr-auto" href="#">
+    <a class="navbar-brand mr-auto" href="/campaign">
       <img src="/assets_app/images/logo/icon-logo-kreatora-small.png" alt="logo-kreatora" class="header-logo-kreatora">
     </a>
     <ul class="navbar-nav left-nav">
@@ -90,12 +90,15 @@ export default {
 }
 </script>
 <style lang="css" scoped>
-.header-logo-kreatora {
-  margin-left: -12px;
+@media screen and (max-width: 390px) {
+  .header-logo-kreatora {
+    width: 45px;
+    height: auto;
+  }
 }
 @media screen and (max-width: 350px) {
   .header-logo-kreatora {
-    margin-left: -15px;
+    margin-left: -8px;
     width: 40px;
     height: auto;
   }
@@ -120,6 +123,26 @@ export default {
   border: none;
   background-color: inherit;
 }
+@media screen and (max-width: 450px) {
+  .left-nav{
+    min-width: 72%;
+    padding-left: 2px;
+    padding-right: 2px;
+  }
+  .input-search {
+    width: 190px;
+  }
+}
+@media screen and (max-width: 390px) {
+  .left-nav{
+    min-width: 68%;
+    padding-left: 2px;
+    padding-right: 2px;
+  }
+  .input-search {
+    width: 180px;
+  }
+}
 @media screen and (max-width: 330px) {
   .left-nav{
     min-width: 65%;
@@ -127,7 +150,7 @@ export default {
     padding-right: 2px;
   }
   .input-search {
-    width: 170px;
+    width: 160px;
   }
 }
 .input-search:focus {

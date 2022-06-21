@@ -3,7 +3,7 @@
   <div :class="categories.length ? 'col-8':'col-12'">
     <h5><strong>{{title}}</strong></h5>
   </div>
-  <div class="col-4 d-flex justify-content-end align-items-center" v-if="categories.length">
+  <div class="col-4 d-flex justify-content-end align-items-center" v-if="categories.length && !isSearch">
     <div class="campaign-list-dot mr-1" :class="{'dot-active': title === 'Semua'}">&nbsp;</div>
     <div class="campaign-list-dot mr-1" :class="{'dot-active': item.name === title}" v-for="(item, index) in categories" :key="index">&nbsp;</div>
     <a href="javascript:void(0)" @click="onClickBack" v-show="clickBack">Kecilkan</a>

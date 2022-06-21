@@ -204,11 +204,11 @@ class BackerUserController extends Controller
 
             // Payment record
             $client = new Client();
-            $amount = $amount + $request->tip;
+            $amountTip = $amount + $request->tip;
             $params = array(
                 'transaction_details' => array(
                     'order_id' => rand(10000,99999).$user->id,
-                    'gross_amount' => $amount,
+                    'gross_amount' => $amountTip,
                 )
             );
 
@@ -218,7 +218,7 @@ class BackerUserController extends Controller
 
             $codeServer = base64_encode(config('midtrans.server_key').":");
             // jika kurang dari Rp. 10.0000
-            if ( $amount < 10000 ) {
+            if ( $amountTip < 10000 ) {
                 return response()->json([
                     'message' => $this->message = array("Minimal donasi Rp. 10.000 ya!"),
                     'data' => new \stdClass()
@@ -250,7 +250,7 @@ class BackerUserController extends Controller
                     $backer_user->user_id = $user->id;
                     $backer_user->campaign_id = $request->campaign_id;
                     if ($request->reward_id) $backer_user->reward_id = $request->reward_id;
-                    $backer_user->amount = $amount; // amount from reward if available
+                    $backer_user->amount = $amountTip - ($request->tip ?? 0); // amount from reward if available
                     if ($request->tip) $backer_user->tip = $request->tip;
                     $backer_user->is_anonymous = $request->is_anonymous;
                     $backer_user->save();
@@ -339,12 +339,12 @@ class BackerUserController extends Controller
         ]);
         $detail = json_decode($res->getBody()->getContents());
         //check if order id valid or nah
-        if ($detail->status_code == 404) {
-            return response()->json([
-                'data' => new \stdClass(),
-                'message' => array('Mohon maaf, ID Order yang anda masukan salah!'),
-            ]);
-        }else {
+        if ($detail->status_code != 404) {
+//            return response()->json([
+//                'data' => new \stdClass(),
+//                'message' => array('Mohon maaf, ID Order yang anda masukan salah!'),
+//            ]);
+//        } else {
             //update status
             Payment::where('order_id', $order_id)
             ->limit(1)
@@ -353,7 +353,7 @@ class BackerUserController extends Controller
                 'metode' => $detail->payment_type,
                 'status' => $detail->transaction_status,
                 'transaction_time' => $detail->transaction_time,
-        ));
+            ));
         }
 
        //get data from payment table
@@ -376,7 +376,8 @@ class BackerUserController extends Controller
                 "campaign" => [
                     "title" => $data->campaign->title,
                     "pictures" => $data->campaign->pictures,
-                    "creator_name" => $data->campaign->creator_name
+                    "creator_name" => $data->campaign->creator_name,
+                    "slug" => $data->campaign->slug,
                 ],
                 "payment" => [
                     "order_id" => $data->payment ? $data->payment->order_id : null,

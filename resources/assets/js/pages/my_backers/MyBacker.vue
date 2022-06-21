@@ -15,7 +15,7 @@
               <div class="label-backer my-2">
                 Dukung&nbsp;&nbsp; -&nbsp;&nbsp;
                 <span class="label-status" :class="statusProcess(item.payment.status)">
-                  {{ (item.payment && item.payment.status) ? (item.payment.status != 'settlement' ? item.payment.status:'berhasil') : 'pending' }}
+                  {{ (item.payment && item.payment.status) ? (item.payment.status === 'settlement' ? 'berhasil' : item.payment.status) : 'expired' }}
                 </span>
               </div>
             </div>
@@ -66,9 +66,9 @@ export default {
       })
     },
     statusProcess(status) {
-      if (status == 'settlement') return 'text-primary'
-      else if (status == 'expire') return 'text-danger'
-      else return 'text-success'
+      if (status === 'settlement') return 'text-primary'
+      else if (status === 'pending') return 'text-success'
+      else return 'text-danger'
     }
   },
   mounted() {
