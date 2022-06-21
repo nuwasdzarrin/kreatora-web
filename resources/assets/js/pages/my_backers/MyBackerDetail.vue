@@ -11,7 +11,10 @@
           </div>
           <div class="col-8">
             <div class="title-campaign mb-1">{{detail.campaign ? detail.campaign.title : ''}}</div>
-            <div class="kreator-campaign">{{detail.campaign ? detail.campaign.creator_name : ''}} <i class="fas fa-certificate ml-1" style="color: #008FD7;"></i></div>
+            <div class="kreator-campaign">
+              {{detail.campaign ? detail.campaign.creator_name : ''}}
+              <img src="/assets_app/icons/icon-verified.png" style="width: 15px; height: auto;" />
+            </div>
           </div>
         </div>
         <table class="mb-4">
