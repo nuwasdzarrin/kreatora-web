@@ -4,6 +4,7 @@ namespace App;
 
 use Smartisan\Filters\Traits\Filterable;
 use Illuminate\Database\Eloquent\Model;
+use Throwable;
 
 /**
  * CampaignComment Model
@@ -73,6 +74,10 @@ class CampaignComment extends Model
     }
 
     public function getIsAnonymousAttribute() {
-        return $this->payment->backer_user->is_anonymous;
+        try {
+            return $this->payment->backer_user->is_anonymous;
+        } catch (Throwable $e) {
+            return 0;
+        }
     }
 }
