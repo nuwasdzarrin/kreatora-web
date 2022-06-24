@@ -14,6 +14,7 @@
         "atnic/laravel-generator": "^0.10.4",
         "fideloper/proxy": "~3.3",
         "guzzlehttp/guzzle": "^6.3",
+        "invisnik/laravel-steam-auth": "v3.5.0",
         "kavist/rajaongkir": "^1.1",
         "kawankoding/laravel-fcm": "^0.2.0",
         "laravel/framework": "5.5.*",
