@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="google-signin-client_id" content="282529135459-s4uf8hajjhjfmmrqs179usca70o3csgf.apps.googleusercontent.com">
     <title>Google Login Asuuu</title>
 </head>
 <body>
