@@ -114,10 +114,7 @@ export default {
     },
     async googleSignIn(response) {
       try {
-        if (!response) {
-          return null;
-        }
-        console.log("response google: ", response)
+        if (!response) return null
         await this.$store.dispatch("loginGoogle", {
           id_token: response.credential,
         }).then((res) => {
@@ -204,7 +201,7 @@ export default {
   border-radius: 50%;
   border: unset;
   background-color: white;
-  box-shadow: 1px 1px 1px rgba(0, 0, 0, 0.15), -1px -1px 0 #F8F8F8;
+  /*box-shadow: 1px 1px 1px rgba(0, 0, 0, 0.15), -1px -1px 0 #F8F8F8;*/
   cursor: pointer;
 }
 </style>
