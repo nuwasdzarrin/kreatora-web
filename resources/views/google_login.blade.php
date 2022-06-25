@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="google-signin-client_id" content="282529135459-s4uf8hajjhjfmmrqs179usca70o3csgf.apps.googleusercontent.com">
+    <meta name="google-signin-client_id" content="879549587031-ohodmoqbqe3lu01jng08j6v3dj09rb09.apps.googleusercontent.com">
     <title>Google Login Asuuu</title>
 </head>
 <body>
@@ -25,7 +25,7 @@
     }
     window.onload = function () {
         google.accounts.id.initialize({
-            client_id: "282529135459-s4uf8hajjhjfmmrqs179usca70o3csgf.apps.googleusercontent.com",
+            client_id: "879549587031-ohodmoqbqe3lu01jng08j6v3dj09rb09.apps.googleusercontent.com",
             callback: handleCredentialResponse
         });
         google.accounts.id.renderButton(
