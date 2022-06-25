@@ -5,7 +5,7 @@
       <div class="mt-5">
         <div class="d-flex justify-content-between mb-3">
           <div class="d-flex">
-            <img :src="(profile && profile.avatar) ? api.storage + profile.avatar : api.no_image"
+            <img :src="(profile && profile.image) ? profile.image : api.no_image"
                  alt="avatar image" class="avatar-image"
             >
             <div class="ml-3">
