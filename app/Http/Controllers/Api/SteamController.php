@@ -65,7 +65,6 @@ class SteamController extends Controller
             $apiKey = config('steam-auth.api_key');
             $urlSteam = 'https://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key='.$apiKey.'&steamids='.$idSteam;
             
-        
             $client = new Client();
             $res = $client->request('GET',$urlSteam, [
                 'headers' => [
@@ -75,6 +74,7 @@ class SteamController extends Controller
             ],
             ]);
             $response = json_decode($res->getBody()->getContents());
+            
             $players = $response->response->players[0];
             
            
@@ -99,7 +99,7 @@ class SteamController extends Controller
                 //add data steam on db
                 $user = new User();
                 $user->name = $players->personaname;
-                $user->email = 'default@email.com';
+                //$user->email = '';
                 $user->avatar = $players->avatar;
                 $user->password = bcrypt($steamid);
                 $user->email_verified_at = now();
