@@ -205,7 +205,6 @@ export default {
                 .messaging()
                 .getToken()
                 .then((token) => {
-                  window.console.log("token ", token);
                   Cookie.set('fcm_token', token, { expires: '1h' })
                   if (this.isLoggedIn) {
                     Apis.auth.refresh_fcm_token({fcm_token: token})

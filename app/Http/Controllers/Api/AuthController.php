@@ -73,12 +73,59 @@ class AuthController extends Controller
             return response()->json($data, $this->code);
         } else {
             $arrayMsg = array('Password dan emailmu salah!', 'Tolong cek data anda dengan teliti.');
-           
-
             return response()->json([
                 'message' => $arrayMsg,
                 'redirect_to' => 'login'
             ], 401);
+        }
+    }
+
+    public function google_login(Request $request) {
+        $client = new \Google_Client(['client_id' => config('service.google.client_id')]);  // Specify the CLIENT_ID of the app that accesses the backend
+        $response = $client->verifyIdToken($request->id_token);
+//        dd($response);
+        if (!$response) {
+            return response()->json([
+                'message' => array('Login via google gagal'),
+                'redirect_to' => 'login'
+            ], 401);
+        }
+        $google_id = $response["jti"];
+        $gmail = $response["email"];
+        $name = $response["name"];
+        $images = $response["picture"];
+        $user = User::query()->where('email', $gmail)->first();
+        if($user != null){
+            $msg = array('Selamat! kamu telah berhasil login!');
+            $data['token'] = $user->createToken('nApp')->accessToken;
+            $user->fcm_token = $request->fcm_token;
+            $user->save();
+
+            $data['message'] = $msg;
+            $data['data'] = $user;
+            $data['redirect_to'] = 'homepage';
+            $this->code = 200;
+            return response()->json($data, $this->code);
+        } else {
+            $user = new User();
+            $user->name = $name;
+            $user->email = $gmail;
+            $user->avatar = $images;
+            $user->password = bcrypt($google_id);
+            $user->email_verified_at = now();
+            $user->google_id = $google_id;
+            $user->fcm_token = $request->fcm_token;
+            $user->save();
+
+            $msg = array('Selamat! kamu telah berhasil login!');
+            $data['token'] = $user->createToken('nApp')->accessToken;
+
+            $data['message'] = $msg;
+            $data['data'] = $user;
+            $data['redirect_to'] = 'homepage';
+            $this->code = 200;
+
+            return response()->json($data, $this->code);
         }
     }
 
@@ -101,7 +148,7 @@ class AuthController extends Controller
         return response()->json([
             'message' => $msg,
             'data' => $user,
-            
+
         ], 200);
     }
 
@@ -175,7 +222,7 @@ class AuthController extends Controller
             'message' => $this->message,
             'data' => $user,
             'redirect_to' => 'verification',
-            
+
         ], 200);
     }
 
@@ -194,7 +241,7 @@ class AuthController extends Controller
             return response()->json([
                 'message' => $validator->errors(),
                 'data' => [],
-                
+
             ], 401);
         }
         $auth = auth()->user();
@@ -225,7 +272,7 @@ class AuthController extends Controller
         $user->ktp = $request->ktp;
         $user->save();
         $msg = array('Selamat akun anda telah manjadi kreator!');
-       
+
         return response()->json([
             'message' => $msg,
             'data' => $user,
@@ -242,12 +289,12 @@ class AuthController extends Controller
             return response()->json([
                 'message' => $validator->errors(),
                 'data' => [],
-               
+
             ], 401);
         }
         $data = User::where('email', $request->email)->first();
 
-        $msg = array('Mohon maaf email tidak valid, silahkan mencoba dengan email yang lain!'); 
+        $msg = array('Mohon maaf email tidak valid, silahkan mencoba dengan email yang lain!');
         $this->code = 404;
 
         $code = rand(1000,9999);
@@ -263,7 +310,7 @@ class AuthController extends Controller
         return response()->json([
             'message' => $this->message,
             'data' => [],
-            
+
         ], $this->code);
     }
 
@@ -278,7 +325,7 @@ class AuthController extends Controller
                 'data' => [],
             ], 401);
         }
-        
+
         $data = User::query()->where([
             ['remember_token', $request->code],
             ['email', $request->email],
@@ -379,7 +426,7 @@ class AuthController extends Controller
                 'data' => [],
             ], $this->code);
         }
-        
+
     }
 
     public function profile()
@@ -391,7 +438,7 @@ class AuthController extends Controller
                 'message' => $msg,
                 'data' => $user,
             ], $this->code);
-           
+
         } else {
             $msg = array('Mohon maaf anda belum login!');
             return response()->json([
@@ -399,6 +446,6 @@ class AuthController extends Controller
                 'data' => [],
             ], $this->code);
         }
-        
+
     }
 }

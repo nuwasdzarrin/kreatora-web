@@ -14,10 +14,12 @@
     <title>Kreatora - Support kreatifitas indonesia</title>
     <meta content="" name="description">
     <meta content="" name="keywords">
+    <meta name="google-signin-client_id" content="282529135459-s4uf8hajjhjfmmrqs179usca70o3csgf.apps.googleusercontent.com">
 
     <!-- Favicons -->
     <link href="/assets_app/images/logo/icon-logo-kreatora-small.png" rel="icon">
     <link href="/assets_app/images/logo/icon-logo-kreatora-small.png" rel="apple-touch-icon">
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
 </head>
 <body class="hold-transition sidebar-mini">
     <div id="app">

@@ -25,8 +25,11 @@
           <button class="btn btn-lg btn-primary btn-block" type="button" @click="doLogin">Masuk</button>
           <p class="mt-5">Atau lebih cepat ...</p>
           <div class="d-flex justify-content-center">
-            <div class="auth-social ml-2" @click="googleSignIn"><i class="fab fa-google text-danger" style="font-size: 22px;"></i></div>
-            <div class="auth-social ml-2"><i class="fab fa-facebook-f" style="color: #0024D7; font-size: 22px;"></i></div>
+            <div class="auth-social ml-2">
+              <div id="googleLoginDiv"></div>
+            </div>
+            <div id="yesAm"></div>
+<!--            <div class="auth-social ml-2"><i class="fab fa-facebook-f" style="color: #0024D7; font-size: 22px;"></i></div>-->
           </div>
         </div>
 <!--        <div v-else class="form-signin">-->
@@ -56,8 +59,7 @@
 
 <script>
 import Cookie from "vue-cookie";
-import config from "../../config";
-import Apis from "../../apis";
+import config from "../../config/index";
 export default {
   data() {
     return {
@@ -65,6 +67,7 @@ export default {
       isRegisterProcess: false,
       isRegisterAlert: false,
       isPassword: true,
+      isInitGoogle: null,
       email: "",
       password: "",
       registerMessage: "",
@@ -74,12 +77,18 @@ export default {
         password: '',
         confirm_password:''
       },
-      googleParams: {
-        client_id: config.google_client_id,
-      }
     }
   },
   mounted() {
+    google.accounts.id.initialize({
+      client_id: config.google.client_id,
+      callback: this.googleSignIn
+    });
+    google.accounts.id.renderButton(
+        document.getElementById("googleLoginDiv"),
+        { theme: "outline", size: "large", type: "icon" }  // customization attributes
+    );
+    google.accounts.id.prompt();
   },
   methods: {
     async doLogin() {
@@ -103,14 +112,11 @@ export default {
         }
       });
     },
-    async googleSignIn() {
+    async googleSignIn(response) {
       try {
-        const googleUser = await this.$gAuth.signIn();
-        if (!googleUser) {
-          return null;
-        }
+        if (!response) return null
         await this.$store.dispatch("loginGoogle", {
-          access_token: googleUser.getAuthResponse().access_token,
+          id_token: response.credential,
         }).then((res) => {
           if (res.status === 401) {
             res.data.message.forEach(element => {
@@ -195,7 +201,7 @@ export default {
   border-radius: 50%;
   border: unset;
   background-color: white;
-  box-shadow: 1px 1px 1px rgba(0, 0, 0, 0.15), -1px -1px 0 #F8F8F8;
+  /*box-shadow: 1px 1px 1px rgba(0, 0, 0, 0.15), -1px -1px 0 #F8F8F8;*/
   cursor: pointer;
 }
 </style>

@@ -70,3 +70,7 @@ Route::get('/campaign/{any?}', function () {
 
 Route::get('google/redirect', 'Api\GoogleController@redirect');
 Route::get('google/callback', 'Api\GoogleController@handleCallback');
+Route::get('google', function (){
+    return view('google_login');
+});
+

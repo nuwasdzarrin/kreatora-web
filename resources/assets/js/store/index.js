@@ -78,7 +78,7 @@ const index = new Vuex.Store({
             commit('LOGIN');
             return new Promise(resolve => {
                 Api.auth.google({
-                    access_token: payload.access_token,
+                    id_token: payload.id_token,
                     fcm_token: Cookie.get('fcm_token')
                 }).then(function (response) {
                     Cookie.set('token', response.data.token, { expires: '6h' });
