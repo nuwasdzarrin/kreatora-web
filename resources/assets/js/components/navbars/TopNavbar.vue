@@ -15,7 +15,7 @@
     <ul class="navbar-nav ml-auto">
       <!--   <notification-list />-->
       <li class="nav-item">
-        <img :src="(profile && profile.avatar) ? api.storage + profile.avatar : api.no_image"
+        <img :src="(profile && profile.image) ? profile.image : api.no_image"
              alt="avatar" class="nav-link header-account" style="padding: 0;"
              @click="$router.push({name: 'DashboardAccount'})"
              v-if="isLoggedIn"

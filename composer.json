@@ -13,6 +13,7 @@
         "ext-json": "*",
         "atnic/laravel-generator": "^0.10.4",
         "fideloper/proxy": "~3.3",
+        "google/apiclient": "^2.12",
         "guzzlehttp/guzzle": "^6.3",
         "kavist/rajaongkir": "^1.1",
         "kawankoding/laravel-fcm": "^0.2.0",

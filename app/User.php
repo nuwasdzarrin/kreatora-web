@@ -8,6 +8,7 @@ use Atnic\LaravelGenerator\Traits\SetterGetterExtendedAttribute;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Support\Facades\URL;
 use Laravel\Passport\HasApiTokens;
 use Smartisan\Filters\Traits\Filterable;
 
@@ -45,7 +46,7 @@ class User extends \TCG\Voyager\Models\User
     protected $dates = ['deleted_at'];
 
     protected $appends = [
-        'role_name'
+        'role_name','image'
     ];
 
     public function campaigns()
@@ -80,5 +81,11 @@ class User extends \TCG\Voyager\Models\User
     public function getRoleNameAttribute()
     {
         return $this->role ? $this->role->display_name : null;
+    }
+
+    public function getImageAttribute()
+    {
+        if (!$this->avatar) return null;
+        return str_contains($this->avatar, 'https') ? $this->avatar : URL::to('/assets/images/'.$this->avatar);
     }
 }
