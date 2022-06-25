@@ -28,6 +28,7 @@
             <div class="auth-social ml-2">
               <div id="googleLoginDiv"></div>
             </div>
+            <div id="yesAm"></div>
 <!--            <div class="auth-social ml-2"><i class="fab fa-facebook-f" style="color: #0024D7; font-size: 22px;"></i></div>-->
           </div>
         </div>
@@ -78,7 +79,7 @@ export default {
       },
     }
   },
-  created() {
+  mounted() {
     google.accounts.id.initialize({
       client_id: config.google.client_id,
       callback: this.googleSignIn
