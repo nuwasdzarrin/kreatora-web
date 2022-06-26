@@ -4,32 +4,40 @@
       <router-link :to="{ name: 'HomePage'}">
         <div class="mb-3"><img src="/assets_app/images/logo/icon-logo-kreatora.png" alt="Kreatora Logo" style="width: 60px; height: auto;"></div>
         <img src="/assets_app/images/logo/kreatora-text.png" alt="Kreatora text">
-        <!-- <div class="auth-logo-title">KREATORA</div> -->
       </router-link>
       <div class="card-body">
         <div class="form-signin">
-          <div class="auth-section-title">Daftar</div>
-          <div class="d-flex justify-content-around mb-3 auth-tab">
+          <div class="auth-section-title">Daftar {{profile && profile.social==='steam' ? 'dengan Steam' : ''}}</div>
+          <div class="text-left" v-if="profile && profile.social==='steam'">
+            <p>Lengkapi data dibawah ini untuk menggunakan akun anda</p>
+          </div>
+          <div class="d-flex justify-content-around mb-3 auth-tab" v-else>
             <div class="auth-tab-item auth-tab-item-active">Email</div>
             <div class="auth-tab-item">Nomor Ponsel</div>
           </div>
           <div class="form-group">
-            <input type="text" v-model="register.name" class="form-control auth-input" placeholder="Nama" required>
+            <input type="text" v-model="register.name" class="form-control auth-input" placeholder="Nama" required
+                   :disabled="profile && profile.social==='steam'"
+            >
           </div>
           <div class="form-group">
             <input type="email" v-model="register.email" class="form-control auth-input" placeholder="Email" required>
           </div>
           <div class="form-group" style="position: relative">
-            <input :type="isPassword ? 'password':'text'" v-model="register.password" class="form-control auth-input" placeholder="Password" required>
+            <input :type="isPassword ? 'password':'text'" v-model="register.password" class="form-control auth-input"
+                   placeholder="Password" required
+            >
             <i class="fa fa-eye auth-eye" v-if="isPassword" @click="isPassword = false"></i>
             <i class="fa fa-eye-slash auth-eye" v-else @click="isPassword = true"></i>
           </div>
           <div class="form-group" style="position: relative">
-            <input :type="isPasswordConfirmation ? 'password':'text'" v-model="register.password_confirmation" class="form-control auth-input" placeholder="Konfirmasi Password" required @keyup.enter="doRegister">
+            <input :type="isPasswordConfirmation ? 'password':'text'" v-model="register.password_confirmation"
+                   class="form-control auth-input" placeholder="Konfirmasi Password" required @keyup.enter="doRegister"
+            >
             <i class="fa fa-eye auth-eye" v-if="isPasswordConfirmation" @click="isPasswordConfirmation = false"></i>
             <i class="fa fa-eye-slash auth-eye" v-else @click="isPasswordConfirmation = true"></i>
           </div>
-          <p class="my-4">Sudah punya akun? <router-link :to="{ name: 'Login' }">Login</router-link></p>
+          <p class="my-4" v-if="!profile">Sudah punya akun? <router-link :to="{ name: 'Login' }">Login</router-link></p>
           <button class="btn btn-lg btn-primary btn-block" type="button" @click="doRegister">Daftar</button>
         </div>
       </div>
@@ -60,6 +68,18 @@ export default {
     }
   },
   mounted() {
+    if (this.profile && this.profile.social === 'steam') {
+      this.register.name = this.profile.name
+    }
+  },
+  computed: {
+    profile() {
+      if (Object.keys(this.$store.getters.authUser).length)
+        return this.$store.getters.authUser
+      else if (Cookie.get('user'))
+        return JSON.parse(Cookie.get('user'));
+      else return {social: null}
+    }
   },
   methods: {
     doRegister() {

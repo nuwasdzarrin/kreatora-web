@@ -40,13 +40,13 @@ let routes = [
                 path: '/campaign/register',
                 name: "Register",
                 component: Register,
-                meta: {requiresAuth: false, is_guest: true},
+                meta: {requiresAuth: false},
             },
             {
                 path: '/campaign/verification',
                 name: "Verification",
                 component: Verification,
-                meta: {requiresAuth: false, is_guest: true},
+                meta: {requiresAuth: false},
             },
             {
                 path: '/campaign/:slug',

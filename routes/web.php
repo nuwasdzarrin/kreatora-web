@@ -68,8 +68,9 @@ Route::get('/campaign/{any?}', function () {
 })->where('any','.*');
 
 
-Route::get('google/redirect', 'Api\GoogleController@redirect');
-Route::get('google/callback', 'Api\GoogleController@handleCallback');
+
+Route::get('auth/steam', 'Api\SteamController@redirectToSteam')->name('auth.steam');
+Route::get('auth/steam/handle', 'Api\SteamController@handle')->name('auth.steam.handle');
 Route::get('google', function (){
     return view('google_login');
 });

@@ -82,6 +82,7 @@ Vue.component('my-vue-select', require('./components/MyVueSelect'));
 Vue.component('my-date-picker', require('./components/MyDatePicker'));
 
 Vue.component('layout', require('./layouts/Layout.vue'));
+Vue.component('steam', require('./layouts/Steam.vue'));
 Vue.component('home', require('./layouts/Home.vue'));
 Vue.component('TopNavbar', require('./components/navbars/TopNavbar.vue'));
 Vue.component('NoTopNavbar', require('./components/navbars/NoTopNavbar.vue'));
