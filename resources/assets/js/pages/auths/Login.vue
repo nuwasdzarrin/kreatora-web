@@ -29,7 +29,7 @@
               <div id="googleLoginDiv"></div>
             </div>
             <a class="auth-social auth-steam ml-2" href="/auth/steam">
-              <img src="/assets_app/images/logo/logo-steam.png" style="width: 40px; height: auto">
+              <img src="/assets_app/images/logo/logo-steam.png" style="width: auto; height: 37px">
             </a>
           </div>
         </div>
@@ -174,8 +174,6 @@ export default {
   cursor: pointer;
 }
 .auth-social {
-  width: 50px;
-  height: 50px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -183,7 +181,9 @@ export default {
   cursor: pointer;
 }
 .auth-steam {
-  padding: 7px;
+  width: 42px;
+  height: 42px;
+  padding: 5px;
   border-radius: 10px;
   box-shadow: 1px 1px 1px rgba(0, 0, 0, 0.15), -1px -1px 0 #F8F8F8;
 }
