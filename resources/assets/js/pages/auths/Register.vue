@@ -74,32 +74,47 @@ export default {
   },
   computed: {
     profile() {
-      if (Object.keys(this.$store.getters.authUser).length)
-        return this.$store.getters.authUser
-      else if (Cookie.get('user'))
-        return JSON.parse(Cookie.get('user'));
-      else return {social: null}
+      return this.$store.getters.authUser
     }
   },
   methods: {
     doRegister() {
       this.$set(this, 'is_loading', true)
-      Api.auth.register(this.register).then((res)=>{
-        Cookie.set('verification_email', res.data.data.email, { expires: '1h' });
-        this.$set(this, 'is_loading', false)
-        this.$toastr.s(res.data.message);
-        if (res.data.redirect_to === 'login') return this.$router.push({ name: 'Login'});
-        return this.$router.push({ name: 'Verification'});
-        // this.clearForm();
-      }).catch((err)=>{
-        this.$set(this, 'is_loading', false)
-        if (err && err.response.data && err.response.data.message) {
-          let messages = Object.values(err.response.data.message)
-          messages.forEach((item) => {
-            this.$toastr.e(item);
-          })
-        }
-      });
+      if (this.profile && this.profile.social === 'steam') {
+        Api.auth.steam(this.profile.social_id,this.register).then((res)=>{
+          Cookie.set('verification_email', res.data.data.email, { expires: '1h' });
+          this.$set(this, 'is_loading', false)
+          this.$toastr.s(res.data.message);
+          if (res.data.redirect_to === 'login') return this.$router.push({ name: 'Login'});
+          return this.$router.push({ name: 'Verification'});
+          // this.clearForm();
+        }).catch((err)=>{
+          this.$set(this, 'is_loading', false)
+          if (err && err.response.data && err.response.data.message) {
+            let messages = Object.values(err.response.data.message)
+            messages.forEach((item) => {
+              this.$toastr.e(item);
+            })
+          }
+        });
+      } else {
+        Api.auth.register(this.register).then((res)=>{
+          Cookie.set('verification_email', res.data.data.email, { expires: '1h' });
+          this.$set(this, 'is_loading', false)
+          this.$toastr.s(res.data.message);
+          if (res.data.redirect_to === 'login') return this.$router.push({ name: 'Login'});
+          return this.$router.push({ name: 'Verification'});
+          // this.clearForm();
+        }).catch((err)=>{
+          this.$set(this, 'is_loading', false)
+          if (err && err.response.data && err.response.data.message) {
+            let messages = Object.values(err.response.data.message)
+            messages.forEach((item) => {
+              this.$toastr.e(item);
+            })
+          }
+        });
+      }
     },
     clearForm() {
       this.$set(this.register,'name','');

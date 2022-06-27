@@ -56,7 +56,7 @@ export default {
     }
   },
   mounted() {
-    this.resendCode()
+    this.is_countdown = true
   },
   methods: {
     handleOnChange(value) {
@@ -70,7 +70,9 @@ export default {
       this.$set(this,'is_loading',true);
       Api.auth.email_verification({code: this.code, email: this.verificationEmail}).then((res)=>{
         this.$set(this, 'is_loading', false)
-        this.$toastr.s(res.data.message + '. Silahkan login kembali');
+        res.data.message.forEach(element => {
+          this.$toastr.s(element+ ((this.profile && this.profile.social === 'steam') ? '':'. Silahkan login kembali'));
+        })
         this.$router.push({ name: 'Login'});
       }).catch((err)=>{
         this.$set(this, 'is_loading', false)
@@ -107,8 +109,11 @@ export default {
   computed: {
     verificationEmail() {
       return Cookie.get('verification_email')
+    },
+    profile() {
+      return this.$store.getters.authUser
     }
-  }
+  },
 }
 </script>
 

@@ -6,11 +6,15 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use Invisnik\LaravelSteamAuth\SteamAuth;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\EmailCodeVerification;
 use Illuminate\Support\Facades\Auth;
 use GuzzleHttp\Client;
 use App\User;
 use Illuminate\Http\Request;
-use Invisnik\LaravelSteamAuth\SteamInfo;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Validator;
+use Symfony\Component\HttpKernel\Exception\HttpException;
 
 class SteamController extends Controller
 {
@@ -91,15 +95,14 @@ class SteamController extends Controller
             $this->code = 200;
             return view('auth.steam', $data);
 
-        }else {
-
+        } else {
             //add data steam on db
             $user = new User();
             $user->name = $players->personaname;
-            //$user->email = '';
+            $user->email = '';
             $user->avatar = $players->avatar;
             $user->password = bcrypt($steamid);
-            $user->email_verified_at = now();
+            $user->email_verified_at = null;
             $user->social_id = $steamid;
             $user->social = 'steam';
             $user->save();
@@ -113,30 +116,63 @@ class SteamController extends Controller
             $this->code = 200;
 
             return view('auth.steam', $data);
-
         }
     }
-    /**
-     * Getting user by info or created if not exists
-     *
-     * @param $info
-     * @return User
-     */
-    protected function findOrNewUser($info)
+
+    public function register(Request $request, $id)
     {
-        $user = User::where('social_id', $info->steamID64)->first();
-
-        if (!is_null($user)) {
-            return $user;
+        $validator = Validator::make($request->all(), [
+            'email' => 'required|email',
+            'password' => 'required|string|min:6',
+            'password_confirmation' => 'required|same:password',
+        ]);
+        if ($validator->fails()) {
+            return response()->json([
+                'redirect_to' => 'register',
+                'message' => $validator->errors()
+            ], 401);
+        }
+//        check if user exist
+        $user = User::query()->where('email', $request->email)->first();
+        if ($user) {
+            $redirect = '';
+            if (!$user->email_verified_at) {
+                $msg = array('Mohon maaf email yang anda masukan telah terdaftar. Silahkan cek di email anda agar dapat verifikasi.');
+                $this->message = $msg;
+                $redirect = 'verification';
+            } else {
+                $msg = array('Selamat email telah terdaftar dan terverifikasi! silahkan login kembali');
+                $this->message = $msg;
+                $redirect = 'login';
+            }
+            return response()->json([
+                'data' => $user,
+                'redirect_to' => $redirect,
+                'message' => $this->message
+            ], 200);
         }
 
-        return User::create([
-            'email' => 'x',
-            'name' => $info->personaname,
-            'avatar' => $info->avatarfull,
-            'social_id' => $info->steamID64
-        ]);
+        $code = rand(1000,9999);
+        try {
+            DB::beginTransaction();
+            Mail::to($request->email)->send(new EmailCodeVerification($code));
+            $user = User::query()->where('social_id', $id)->first();
+            $user->email = $request['email'];
+            $user->password = bcrypt($request['password']);
+            $user->remember_token = $code;
+            $user->save();
+
+            $this->message = array("Selamat anda berhasil mendaftar! Silahkan cek email untuk verifikasi.");
+            DB::commit();
+        } catch (\Exception $exception) {
+            DB::rollBack();
+            throw new HttpException(500, $exception->getMessage(), $exception);
+        }
+
+        return response()->json([
+            'message' => $this->message,
+            'data' => $user,
+            'redirect_to' => 'verification',
+        ], 200);
     }
-
-
 }

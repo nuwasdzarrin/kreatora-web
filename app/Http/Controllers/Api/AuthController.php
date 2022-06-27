@@ -38,6 +38,7 @@ class AuthController extends Controller
 
     public function login(Request $request)
     {
+       
         $validator = Validator::make($request->all(), [
             'email' => 'required|email',
             'password' => 'required|string',
@@ -178,7 +179,7 @@ class AuthController extends Controller
         if ($user) {
             $redirect = '';
             if (!$user->email_verified_at) {
-                $msg = array('Mohon maaf email yang anda masukan telah terdaftar. Silahkan cek di email anda agar dapat memverifikasi.');
+                $msg = array('Mohon maaf email yang anda masukan telah terdaftar. Silahkan cek di email anda agar dapat verifikasi.');
                 $this->message = $msg;
                 $redirect = 'verification';
             } else {
@@ -195,7 +196,7 @@ class AuthController extends Controller
 
 
         $code = rand(1000,9999);
-       // Mail::to($request->email)->send(new EmailCodeVerification($code));
+        Mail::to($request->email)->send(new EmailCodeVerification($code));
 
         try {
             DB::beginTransaction();
@@ -212,6 +213,7 @@ class AuthController extends Controller
             $wallet->save();
 
             $this->message = array("Selamat anda berhasil mendaftar! Silahkan cek email untuk verifikasi.");
+            
             DB::commit();
         } catch (\Exception $exception) {
             DB::rollBack();
