@@ -26,6 +26,9 @@ const api = {
         google: (data) => {
             return Axios.post(Path.auth.google, data)
         },
+        steam: (id, data) => {
+            return Axios.put(Path.auth.steam.replace('{id}', id), data)
+        },
         resend_code: (data) => {
             return Axios.post(Path.auth.resend_code, data);
         },

@@ -23,29 +23,16 @@
           </div>
           <p class="my-4">Belum punya akun? <router-link :to="{ name: 'Register' }">Daftar</router-link></p>
           <button class="btn btn-lg btn-primary btn-block" type="button" @click="doLogin">Masuk</button>
-          <p class="mt-5">Atau lebih cepat ...</p>
+          <p class="mt-5">Atau masuk dengan</p>
           <div class="d-flex justify-content-center">
             <div class="auth-social ml-2">
               <div id="googleLoginDiv"></div>
             </div>
-            <div id="yesAm"></div>
-<!--            <div class="auth-social ml-2"><i class="fab fa-facebook-f" style="color: #0024D7; font-size: 22px;"></i></div>-->
+            <a class="auth-social auth-steam ml-2" href="/auth/steam">
+              <img src="/assets_app/images/logo/logo-steam.png" style="width: auto; height: 37px">
+            </a>
           </div>
         </div>
-<!--        <div v-else class="form-signin">-->
-<!--          <p>Nice! Sekarang silakan masukkan-->
-<!--            password akun anda</p>-->
-<!--          <div v-if="isError" class="alert alert-danger">-->
-<!--            <strong>Error!</strong> {{messages}}-->
-<!--          </div>-->
-<!--          <div v-if="isRegisterAlert" class="alert alert-success">-->
-<!--            <strong>Berhasil!</strong> {{registerMessage}}-->
-<!--          </div>-->
-<!--          <div class="form-group mb-5">-->
-<!--            <input type="password" v-model="password" class="form-control" placeholder="Masukkan password anda" required @keyup.enter="login">-->
-<!--          </div>-->
-<!--          <button class="btn btn-lg btn-primary btn-block" type="button" :disabled="isPending" @click="login"><i v-if="isPending" class="fab fa-login fa-refresh fa-spin"></i>MASUK</button>-->
-<!--        </div>-->
       </div>
     </div>
     <loading
@@ -128,12 +115,6 @@ export default {
             this.$router.push({ name: 'HomePage'});
           }
         });
-        // console.log("isAuthorized: ", this.$gAuth.isAuthorized);
-        // console.log("googleUser: ", googleUser);
-        // console.log("getId: ", googleUser.getId());
-        // console.log("getBasicProfile: ", googleUser.getBasicProfile());
-        // console.log("getAuthResponse: ", googleUser.getAuthResponse());
-        // console.log("Access Token: ", googleUser.getAuthResponse().access_token);
       } catch (error) {
         console.error(error);
         return null;
@@ -193,15 +174,17 @@ export default {
   cursor: pointer;
 }
 .auth-social {
-  width: 50px;
-  height: 50px;
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: 50%;
-  border: unset;
   background-color: white;
-  /*box-shadow: 1px 1px 1px rgba(0, 0, 0, 0.15), -1px -1px 0 #F8F8F8;*/
   cursor: pointer;
+}
+.auth-steam {
+  width: 42px;
+  height: 42px;
+  padding: 5px;
+  border-radius: 10px;
+  box-shadow: 1px 1px 1px rgba(0, 0, 0, 0.15), -1px -1px 0 #F8F8F8;
 }
 </style>

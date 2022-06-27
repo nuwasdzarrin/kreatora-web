@@ -9,9 +9,6 @@
 <script>
 import axios from 'axios';
 import Cookie from 'vue-cookie';
-// import firebase from "firebase/app";
-// import "firebase/messaging";
-// import Apis from "../apis";
 export default {
   name: 'Home',
   computed: {

@@ -10,6 +10,7 @@ const path = {
         register: '/api/register',
         facebook: '/auth/',
         google: '/api/auth/google',
+        steam: '/api/auth/steam/register/{id}',
         email_verification: '/api/email_verification',
         resend_code: '/api/email_code',
         refresh_fcm_token: '/api/refresh_fcm_token',

@@ -1,6 +1,5 @@
 import Vuex from 'vuex';
 import Vue from 'vue';
-import jwt_decode from 'jwt-decode';
 import Api from '../apis';
 import Cookie from 'vue-cookie';
 
@@ -99,11 +98,7 @@ const index = new Vuex.Store({
         },
         logout({ commit }) {
             Cookie.delete('token');
-            Cookie.delete('myProfile');
-            Cookie.delete('companySelected');
-            // localStorage.removeItem("token");
-            // localStorage.removeItem("myProfile");
-            // localStorage.removeItem("companySelected");
+            Cookie.delete('user');
             commit('LOGOUT');
         },
         success({ commit },message) {
@@ -152,7 +147,11 @@ const index = new Vuex.Store({
             return state.notifications;
         },
         authUser(state){
-            return state.user
+            if (Object.keys(state.user).length)
+                return state.user
+            else if (Cookie.get('user'))
+                return JSON.parse(Cookie.get('user'));
+            else return null
         }
     }
 });

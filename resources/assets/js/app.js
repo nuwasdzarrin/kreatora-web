@@ -82,11 +82,12 @@ Vue.component('my-vue-select', require('./components/MyVueSelect'));
 Vue.component('my-date-picker', require('./components/MyDatePicker'));
 
 Vue.component('layout', require('./layouts/Layout.vue'));
+Vue.component('steam', require('./layouts/Steam.vue'));
 Vue.component('home', require('./layouts/Home.vue'));
 Vue.component('TopNavbar', require('./components/navbars/TopNavbar.vue'));
+Vue.component('TopNavbarBlock', require('./components/navbars/TopNavbarBlock.vue'));
 Vue.component('NoTopNavbar', require('./components/navbars/NoTopNavbar.vue'));
 Vue.component('BottomNavbar', require('./components/navbars/BottomNavbar.vue'));
-Vue.component('login', require('./pages/auths/Login.vue'));
 Vue.component('notification-list', require('./components/NotificationList.vue'));
 Vue.component('notification', require('./components/Notification.vue'));
 Vue.component('pagination', require('./components/Pagination.vue'));

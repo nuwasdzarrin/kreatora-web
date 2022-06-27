@@ -50,6 +50,9 @@ Route::get('run_storage', function () {
 Route::get('/', function () {
     return view('homepage');
 });
+Route::get('/term_of_use', function () {
+    return view('term_of_use');
+});
 
 
 Route::group(['prefix' => 'admin'], function () {
@@ -68,8 +71,9 @@ Route::get('/campaign/{any?}', function () {
 })->where('any','.*');
 
 
-Route::get('google/redirect', 'Api\GoogleController@redirect');
-Route::get('google/callback', 'Api\GoogleController@handleCallback');
+
+Route::get('auth/steam', 'Api\SteamController@redirectToSteam')->name('auth.steam');
+Route::get('auth/steam/handle', 'Api\SteamController@handle')->name('auth.steam.handle');
 Route::get('google', function (){
     return view('google_login');
 });
