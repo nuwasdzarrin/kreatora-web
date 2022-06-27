@@ -20,5 +20,5 @@ return [
     /*
      * Is using https ?
      */
-    'https' => false,
+    'https' => true,
 ];
