@@ -50,6 +50,9 @@ Route::get('run_storage', function () {
 Route::get('/', function () {
     return view('homepage');
 });
+Route::get('/term_of_use', function () {
+    return view('term_of_use');
+});
 
 
 Route::group(['prefix' => 'admin'], function () {

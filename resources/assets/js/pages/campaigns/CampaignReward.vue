@@ -1,13 +1,6 @@
 <template>
   <div style="height: 100vh; position: relative;">
-    <div class="container bg-white" style="box-shadow: 0 2px 2px rgba(0, 0, 0, 0.15);">
-      <div class="d-flex align-items-center py-3 text-14">
-        <div @click="$router.push({ name: 'CampaignDetail', params: { slug: detail_campaign.slug }})"  style="cursor: pointer;">
-          <i class="fas fa-arrow-left" style="color: #008FD7;font-size: 20px;"></i>
-        </div>
-        <div class="reward-header ml-5">Pilih Hadiah Anda</div>
-      </div>
-    </div>
+    <TopNavbarBlock title="Pilih Hadiah Anda" routes="CampaignDetail" :params="{ slug: detail_campaign.slug }"/>
     <div class="container d-flex mt-5 reward-horizontal">
       <div class="mr-3" v-for="(item, index) in detail_campaign.rewards" :key="index">
         <div class="card-reward-content">

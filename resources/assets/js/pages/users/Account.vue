@@ -47,6 +47,14 @@
           </div>
           <i class="fa fa-chevron-right"></i>
         </div>
+        <div class="d-flex align-items-center justify-content-between list-menu"
+             @click="window.location.href='/term_of_use'">
+          <div>
+            <div class="title-list mb-2">Kebijakan Pengguna</div>
+            <div class="desc-list">Pelajari lebih lanjut tentang kebijakan pengguna</div>
+          </div>
+          <i class="fa fa-chevron-right"></i>
+        </div>
         <div class="d-flex align-items-center justify-content-between list-menu" @click="logout">
           <div class="title-list" style="color: #D70000;">Sign Out</div>
           <i class="fa fa-chevron-right" style="color: #D70000;"></i>

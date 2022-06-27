@@ -6,7 +6,7 @@
       >
         <i class="fas fa-arrow-left" style="color: #008FD7;font-size: 20px;"></i>
       </div>
-      <div class="top-navbar-block-title ml-5">{{title}}</div>
+      <div class="top-navbar-block-title ml-3">{{title}}</div>
     </div>
   </div>
 </template>
