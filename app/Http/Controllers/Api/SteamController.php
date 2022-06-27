@@ -132,47 +132,58 @@ class SteamController extends Controller
                 'message' => $validator->errors()
             ], 401);
         }
+        $code = rand(1000,9999);
+
 //        check if user exist
         $user = User::query()->where('email', $request->email)->first();
         if ($user) {
-            $redirect = '';
-            if (!$user->email_verified_at) {
-                $msg = array('Mohon maaf email yang anda masukan telah terdaftar. Silahkan cek di email anda agar dapat verifikasi.');
-                $this->message = $msg;
-                $redirect = 'verification';
-            } else {
+            $steamUser = User::query()->where('social_id', $id)->first();
+            if ($user->email_verified_at) {
                 $msg = array('Selamat email telah terdaftar dan terverifikasi! silahkan login kembali');
                 $this->message = $msg;
                 $redirect = 'login';
+            } else {
+                $user->remember_token = $code;
+                Mail::to($request->email)->send(new EmailCodeVerification($code));
+                $msg = array('Mohon maaf email yang anda masukan telah terdaftar. Silahkan cek di email anda agar dapat verifikasi.');
+                $this->message = $msg;
+                $redirect = 'verification';
+            }
+            if ($steamUser) {
+                $user->name = $steamUser->name;
+                $user->avatar = $steamUser->avatar;
+                $user->password = bcrypt($request->password);
+                $user->social = 'steam';
+                $user->social_id = $id;
+                $user->save();
+                $steamUser->forceDelete();
             }
             return response()->json([
                 'data' => $user,
                 'redirect_to' => $redirect,
                 'message' => $this->message
             ], 200);
+        } else {
+            try {
+                DB::beginTransaction();
+                Mail::to($request->email)->send(new EmailCodeVerification($code));
+                $user = User::query()->where('social_id', $id)->first();
+                $user->email = $request['email'];
+                $user->password = bcrypt($request['password']);
+                $user->remember_token = $code;
+                $user->save();
+
+                $this->message = array("Selamat anda berhasil mendaftar! Silahkan cek email untuk verifikasi.");
+                DB::commit();
+            } catch (\Exception $exception) {
+                DB::rollBack();
+                throw new HttpException(500, $exception->getMessage(), $exception);
+            }
+            return response()->json([
+                'message' => $this->message,
+                'data' => $user,
+                'redirect_to' => 'verification',
+            ], 200);
         }
-
-        $code = rand(1000,9999);
-        try {
-            DB::beginTransaction();
-            Mail::to($request->email)->send(new EmailCodeVerification($code));
-            $user = User::query()->where('social_id', $id)->first();
-            $user->email = $request['email'];
-            $user->password = bcrypt($request['password']);
-            $user->remember_token = $code;
-            $user->save();
-
-            $this->message = array("Selamat anda berhasil mendaftar! Silahkan cek email untuk verifikasi.");
-            DB::commit();
-        } catch (\Exception $exception) {
-            DB::rollBack();
-            throw new HttpException(500, $exception->getMessage(), $exception);
-        }
-
-        return response()->json([
-            'message' => $this->message,
-            'data' => $user,
-            'redirect_to' => 'verification',
-        ], 200);
     }
 }
