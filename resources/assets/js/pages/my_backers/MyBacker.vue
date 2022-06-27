@@ -1,7 +1,7 @@
 <template>
   <div class="wrapper-backer">
     <TopNavbarBlock title="Dukungan Saya" :routes="back_button" />
-    <div class="container py-3">
+    <div class="container py-3" v-if="campaigns.length">
       <div class="my-1" v-for="(item) in campaigns">
         <div class="py-2" @click="$router.push({
             name: detail_page,
@@ -23,6 +23,16 @@
           </div>
         </div>
         <hr style="opacity: 0.4; border-top: 2px solid #001B29;"/>
+      </div>
+    </div>
+    <div class="container py-3 d-flex justify-content-center align-items-center" style="height: calc(100vh - 200px);" v-else>
+      <div class="px-3 text-center">
+        <img src="/assets_app/images/search_not_found.png" alt="campaign not found" class="mb-2">
+        <h5 class="text-dark mb-2"><b>Belum ada campaign yang didukung</b></h5>
+        <div class="mb-5">Ups! belum ada campaign yang kamu dukung. Yuk mulai dukung campaign sekarang!</div>
+        <button class="btn btn-primary" @click="$router.push({
+            name: 'HomePage',
+          })">Cek Campaign</button>
       </div>
     </div>
     <loading
