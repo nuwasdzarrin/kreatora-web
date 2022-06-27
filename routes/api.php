@@ -26,7 +26,7 @@ Route::post('refresh_fcm_token', 'Api\AuthController@refresh_fcm_token')->name('
 Route::get('logout', 'Api\AuthController@logout')->name('api.logout');
 Route::get('profile', 'Api\AuthController@profile')->name('api.profile');
 Route::post('auth/google', 'Api\GoogleController@auth')->name('api.auth');
-
+Route::put('auth/steam/register/{id}', 'Api\SteamController@register')->name('api.auth.steam.register');
 
 Route::apiResource('users', 'Api\UserController', [ 'as' => 'api' ]);
 Route::apiResource('campaign_categories', 'Api\CampaignCategoryController', [ 'as' => 'api' ]);
