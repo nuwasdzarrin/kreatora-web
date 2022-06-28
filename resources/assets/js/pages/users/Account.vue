@@ -40,15 +40,16 @@
           </div>
           <i class="fa fa-chevron-right"></i>
         </div>
-        <div class="d-flex align-items-center justify-content-between list-menu">
+        <div class="d-flex align-items-center justify-content-between list-menu"
+             @click="window.location.href='/pedoman_komunitas'">
           <div>
-            <div class="title-list mb-2">Community Guideline</div>
+            <div class="title-list mb-2">Pedoman Komunitas</div>
             <div class="desc-list">Pelajari lebih lanjut tentang Kreatora</div>
           </div>
           <i class="fa fa-chevron-right"></i>
         </div>
         <div class="d-flex align-items-center justify-content-between list-menu"
-             @click="window.location.href='/term_of_use'">
+             @click="window.location.href='/kebijakan_pengguna'">
           <div>
             <div class="title-list mb-2">Kebijakan Pengguna</div>
             <div class="desc-list">Pelajari lebih lanjut tentang kebijakan pengguna</div>

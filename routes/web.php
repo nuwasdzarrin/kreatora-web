@@ -50,8 +50,11 @@ Route::get('run_storage', function () {
 Route::get('/', function () {
     return view('homepage');
 });
-Route::get('/term_of_use', function () {
+Route::get('/kebijakan_pengguna', function () {
     return view('term_of_use');
+});
+Route::get('/pedoman_komunitas', function () {
+    return view('community_guideline');
 });
 
 
