@@ -87,7 +87,7 @@ class SteamController extends Controller
         if ($user != null) {
             $msg = array('Selamat! kamu telah berhasil login!');
             $user->name = $players->personaname;
-            $user->avatar = $players->avatar;
+            $user->avatar = $players->avatarfull;
             $data['token'] = $user->createToken('nApp')->accessToken;
             $user->save();
 
@@ -102,7 +102,7 @@ class SteamController extends Controller
             $user = new User();
             $user->name = $players->personaname;
             $user->email = '';
-            $user->avatar = $players->avatar;
+            $user->avatar = $players->avatarfull;
             $user->password = bcrypt($steamid);
             $user->email_verified_at = null;
             $user->social_id = $steamid;
