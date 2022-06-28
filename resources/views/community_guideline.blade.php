@@ -25,7 +25,7 @@
         </div>
         <div class="container mt-4 pb-3 text-dark">
             <div class="mb-4">
-                <p class="text-justify">Kreatora berokomitmen untuk mendorong kemajuan industri game Indonesia.
+                <p class="text-justify">Kreatora berkomitmen untuk mendorong kemajuan industri game Indonesia.
                     Demi mewujudkan hal tersebut Kreatora mengharapkan terbentuknya komunitas pengguna yang baik dan
                     berkualitas. Skema reward-based crowdfunding membutuhkan kepercayaan, kerjas keras, kerjasama, dan
                     konsistensi dalam implementasinya. Oleh karena itu Kreatoar ingin memberikan pedoman bagi komunitas
