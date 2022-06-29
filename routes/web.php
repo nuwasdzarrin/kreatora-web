@@ -53,6 +53,9 @@ Route::get('/', function () {
 Route::get('/kebijakan_pengguna', function () {
     return view('term_of_use');
 });
+Route::get('/kebijakan_privasi', function () {
+    return view('privacy_policy');
+});
 Route::get('/pedoman_komunitas', function () {
     return view('community_guideline');
 });
