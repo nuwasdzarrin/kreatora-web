@@ -2,7 +2,8 @@
   <div class="card text-center d-flex justify-content-center" style="height: 100vh">
     <div>
       <router-link :to="{ name: 'HomePage'}">
-        <div class="mb-3"><img src="/assets_app/images/logo/icon-logo-kreatora.png" alt="Kreatora Logo" style="width: 60px; height: auto;"></div>
+<!--        <div class="mb-3"><img src="/assets_app/images/logo/icon-logo-kreatora.png" alt="Kreatora Logo" style="width: 60px; height: auto;"></div>-->
+        <div class="mb-3"><img src="/assets_app/images/logo/kreatora_blue_beta.png" alt="Kreatora Logo" style="width: 60px; height: auto;"></div>
         <img src="/assets_app/images/logo/kreatora-text.png" alt="Kreatora text">
         <!-- <div class="auth-logo-title">KREATORA</div> -->
       </router-link>

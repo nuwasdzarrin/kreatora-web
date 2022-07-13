@@ -2,7 +2,7 @@
   <nav class="navbar navbar-expand navbar-light bg-primary">
     <!-- Left navbar links -->
     <a class="navbar-brand mr-auto" href="/campaign">
-      <img src="/assets_app/images/logo/icon-logo-kreatora-small.png" alt="logo-kreatora" class="header-logo-kreatora">
+      <img src="/assets_app/images/logo/kreatora_white_beta.png" alt="logo-kreatora" class="header-logo-kreatora">
     </a>
     <ul class="navbar-nav left-nav">
       <li class="nav-item d-flex align-items-center">
@@ -90,6 +90,10 @@ export default {
 }
 </script>
 <style lang="css" scoped>
+.header-logo-kreatora {
+  width: 45px;
+  height: auto;
+}
 @media screen and (max-width: 390px) {
   .header-logo-kreatora {
     width: 45px;

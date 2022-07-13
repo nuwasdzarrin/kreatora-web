@@ -146,8 +146,8 @@ class CampaignController extends Controller
                 }
             }
         }
-        $slug = $this->createSlug($request->title);
-        $campaign->slug = $slug;
+//        $slug = $this->createSlug($request->title);
+//        $campaign->slug = $slug;
         $campaign->save();
 
         return (new Resource($campaign))->response()->setStatusCode(201);
@@ -260,11 +260,11 @@ class CampaignController extends Controller
         $title = $title.'-'.rand(10000,99999);
         $slug = Str::slug($title);
         $allSlugs = $this->getRelatedSlugs($slug);
-   
+
         if (! $allSlugs->contains('slug', $slug)){
             return $slug;
         }
-   
+
         for ($i = 1; $i <= 10; $i++) {
             $newSlug = $slug.'-'.$i;
                 if (! $allSlugs->contains('slug', $newSlug)) {
@@ -276,8 +276,7 @@ class CampaignController extends Controller
 
     public function getRelatedSlugs($slug)
     {
-    return  Campaign::select('slug')->where('slug', 'like',  $slug.'%')
-        ->get();
+        return  Campaign::select('slug')->where('slug', 'like',  $slug.'%')->get();
     }
 
     public function slug($slug=null)

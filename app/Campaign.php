@@ -100,6 +100,12 @@ class Campaign extends Model
         return $this->belongsTo(CampaignCategory::class);
     }
 
+    public function setTitleAttribute($value)
+    {
+        $this->attributes['title'] = $value;
+        $this->attributes['slug'] = str_slug($value.'-'.rand(10000,99999));
+    }
+
     public function getCategoryNameAttribute()
     {
         return $this->campaign_category ? $this->campaign_category->name : null;

@@ -29,12 +29,13 @@ window.events = new Vue();
 Vue.prototype.window = window;
 
 firebase.initializeApp({
-    apiKey: "AIzaSyAi03PUUjCVEiOqYWBKeCfnC2dtC77oELA",
-    authDomain: "kreatora-mobile.firebaseapp.com",
-    projectId: "kreatora-mobile",
-    storageBucket: "kreatora-mobile.appspot.com",
-    messagingSenderId: "671989481166",
-    appId: "1:671989481166:web:f16d956b7fbd452b62da9f"
+    apiKey: "AIzaSyDoU-JuN5WYaQywZWE3Z6tWST3IIN1l04U",
+    authDomain: "kreatora-35115.firebaseapp.com",
+    projectId: "kreatora-35115",
+    storageBucket: "kreatora-35115.appspot.com",
+    messagingSenderId: "362844505116",
+    appId: "1:362844505116:web:9579418318d6bade834bd9",
+    measurementId: "G-YG3VZHQQY0"
 });
 
 // if ('serviceWorker' in navigator) {
