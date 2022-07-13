@@ -36,10 +36,8 @@ return [
     ],
 
     'google' => [
-        'client_id' => env('GOOGLE_CLIENT_ID','362844505116-9hsro776fj7h7pugpnkvmjao35ndf3ha.apps.googleusercontent.com'),
-        'client_secret' => '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',
-//        'client_id' => env('GOOGLE_CLIENT_ID','879549587031-ohodmoqbqe3lu01jng08j6v3dj09rb09.apps.googleusercontent.com'),
-//        'client_secret' => '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',
+        'client_id' => env('GOOGLE_CLIENT_ID',''),
+        'client_secret' => env('GOOGLE_CLIENT_SECRET',''),
         'redirect' => 'http://127.0.0.1:8000/google/callback',
     ],
 ];
