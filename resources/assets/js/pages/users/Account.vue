@@ -26,7 +26,8 @@
           </div>
         </div>
         <hr class="account-hr">
-        <div class="d-flex align-items-center justify-content-between list-menu">
+        <div class="d-flex align-items-center justify-content-between list-menu"
+             @click="window.location.href=`https://wa.me/6285171015570?text=Halo kreatora, Saya ${profile.name} ingin menjadi kreator`">
           <div>
             <div class="title-list mb-2">Jadi Kreator</div>
             <div class="desc-list">Hubungi Kreatora untuk menjadi Kreator</div>
