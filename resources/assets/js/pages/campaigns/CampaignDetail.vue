@@ -1,82 +1,92 @@
 <template>
   <div class="wrapper-detail" :class="isSection ? 'bg-white':''">
-    <div v-if="isSection">
-      <div class="container" style="box-shadow: 0 2px 2px rgba(0, 0, 0, 0.15);">
-        <!-- <div class="d-flex justify-content-between align-items-center py-3 text-14">
-          <div @click="$router.push({ name: 'CampaignDetail', params: { slug: detail_campaign.slug }})">
-            <i class="fas fa-arrow-left" style="color: #008FD7;font-size: 20px;"></i>
-          </div>
-          <div>
-            <a href="#" class="mr-2"><i class="far fa-bookmark text-20"></i></a>
-            <a href="#"><i class="fa fa-share-alt text-20"></i></a>
-          </div>
-        </div> -->
-        <div class="d-flex align-items-center py-3 mb-3 text-14">
-          <div class="mr-3" @click="$router.push({ name: 'CampaignDetail', params: { slug: detail_campaign.slug }})">
-            <i class="fas fa-arrow-left" style="color: #008FD7;font-size: 20px;"></i>
-          </div>
-          <div class="text-14 text-color-black" @click="$router.push({ name: 'CampaignDetail', params: { slug: detail_campaign.slug }, query: { section: 'description' }})" v-if="isSection === 'description'">
-            <b>Deskripsi</b>
-          </div>
-          <div class="text-14 text-color-black" style="position: relative;" @click="$router.push({ name: 'CampaignDetail', params: { slug: detail_campaign.slug }, query: { section: 'interaction' }})" v-if="isSection === 'interaction'">
-            <b>Interaction</b>
-            <b class="campaign-comments-length">{{detail_campaign.campaign_comments && detail_campaign.campaign_comments.length}}</b>
-          </div>
-          <!-- <div class="text-14" :class="{'text-color-black': isSection === 'faq'}" @click="$router.push({ name: 'CampaignDetail', params: { slug: detail_campaign.slug }, query: { section: 'faq' }})">
-            <b>FAQ</b>
-          </div>
-          <div class="text-14" :class="{'text-color-black': isSection === 'risk'}" @click="$router.push({ name: 'CampaignDetail', params: { slug: detail_campaign.slug }, query: { section: 'risk' }})">
-            <b>Risiko</b>
-          </div>
-          <div class="text-14" :class="{'text-color-black': isSection === 'update'}" @click="$router.push({ name: 'CampaignDetail', params: { slug: detail_campaign.slug }, query: { section: 'update' }})">
-            <b>Update</b>
-          </div> -->
-        </div>
+    <div class="container py-3 d-flex justify-content-center align-items-center" style="height: calc(100vh - 200px);" v-if="!Object.keys(detail_campaign).length">
+      <div class="px-3 text-center">
+        <img src="/assets_app/images/search_not_found.png" alt="campaign not found" class="mb-2">
+        <h5 class="text-dark mb-2"><b>Campaign tidak aktif</b></h5>
+        <div class="mb-5">Ups! campaign sudah tidak aktif. Silahkan cek campaign lainnya disini</div>
+        <button class="btn btn-primary" @click="$router.push({
+            name: 'HomePage',
+          })">Cek Campaign</button>
       </div>
-      <div class="container" style="overflow-y: auto;" :style= "[is_reply ? {height: '75vh'} : {height: '90vh'}]">
-        <div v-html="dataSection" v-if="isSection === 'description' || isSection === 'risk'"/>
-<!--        <div class="pt-3" v-if="isSection === 'faq'">-->
-<!--          <div class="mb-4" v-for="(item, index) in detail_campaign.faqs" :key="index">-->
-<!--            <div class="faq-question" :class="{'no-bottom-radius': is_faq_open[index]}" @click="openFaq(index)">-->
-<!--              <div style="max-width: 90%">-->
-<!--                {{ item.question }}-->
-<!--              </div>-->
-<!--              <div><i class="fas fa-chevron-right" :class="{'fa-rotate-90': is_faq_open[index]}"></i></div>-->
-<!--            </div>-->
-<!--            <div class="faq-answer" v-show="is_faq_open[index]">-->
-<!--              {{ item.answer }}-->
-<!--            </div>-->
-<!--          </div>-->
-<!--        </div>-->
-<!--        <div class="pt-3" v-if="isSection === 'update'">-->
-<!--          <div class="update-box" v-for="(item, index) in detail_campaign.updates" :key="index">-->
-<!--            <div class="d-flex justify-content-between mb-3 text-12">-->
-<!--              <div><strong>Update #{{item.index}}</strong></div>-->
-<!--              <div style="color: #5C5C70">{{item.updated_at | dateDDMMYYYY}}</div>-->
-<!--            </div>-->
-<!--            <h5><strong>{{item.title}}</strong></h5>-->
-<!--            <p class="text-14" v-html="item.description">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Facilisi massa tortor vel justo vivamus aliquet. Sed massa lectus sed neque, maecenas enim porttitor ......</p>-->
-<!--            <div class="text-right"><span class="mr-2" style="color: black">11</span><i class="far fa-comment-alt mr-4"></i><span class="mr-2" style="color: black">11</span><i class="far fa-heart"></i></div>-->
-<!--          </div>-->
-<!--        </div>-->
-        <CommentComponent :comments="detail_campaign.campaign_comments" @onReply="replyOnClick" v-if="isSection === 'interaction'" />
-        <div class="container comment-bottom-wrapper" v-if="is_reply">
-          <div class="my-1">membalas <b>{{reply_to.user_name}}</b></div>
-          <div class="d-flex">
-            <input type="text" class="form-control comment-input" v-model="comment" />
-            <div class="d-flex align-items-center justify-content-center ml-2 comment-send-button" @click="sendComment">
-              <i class="fa fa-paper-plane text-20"></i>
+    </div>
+    <div v-else-if="isSection">
+        <div class="container" style="box-shadow: 0 2px 2px rgba(0, 0, 0, 0.15);">
+          <!-- <div class="d-flex justify-content-between align-items-center py-3 text-14">
+            <div @click="$router.push({ name: 'CampaignDetail', params: { slug: detail_campaign.slug }})">
+              <i class="fas fa-arrow-left" style="color: #008FD7;font-size: 20px;"></i>
+            </div>
+            <div>
+              <a href="#" class="mr-2"><i class="far fa-bookmark text-20"></i></a>
+              <a href="#"><i class="fa fa-share-alt text-20"></i></a>
+            </div>
+          </div> -->
+          <div class="d-flex align-items-center py-3 mb-3 text-14">
+            <div class="mr-3" @click="$router.push({ name: 'CampaignDetail', params: { slug: detail_campaign.slug }})">
+              <i class="fas fa-arrow-left" style="color: #008FD7;font-size: 20px;"></i>
+            </div>
+            <div class="text-14 text-color-black" @click="$router.push({ name: 'CampaignDetail', params: { slug: detail_campaign.slug }, query: { section: 'description' }})" v-if="isSection === 'description'">
+              <b>Deskripsi</b>
+            </div>
+            <div class="text-14 text-color-black" style="position: relative;" @click="$router.push({ name: 'CampaignDetail', params: { slug: detail_campaign.slug }, query: { section: 'interaction' }})" v-if="isSection === 'interaction'">
+              <b>Interaction</b>
+              <b class="campaign-comments-length">{{detail_campaign.campaign_comments && detail_campaign.campaign_comments.length}}</b>
+            </div>
+            <!-- <div class="text-14" :class="{'text-color-black': isSection === 'faq'}" @click="$router.push({ name: 'CampaignDetail', params: { slug: detail_campaign.slug }, query: { section: 'faq' }})">
+              <b>FAQ</b>
+            </div>
+            <div class="text-14" :class="{'text-color-black': isSection === 'risk'}" @click="$router.push({ name: 'CampaignDetail', params: { slug: detail_campaign.slug }, query: { section: 'risk' }})">
+              <b>Risiko</b>
+            </div>
+            <div class="text-14" :class="{'text-color-black': isSection === 'update'}" @click="$router.push({ name: 'CampaignDetail', params: { slug: detail_campaign.slug }, query: { section: 'update' }})">
+              <b>Update</b>
+            </div> -->
+          </div>
+        </div>
+        <div class="container" style="overflow-y: auto;" :style= "[is_reply ? {height: '75vh'} : {height: '90vh'}]">
+          <div v-html="dataSection" v-if="isSection === 'description' || isSection === 'risk'"/>
+          <!--        <div class="pt-3" v-if="isSection === 'faq'">-->
+          <!--          <div class="mb-4" v-for="(item, index) in detail_campaign.faqs" :key="index">-->
+          <!--            <div class="faq-question" :class="{'no-bottom-radius': is_faq_open[index]}" @click="openFaq(index)">-->
+          <!--              <div style="max-width: 90%">-->
+          <!--                {{ item.question }}-->
+          <!--              </div>-->
+          <!--              <div><i class="fas fa-chevron-right" :class="{'fa-rotate-90': is_faq_open[index]}"></i></div>-->
+          <!--            </div>-->
+          <!--            <div class="faq-answer" v-show="is_faq_open[index]">-->
+          <!--              {{ item.answer }}-->
+          <!--            </div>-->
+          <!--          </div>-->
+          <!--        </div>-->
+          <!--        <div class="pt-3" v-if="isSection === 'update'">-->
+          <!--          <div class="update-box" v-for="(item, index) in detail_campaign.updates" :key="index">-->
+          <!--            <div class="d-flex justify-content-between mb-3 text-12">-->
+          <!--              <div><strong>Update #{{item.index}}</strong></div>-->
+          <!--              <div style="color: #5C5C70">{{item.updated_at | dateDDMMYYYY}}</div>-->
+          <!--            </div>-->
+          <!--            <h5><strong>{{item.title}}</strong></h5>-->
+          <!--            <p class="text-14" v-html="item.description">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Facilisi massa tortor vel justo vivamus aliquet. Sed massa lectus sed neque, maecenas enim porttitor ......</p>-->
+          <!--            <div class="text-right"><span class="mr-2" style="color: black">11</span><i class="far fa-comment-alt mr-4"></i><span class="mr-2" style="color: black">11</span><i class="far fa-heart"></i></div>-->
+          <!--          </div>-->
+          <!--        </div>-->
+          <CommentComponent :comments="detail_campaign.campaign_comments" @onReply="replyOnClick" v-if="isSection === 'interaction'" />
+          <div class="container comment-bottom-wrapper" v-if="is_reply">
+            <div class="my-1">membalas <b>{{reply_to.user_name}}</b></div>
+            <div class="d-flex">
+              <input type="text" class="form-control comment-input" v-model="comment" />
+              <div class="d-flex align-items-center justify-content-center ml-2 comment-send-button" @click="sendComment">
+                <i class="fa fa-paper-plane text-20"></i>
+              </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
     <div class="detail-content" v-else>
       <div style="position: relative;">
         <img :src="(detail_campaign && detail_campaign.pictures) ? (api.storage + detail_campaign.pictures[0]) : api.no_image" alt="campaign-images" class="campaign-detail-img">
         <span class="back-button-img" @click="$router.push({ name: 'HomePage'})"  style="cursor: pointer;">
-          <i class="fas fa-arrow-left"></i>
-        </span>
+        <i class="fas fa-arrow-left"></i>
+      </span>
         <img :src="api.storage + 'kreatora-mark.png'" style="position: absolute; bottom: 10px; right: 10px;">
       </div>
       <div class="container py-4 bg-gray-light">

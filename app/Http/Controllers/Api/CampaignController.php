@@ -79,6 +79,7 @@ class CampaignController extends Controller
     public function index()
     {
         $campaigns = Campaign::filter()
+            ->where('status', 'active')
             ->paginate()->appends(request()->query());
 //        $this->authorize('index', 'App\Campaign');
 
@@ -281,7 +282,8 @@ class CampaignController extends Controller
 
     public function slug($slug=null)
     {
-        $data = Campaign::query()->where('slug', $slug)->with(['rewards','campaign_comments.childs'])->first();
+        $data = Campaign::query()->where('slug', $slug)->where('status', 'active')
+            ->with(['rewards','campaign_comments.childs'])->first();
         return response()->json($data, 200);
     }
 
