@@ -1,7 +1,7 @@
 <template>
   <div class="wrapper-detail" :class="isSection ? 'bg-white':''">
     <div class="container py-3 d-flex justify-content-center align-items-center" style="height: calc(100vh - 200px);" v-if="!Object.keys(detail_campaign).length">
-      <div class="px-3 text-center">
+      <div class="px-3 text-center" v-if="!is_loading">
         <img src="/assets_app/images/search_not_found.png" alt="campaign not found" class="mb-2">
         <h5 class="text-dark mb-2"><b>Campaign tidak aktif</b></h5>
         <div class="mb-5">Ups! campaign sudah tidak aktif. Silahkan cek campaign lainnya disini</div>
