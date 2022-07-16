@@ -123,7 +123,7 @@ class Campaign extends Model
 
     public function getCreatorAvatarAttribute()
     {
-        return $this->user ? $this->user->avatar : null;
+        return $this->user ? $this->user->image : null;
     }
 
     public function getBackerAvatarAttribute()
@@ -131,7 +131,7 @@ class Campaign extends Model
         if (!$this->backer_users) return null;
         $result = [];
         $this->backer_users->take(-3)->each(function ($backer) use (&$result) {
-            array_push($result, $backer->user->avatar);
+            array_push($result, $backer->user->image);
         });
         return $result;
     }

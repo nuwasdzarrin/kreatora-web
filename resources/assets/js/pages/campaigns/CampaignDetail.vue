@@ -91,14 +91,14 @@
         <div class="d-flex justify-content-between align-items-center mb-4">
           <div class="text-12">
             oleh:
-            <img :src="(detail_campaign && detail_campaign.creator_avatar) ? api.storage + detail_campaign.creator_avatar : api.no_image" alt="avatar-creator" class="user-avatar ml-1">
+            <img :src="(detail_campaign && detail_campaign.creator_avatar) ? detail_campaign.creator_avatar : api.no_image" alt="avatar-creator" class="user-avatar ml-1">
             <strong class="text-color-black">{{detail_campaign.creator_name}}</strong>
             <img src="/assets_app/icons/icon-verified.png" style="width: 15px; height: auto;" />
           </div>
           <div class="text-14">
             backers:
             <strong class="mr-1">{{detail_campaign.total_backer}}</strong>
-            <img :src="api.storage + item" alt="avatar-creator" class="user-avatar avatar-margin-right" v-for="(item, index) in detail_campaign.backer_avatar" :key="index">
+            <img :src="item" alt="avatar-creator" class="user-avatar avatar-margin-right" v-for="(item, index) in detail_campaign.backer_avatar" :key="index">
           </div>
         </div>
         <h5 class="text-color-black"><strong>{{detail_campaign.title}}</strong></h5>

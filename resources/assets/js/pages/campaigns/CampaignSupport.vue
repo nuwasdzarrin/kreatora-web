@@ -10,7 +10,7 @@
       <div class="mb-1">Dukungan akan dikirimkan ke Kreator :</div>
       <div class="d-flex align-items-center mb-3">
         <img
-            :src="(detail_campaign && detail_campaign.creator_avatar) ? api.storage + detail_campaign.creator_avatar : api.no_image"
+            :src="(detail_campaign && detail_campaign.creator_avatar) ? detail_campaign.creator_avatar : api.no_image"
             alt="avatar-creator"
             class="user-avatar mr-1"
         >
