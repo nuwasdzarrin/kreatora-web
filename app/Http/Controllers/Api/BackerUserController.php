@@ -301,8 +301,8 @@ class BackerUserController extends Controller
                 "is_anonymous" => $item->is_anonymous,
                 "created_at" => $item->created_at,
                 "campaign" => [
-                    "title" => $item->campaign->title,
-                    "pictures" => $item->campaign->pictures
+                    "title" => $item->campaign ? $item->campaign->title : null,
+                    "pictures" => $item->campaign ? $item->campaign->pictures : null
                 ],
                 "payment" => [
                     "order_id" => $item->payment ? $item->payment->order_id : null,
