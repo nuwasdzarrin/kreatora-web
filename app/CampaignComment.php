@@ -65,7 +65,7 @@ class CampaignComment extends Model
 
     public function getUserAvatarAttribute()
     {
-        return $this->user ? $this->user->avatar : '';
+        return $this->user ? $this->user->image : '';
     }
 
     public function getUserNameAttribute()
