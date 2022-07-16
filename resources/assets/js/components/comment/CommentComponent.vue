@@ -3,7 +3,7 @@
         <div v-for="(item, index) in comments" :key="index">
             <div>
                 <div class="d-flex align-item-center py-3">
-                    <img :src="(item && item.user_avatar && item.is_anonymous !== 1) ? (api.storage + item.user_avatar) : api.no_image" class="comment-avatar mr-2" alt="">
+                    <img :src="(item && item.user_avatar && item.is_anonymous !== 1) ? item.user_avatar : api.no_image" class="comment-avatar mr-2" alt="">
                     <div>
                         <h6 style="font-weight: 600;">{{item.is_anonymous === 1 ? convertToAnonymous(item.user_name) : item.user_name}}</h6>
                         <div>{{ daysLeft(item.created_at) }} days ago</div>
@@ -17,7 +17,7 @@
             </div>
             <div class="ml-4 my-3" v-for="(child, i) in item.childs" :key="i">
                 <div class="d-flex align-item-center py-3">
-                    <img :src="(child && child.user_avatar) ? (api.storage + child.user_avatar) : api.no_image" class="comment-avatar mr-2" alt="">
+                    <img :src="(child && child.user_avatar) ? child.user_avatar : api.no_image" class="comment-avatar mr-2" alt="">
                     <div>
                         <h6 style="font-weight: 600;">{{child.user_name || 'Anonim'}}</h6>
                         <div>{{ daysLeft(item.created_at) }} days ago</div>
