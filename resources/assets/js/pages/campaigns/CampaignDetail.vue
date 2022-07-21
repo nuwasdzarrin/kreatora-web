@@ -82,6 +82,7 @@
         </div>
       </div>
     <div class="detail-content" v-else>
+<!--      <div style="flex: 1;"></div>-->
       <div style="position: relative;">
         <img :src="(detail_campaign && detail_campaign.pictures) ? (api.storage + detail_campaign.pictures[0]) : api.no_image" alt="campaign-images" class="campaign-detail-img">
         <span class="back-button-img" @click="$router.push({ name: 'HomePage'})"  style="cursor: pointer;">
@@ -137,7 +138,7 @@
           </a>
         </div>
       </div>
-      <div class="container d-flex bottom-wrapper">
+      <div class="container d-flex py-3 bg-white">
         <div class="d-flex align-items-center justify-content-center mr-2 share-button" @click="is_show_share = true">
           <i class="fa fa-share-alt text-20"></i>
         </div>
@@ -271,8 +272,9 @@ export default {
   flex: 1 1 auto;
 }
 .description-excerpt {
-  border-radius: 20px 20px 0px 0px;
+  border-radius: 20px 20px 0 0;
   flex: 1 1 auto;
+  overflow-y: auto;
 }
 .user-avatar {
   width: 25px;
