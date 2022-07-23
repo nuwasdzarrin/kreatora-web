@@ -28,7 +28,10 @@
           </tr>
           <tr v-if="detail">
             <td>Status</td>
-            <td>: <span class="badge badge-pill" :class="statusProcess(detail && detail.payment && detail.payment.status)" style="text-transform: capitalize">
+            <td>: <span class="badge badge-pill"
+                        :class="statusProcess(detail && detail.payment && detail.payment.status)"
+                        style="text-transform: capitalize"
+            >
               {{ (detail.payment && detail.payment.status) ? (detail.payment.status === 'settlement' ? 'berhasil':detail.payment.status) : 'expired' }}
             </span></td>
           </tr>
