@@ -22,7 +22,8 @@
             </div>
           </div>
           <div>
-            <a href="#" class="font-weight-bold">edit</a>
+            <a href="javascript:void(0)" class="font-weight-bold"
+               @click="$router.push({name: 'DashboardAccountDetail'})">Detail</a>
           </div>
         </div>
         <hr class="account-hr">
@@ -34,7 +35,8 @@
           </div>
           <i class="fa fa-chevron-right"></i>
         </div>
-        <div class="d-flex align-items-center justify-content-between list-menu" @click="$router.push({name: 'DashboardMyBacker'})">
+        <div class="d-flex align-items-center justify-content-between list-menu"
+             @click="$router.push({name: 'DashboardMyBacker'})">
           <div>
             <div class="title-list mb-2">Riwayat Dukungan</div>
             <div class="desc-list">Lihat riwayat dukungan yang telah kamu berikan</div>

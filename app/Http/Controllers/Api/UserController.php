@@ -67,8 +67,8 @@ class UserController extends Controller
     */
     public function __construct()
     {
-        $this->avatar_path = 'app/public/users/';
-        $this->avatar_path_update = 'app/public/';
+        $this->avatar_path = 'assets/images/users/';
+        $this->avatar_path_update = 'assets/images/';
         $this->middleware('auth:api');
     }
 
@@ -151,21 +151,19 @@ class UserController extends Controller
             $ext = $ext[1];
             $imgName = 'avatar_'.$user->id."_".uniqid().'.'.$ext;
             if($ext=='png'){
-                imagepng($image,storage_path($this->avatar_path).$imgName,8);
+                imagepng($image,public_path($this->avatar_path).$imgName,8);
             } else {
-                imagejpeg($image,storage_path($this->avatar_path).$imgName,20);
+                imagejpeg($image,public_path($this->avatar_path).$imgName,20);
             }
             $request->avatar = 'users/'.$imgName;
             if ($user->avatar && $user->avatar != 'users/default.png') {
-                $isExist = File::exists(storage_path($this->avatar_path_update).$user->avatar);
-                if($isExist) File::delete(storage_path($this->avatar_path_update).$user->avatar);
+                $isExist = File::exists(public_path($this->avatar_path_update).$user->avatar);
+                if($isExist) File::delete(public_path($this->avatar_path_update).$user->avatar);
             }
         }
 
         $role = User::query()->where('name', 'creator')->first();
-        if ($role) {
-            $user->role_id = $role->id;
-        }
+        if ($role) $user->role_id = $role->id;
         foreach (self::rules($request, $user)['update'] as $key => $value) {
 //            if (Str::contains($value, [ 'file', 'image', 'mimetypes', 'mimes' ])) {
 //                if ($request->hasFile($key)) {
@@ -179,7 +177,6 @@ class UserController extends Controller
             }
         }
         $user->save();
-
         return new Resource($user);
     }
 

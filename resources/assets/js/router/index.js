@@ -11,6 +11,7 @@ import CampaignSupport from "../pages/campaigns/CampaignSupport";
 import MyBacker from "../pages/my_backers/MyBacker";
 import MyBackerDetail from "../pages/my_backers/MyBackerDetail";
 import Account from "../pages/users/Account";
+import Detail from "../pages/users/Detail";
 
 let routes = [
     {
@@ -78,6 +79,11 @@ let routes = [
                 path: '/dashboard/account',
                 component: Account,
                 name: 'DashboardAccount',
+            },
+            {
+                path: '/dashboard/account/detail',
+                component: Detail,
+                name: 'DashboardAccountDetail',
             },
             {
                 path: '/dashboard/my_backer',
