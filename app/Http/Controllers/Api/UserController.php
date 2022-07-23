@@ -161,7 +161,7 @@ class UserController extends Controller
                 if($isExist) File::delete(public_path($this->avatar_path_update).$user->avatar);
             }
         }
-
+        if ($request->filled('password')) $request->password = bcrypt($request->password);
         $role = User::query()->where('name', 'creator')->first();
         if ($role) $user->role_id = $role->id;
         foreach (self::rules($request, $user)['update'] as $key => $value) {
